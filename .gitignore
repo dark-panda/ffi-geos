@@ -1,0 +1,10 @@
+*.kpf
+*.komodoproject
+*~
+.DS_Store
+*tmp*
+pkg/
+doc/
+*.orig
+*.patch
+.vimrc_local
