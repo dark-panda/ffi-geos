@@ -470,11 +470,11 @@ module Geos
       ],
 
       :GEOSWKBWriter_write_r => [
-        :string, :pointer, :pointer, :pointer, :pointer
+        :pointer, :pointer, :pointer, :pointer, :pointer
       ],
 
       :GEOSWKBWriter_writeHEX_r => [
-        :string, :pointer, :pointer, :pointer, :pointer
+        :pointer, :pointer, :pointer, :pointer, :pointer
       ],
 
       :GEOSWKBWriter_setOutputDimension_r => [
