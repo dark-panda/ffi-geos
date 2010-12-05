@@ -4,16 +4,19 @@ module Geos
     attr_reader :ptr
 
     def initialize(*args)
-      ptr = if args.first.is_a?(FFI::Pointer)
-        args.first
+      ptr, auto_free = if args.first.is_a?(FFI::Pointer)
+        [ args.first, args[1] ]
       else
-        FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, *args)
+        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, *args), true ]
       end
 
       @ptr = FFI::AutoPointer.new(
         ptr,
-        self.class.method(:release)
+        auto_free ? self.class.method(:release) : self.class.method(:no_release)
       )
+    end
+
+    def self.no_release(ptr)
     end
 
     def self.release(ptr)
