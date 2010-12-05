@@ -52,7 +52,7 @@ module Geos
           []
         end
 
-        ary = FFI::MemoryPointer.new(:pointer)
+        ary = FFI::MemoryPointer.new(:pointer, inner.length)
         ary.write_array_of_pointer(inner.map(&:ptr))
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer.ptr, ary, inner.length)).tap {
