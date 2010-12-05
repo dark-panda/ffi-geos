@@ -192,6 +192,10 @@ module Geos
         :int, :pointer, :pointer
       ],
 
+      :GEOSGeom_getCoordSeq_r => [
+        :pointer, :pointer, :pointer
+      ],
+
       :GEOSIntersection_r => [
         :pointer, :pointer, :pointer, :pointer
       ],

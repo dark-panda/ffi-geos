@@ -55,6 +55,10 @@ module Geos
       FFIGeos.GEOSGetNumCoordinates_r(Geos.current_handle, self.ptr)
     end
 
+    def coord_seq
+      CoordinateSequence.new(FFIGeos.GEOSGeom_getCoordSeq_r(Geos.current_handle, self.ptr), false)
+    end
+
     def intersection(geom)
       check_geometry(geom)
       cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle, self.ptr, geom.ptr))
