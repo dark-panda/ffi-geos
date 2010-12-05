@@ -12,18 +12,30 @@ module Geos
       end
 
       def create_point(cs)
+        if cs.length != 1
+          raise RuntimeError.new("IllegalArgumentException: Point coordinate list must contain a single element")
+        end
+
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs.ptr)).tap {
           cs.ptr.autorelease = false
         }
       end
 
       def create_line_string(cs)
+        if cs.length <= 1 && cs.length != 0
+          raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
+        end
+
         cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs.ptr)).tap {
           cs.ptr.autorelease = false
         }
       end
 
       def create_linear_ring(cs)
+        if cs.length <= 1 && cs.length != 0
+          raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
+        end
+
         cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs.ptr)).tap {
           cs.ptr.autorelease = false
         }
