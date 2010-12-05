@@ -95,6 +95,22 @@ module Geos
       :GEOSPolygonize_full_r => [
         :pointer, :pointer, :pointer, :pointer, :pointer, :pointer
       ],
+
+      :GEOSGeom_createPoint_r => [
+        :pointer, :pointer, :pointer
+      ],
+
+      :GEOSGeom_createLinearRing_r => [
+        :pointer, :pointer, :pointer
+      ],
+
+      :GEOSGeom_createLineString_r => [
+        :pointer, :pointer, :pointer
+      ],
+
+      :GEOSGeom_createPolygon_r => [
+        :pointer, :pointer, :pointer, :pointer, :uint
+      ],
       #### /Utility functions ####
 
       #### CoordinateSequence functions ####
@@ -534,8 +550,12 @@ module Geos
 
     FFI_LAYOUT.each do |fun, ary|
       ret = ary.shift
-      self.class_eval do
-        attach_function(fun, ary, ret)
+      begin
+        self.class_eval do
+          attach_function(fun, ary, ret)
+        end
+      rescue FFI::NotFoundError
+        # that's okay
       end
     end
   end
@@ -562,6 +582,22 @@ module Geos
 
     def error_handler(*args)
       raise RuntimeError
+    end
+
+    def create_point(*args)
+      Geos::Utils.create_point(*args)
+    end
+
+    def create_line_string(*args)
+      Geos::Utils.create_line_string(*args)
+    end
+
+    def create_linear_ring(*args)
+      Geos::Utils.create_linear_ring(*args)
+    end
+
+    def create_polygon(*args)
+      Geos::Utils.create_polygon(*args)
     end
   end
 
