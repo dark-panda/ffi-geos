@@ -1,6 +1,8 @@
 
 module Geos
   class CoordinateSequence
+    include Enumerable
+
     attr_reader :ptr
 
     def initialize(*args)
@@ -25,6 +27,16 @@ module Geos
 
     def clone
       self.class.new(FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle, self.ptr))
+    end
+
+    def each
+      self.length.times do |n|
+        yield [
+          self.get_x(n),
+          (self.dimensions >= 2 ? self.get_y(n) : nil),
+          (self.dimensions >= 3 ? self.get_z(n) : nil)
+        ].compact
+      end
     end
 
     def set_x(idx, val)
