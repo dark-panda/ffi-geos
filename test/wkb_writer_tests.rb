@@ -30,7 +30,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       43,
       false
-        )
+    )
   end
 
   def test_2d_little_endian_with_srid
@@ -41,7 +41,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       43,
       true
-        )
+    )
   end
 
   def test_2d_big_endian
@@ -52,7 +52,7 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       43,
       false
-        )
+    )
   end
 
   def test_2d_big_endian_with_srid
@@ -63,7 +63,7 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       43,
       true
-        )
+    )
   end
 
   def test_3d_little_endian_with_2d_output
@@ -74,7 +74,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       43,
       false
-        )
+    )
   end
 
   def test_3d_little_endian__with_2d_output_with_srid
@@ -85,7 +85,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       43,
       true
-        )
+    )
   end
 
   def test_3d_big_endian_with_2d_input
@@ -96,7 +96,7 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       43,
       false
-        )
+    )
   end
 
   def test_3d_big_endian_with_2d_input_with_srid
@@ -107,7 +107,7 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       43,
       true
-        )
+    )
   end
 
 
@@ -120,7 +120,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       53,
       false
-        )
+    )
   end
 
   def test_2d_little_endian_with_3d_input_with_srid
@@ -131,7 +131,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       53,
       true
-        )
+    )
   end
 
 
@@ -144,7 +144,7 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       53,
       false
-        )
+    )
   end
 
   def test_2d_big_endian_with_3d_input_with_srid
@@ -155,10 +155,8 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       53,
       true
-        )
+    )
   end
-
-
 
   def test_3d_little_endian_with_3d_input
     wkb_tester(
@@ -168,7 +166,7 @@ class WkbWriterTests < Test::Unit::TestCase
       1,
       53,
       false
-        )
+    )
   end
 
   def test_3d_big_endian_with_3d_input
@@ -179,7 +177,7 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       53,
       false
-        )
+    )
   end
 
   def test_3d_big_endian_with_3d_input_with_srid
@@ -190,19 +188,19 @@ class WkbWriterTests < Test::Unit::TestCase
       0,
       53,
       true
-        )
+    )
   end
 
   def tester_try_bad_byte_order_value
     # raise on anything that's not a Fixnum
     assert_raise(TypeError) do
       wkb_tester(
-        '010100008000000000000018400000000000001C400000000000002040',
-        'POINT(6 7 8)',
-        3,
-        'gibberish',
-        53,
-        false
+    '010100008000000000000018400000000000001C400000000000002040',
+    'POINT(6 7 8)',
+    3,
+    'gibberish',
+    53,
+    false
       )
     end
 

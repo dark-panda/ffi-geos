@@ -29,7 +29,7 @@ class WkbReaderTests < Test::Unit::TestCase
       'Point',
       Geos::Point,
       0
-        )
+    )
   end
 
   def test_2d_big_endian
@@ -87,7 +87,7 @@ class WkbReaderTests < Test::Unit::TestCase
     )
   end
 
-    def test_3d_big_endian_srid
+  def test_3d_big_endian_srid
     wkb_tester(
       'POINT Z (6 7 8)',
       '00A0000001000000354018000000000000401C0000000000004020000000000000',
@@ -96,5 +96,5 @@ class WkbReaderTests < Test::Unit::TestCase
       Geos::Point,
       53
     )
-    end
+  end
 end
