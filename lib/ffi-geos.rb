@@ -40,20 +40,24 @@ module Geos
 
   module FFIGeos
     def self.geos_library_name
-      if ENV['GEOS_LIBRARY_PATH']
-        ENV['GEOS_LIBRARY_PATH']
+      paths = if ENV['GEOS_LIBRARY_PATH']
+        [ ENV['GEOS_LIBRARY_PATH'] ]
       else
-        case Config::CONFIG['arch']
-        when /darwin/
-          %w{ libgeos_c.dylib  libgeos.dylib }.collect { |lib|
-            [ '/usr/lib', '/usr/local/lib', '/opt/local/lib' ].detect { |path|
-              File.exists?("#{path}/#{lib}")
-            }.to_s + "/#{lib}"
-          }
-        else
-          [ 'libgeos.so', 'libgeos_c.so' ]
-        end
+        [ '/usr/lib', '/usr/local/lib', '/opt/local/lib' ]
       end
+
+      libs = case Config::CONFIG['arch']
+        when /darwin/
+          %w{ libgeos_c.dylib  libgeos.dylib }
+        else
+          %w{ libgeos.so libgeos_c.so }
+      end
+
+      libs.collect { |lib|
+        paths.detect { |path|
+          File.exists?("#{path}/#{lib}")
+        }.to_s + "/#{lib}"
+      }
     end
 
     extend ::FFI::Library
