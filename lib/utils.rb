@@ -57,6 +57,9 @@ module Geos
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer.ptr, ary, inner.length)).tap {
           outer.ptr.autorelease = false
+          if !inner.empty?
+            inner.each { |i| i.ptr.autorelease = false }
+          end
         }
       end
     end
