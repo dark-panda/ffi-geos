@@ -195,12 +195,12 @@ class WkbWriterTests < Test::Unit::TestCase
     # raise on anything that's not a Fixnum
     assert_raise(TypeError) do
       wkb_tester(
-    '010100008000000000000018400000000000001C400000000000002040',
-    'POINT(6 7 8)',
-    3,
-    'gibberish',
-    53,
-    false
+        '010100008000000000000018400000000000001C400000000000002040',
+        'POINT(6 7 8)',
+        3,
+        'gibberish',
+        53,
+        false
       )
     end
 
