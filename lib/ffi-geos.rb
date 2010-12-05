@@ -80,6 +80,10 @@ module Geos
         :string
       ],
 
+      :GEOSjtsport => [
+        :string
+      ],
+
       :GEOSPolygonize_r => [
         :pointer, :pointer, :pointer, :uint
       ],
@@ -537,6 +541,10 @@ module Geos
       @version ||= FFIGeos.GEOSversion
     end
 
+    def jts_port
+      @jts_port ||= FFIGeos.GEOSjtsport
+    end
+
     def current_handle
       Thread.current[:ffi_geos_handle] ||= FFIGeos.initGEOS_r(
         self.method(:notice_handler),
@@ -579,7 +587,7 @@ module Geos
   end
 
   module VersionConstants
-    #GEOS_JTS_PORT = Geos.jts_port
+    GEOS_JTS_PORT = Geos.jts_port
     GEOS_VERSION,
       GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERISON_PATCH,
       GEOS_CAPI_VERSION,
