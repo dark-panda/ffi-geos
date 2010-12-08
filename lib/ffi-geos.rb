@@ -66,8 +66,8 @@ module Geos
       #### Utility functions ####
       :initGEOS_r => [
         :pointer,
-        callback([ :string, :varargs ], :void),
-        callback([ :string, :varargs ], :void)
+        callback([ :string, :string ], :void),
+        callback([ :string, :string ], :void)
       ],
 
       :finishGEOS_r => [
@@ -579,7 +579,7 @@ module Geos
     end
 
     def error_handler(*args)
-      raise RuntimeError
+      raise RuntimeError.new(args[0] % args[1])
     end
 
     def create_point(*args)
