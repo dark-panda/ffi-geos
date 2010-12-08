@@ -43,7 +43,7 @@ module Geos
       paths = if ENV['GEOS_LIBRARY_PATH']
         [ ENV['GEOS_LIBRARY_PATH'] ]
       else
-        [ '/usr/lib', '/usr/local/lib', '/opt/local/lib' ]
+        [ '/usr/{lib,lib64}', '/usr/local/{lib,lib64}', '/opt/local/{lib,lib64}' ]
       end
 
       libs = case Config::CONFIG['arch']
@@ -54,9 +54,7 @@ module Geos
       end
 
       libs.collect { |lib|
-        paths.detect { |path|
-          File.exists?("#{path}/#{lib}")
-        }.to_s + "/#{lib}"
+        Dir.glob(paths.collect { |path| "#{path}/#{lib}" }).first
       }
     end
 
