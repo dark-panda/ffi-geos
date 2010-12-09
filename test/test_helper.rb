@@ -18,6 +18,7 @@ module TestHelper
   end
 
   def setup
+    GC.start
     @reader = Geos::WktReader.new
     @writer = Geos::WktWriter.new
   end

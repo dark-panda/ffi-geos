@@ -929,7 +929,7 @@ class GeometryTests < Test::Unit::TestCase
 
       # The method only accept lineal geometries
       assert_raise(RuntimeError) do
-        geom_a.project(geom_b)
+        p geom_a.project(geom_b)
       end
 
       geom_a = read('LINESTRING(0 0, 10 0)')
