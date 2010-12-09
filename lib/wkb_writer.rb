@@ -43,12 +43,6 @@ module Geos
       FFIGeos.GEOSWKBWriter_getOutputDimension_r(Geos.current_handle, self.ptr)
     end
 
-    def old_3d=(val)
-      FFIGeos.GEOSWKBWriter_setOld3D_r(Geos.current_handle, self.ptr,
-        val ? 1 : 0
-      )
-    end
-
     def include_srid
       Geos::Util.bool_result(FFIGeos.GEOSWKBWriter_getIncludeSRID_r(Geos.current_handle, self.ptr))
     end
