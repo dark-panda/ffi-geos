@@ -310,7 +310,7 @@ class GeometryTests < Test::Unit::TestCase
         )
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('union_cascaded')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:union_cascaded)
     def test_union_cascaded
       self_tester(
         :union,
@@ -454,7 +454,7 @@ class GeometryTests < Test::Unit::TestCase
     )
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.instance_methods.include?('extract_unique_points')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:extract_unique_points)
     def test_extract_unique_points
       writer.rounding_precision = 0
 
@@ -603,7 +603,7 @@ class GeometryTests < Test::Unit::TestCase
     assert(!read('POINT(0 nan)').valid?)
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('valid_reason')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_reason)
     def test_valid_reason
       assert_equal("Valid Geometry", read('POINT(0 0)').valid_reason)
       assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 NaN)').valid_reason)
@@ -612,7 +612,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('valid_detail')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_detail)
     def test_valid_detail
       tester = lambda { |detail, location, geom|
         ret = read(geom).valid_detail
@@ -807,7 +807,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if Geos::Geometry.instance_methods.include?('num_coordinates')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:num_coordinates)
     def test_num_coordinates
       tester = lambda { |expected, g|
         geom = read(g)
@@ -856,7 +856,7 @@ class GeometryTests < Test::Unit::TestCase
     tester[[[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]], 'LINEARRING(0 0, 0 5, 5 5, 5 0, 0 0)']
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.instance_methods.include?('num_points')
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:num_points)
     def test_num_points
       assert_equal(4, read('LINESTRING (0 0, 1 0, 1 1, 0 1)').num_points)
 
@@ -866,7 +866,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Point.instance_methods.include?('get_x')
+  if ENV['FORCE_TESTS'] || Geos::Point.method_defined?(:get_x)
     def test_get_x_and_get_y
       geom = read('POINT (1 2)')
       assert_equal(1, geom.get_x)
@@ -922,7 +922,7 @@ class GeometryTests < Test::Unit::TestCase
     ]
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('project')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:project)
     def test_project_and_project_normalized
       geom_a = read('POINT(1 2)')
       geom_b = read('POINT(3 4)')
@@ -956,7 +956,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('interpolate')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:interpolate)
     def test_interpolate
       tester = lambda { |expected, g, d, normalize|
         geom = read(g)
@@ -980,7 +980,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.instance_methods.include?('point_n')
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:point_n)
     def test_point_n
       writer.rounding_precision = 0
 
@@ -1010,7 +1010,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('start_point')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:start_point)
     def test_start_and_end_points
       writer.rounding_precision = 0
 
@@ -1061,7 +1061,7 @@ class GeometryTests < Test::Unit::TestCase
     tester[2.0, g, 'LINESTRING (3 0 , 10 0)']
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('hausdorff_distance')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
     def test_hausdorff_distance
       tester = lambda { |expected, g1, g2|
         geom_1 = read(g1)
@@ -1077,7 +1077,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('snap')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:snap)
     def test_snap
       tester = lambda { |expected, g1, g2, tolerance|
         geom_a = read(g1)
@@ -1093,7 +1093,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('polygonize')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize)
     def test_polygonize
       writer.rounding_precision = 0
 
@@ -1121,7 +1121,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('polygonize_cut_edges')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_cut_edges)
     def test_polygonize_cut_edges
       writer.rounding_precision = 0
 
@@ -1141,7 +1141,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('polygonize_full')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_full)
     def test_polygonize_full
       writer.rounding_precision = 0
 
@@ -1213,7 +1213,7 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.instance_methods.include?('shared_paths')
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:shared_paths)
     def test_shared_paths
       writer.rounding_precision = 0
 

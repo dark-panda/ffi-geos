@@ -17,7 +17,7 @@ class WktWriterTests < Test::Unit::TestCase
     assert_in_delta(98.7654321, y, TOLERANCE)
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.instance_methods.include?('trim=')
+  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:trim=)
     def test_trim
       geom = read('POINT(6 7)')
 
@@ -52,7 +52,7 @@ class WktWriterTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.instance_methods.include?('rounding_precision=')
+  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:rounding_precision=)
     def test_rounding_precision
       geom = read('POINT(6.123456 7.123456)')
 
@@ -69,13 +69,13 @@ class WktWriterTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.instance_methods.include?('output_dimensions')
+  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions)
     def test_output_dimensions
       assert_equal(2, writer.output_dimensions)
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.instance_methods.include?('output_dimensions=')
+  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions=)
     def test_output_dimensions_set
       geom_3d = read('POINT(1 2 3)')
       geom_2d = read('POINT(3 2)')
@@ -102,7 +102,7 @@ class WktWriterTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.instance_methods.include?('old_3d=')
+  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:old_3d=)
     def test_old_3d_set
       geom_3d = read('POINT(1 2 3)')
       writer.trim = true
