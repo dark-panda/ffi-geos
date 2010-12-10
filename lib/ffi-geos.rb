@@ -470,7 +470,7 @@ module Geos
       ],
 
       :GEOSWKBReader_read_r => [
-        :pointer, :pointer, :pointer, :string, :size_t
+        :pointer, :pointer, :pointer, :pointer, :size_t
       ],
 
       :GEOSWKBReader_readHEX_r => [

@@ -24,7 +24,7 @@ module Geos
 
     def write(geom)
       size_t = FFI::MemoryPointer.new(:pointer)
-      FFIGeos.GEOSWKBWriter_write_r(Geos.current_handle, self.ptr, geom.ptr, size_t).get_string(0, size_t.read_int)
+      FFIGeos.GEOSWKBWriter_write_r(Geos.current_handle, self.ptr, geom.ptr, size_t).get_bytes(0, size_t.read_int)
     end
 
     def write_hex(geom)
