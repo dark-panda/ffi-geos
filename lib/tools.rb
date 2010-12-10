@@ -4,6 +4,10 @@ module Geos
     include GeomTypes
 
     def cast_geometry_ptr(geom_ptr, auto_free = true)
+      if geom_ptr.null?
+        raise RuntimeError.new("Tried to create a Geometry from a NULL pointer!")
+      end
+
       klass = case FFIGeos.GEOSGeomTypeId_r(Geos.current_handle, geom_ptr)
         when GEOS_POINT
           Point
