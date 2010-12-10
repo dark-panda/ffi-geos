@@ -568,10 +568,15 @@ module Geos
     end
 
     def current_handle
-      Thread.current[:ffi_geos_handle] ||= FFIGeos.initGEOS_r(
-        self.method(:notice_handler),
-        self.method(:error_handler)
-      )
+      Thread.current[:ffi_geos_handle] or
+        Thread.current[:ffi_geos_handle] = FFIGeos.initGEOS_r(
+          Thread.current[:ffi_geos_notice_handler] = self.method(:notice_handler),
+          Thread.current[:ffi_geos_error_handler] = self.method(:error_handler)
+        ).tap { |handle|
+          Kernel.at_exit {
+            FFIGeos.finishGEOS_r(handle)
+          }
+        }
     end
 
     def notice_handler(*args)
@@ -651,8 +656,4 @@ module Geos
 
   include GeomTypes
   include VersionConstants
-
-  #Kernel.at_exit {
-  #  FFIGeos.finishGEOS
-  #}
 end
