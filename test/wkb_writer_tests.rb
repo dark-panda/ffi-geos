@@ -191,7 +191,7 @@ class WkbWriterTests < Test::Unit::TestCase
     )
   end
 
-  def tester_try_bad_byte_order_value
+  def test_try_bad_byte_order_value
     # raise on anything that's not a Fixnum
     assert_raise(TypeError) do
       wkb_tester(
