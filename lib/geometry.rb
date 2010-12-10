@@ -236,7 +236,7 @@ module Geos
     end
 
     def project(geom, normalized = false)
-      raise TypeError.new("Expected Geos::Geometry type") if !geom.is_a?(Geometry)
+      raise TypeError.new("Expected Geos::Point type") if !geom.is_a?(Geos::Point)
 
       if normalized
         FFIGeos.GEOSProjectNormalized_r(Geos.current_handle, self.ptr, geom.ptr)
