@@ -64,8 +64,45 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle, self.ptr, geom.ptr))
     end
 
-    def buffer(width, quadsegs = 8)
-      cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quadsegs))
+    def buffer(width, *args)
+      quad_segs, options = if args.length <= 0
+        [ 8, nil ]
+      else
+        if args.first.is_a?(Hash)
+          [ args.first[:quad_segs] || 8, args.first ]
+        else
+          [ args.first, args[1] ]
+        end
+      end
+
+      if options
+        if options.is_a?(Hash)
+          self.buffer_with_style(width, options)
+        else
+          raise RuntimeError.new("Expected an options Hash")
+        end
+      else
+        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs))
+      end
+    end
+
+    def buffer_with_style(width, options = {})
+      options = {
+        :quad_segs => 8,
+        :endcap => Geos::BufferCapStyles::ROUND,
+        :join => Geos::BufferJoinStyles::ROUND,
+        :mitre_limit => 5.0
+      }.merge(options)
+
+      cast_geometry_ptr(FFIGeos.GEOSBufferWithStyle_r(
+          Geos.current_handle,
+          self.ptr,
+          width,
+          options[:quad_segs],
+          options[:endcap],
+          options[:join],
+          options[:mitre_limit]
+      ))
     end
 
     def convex_hull

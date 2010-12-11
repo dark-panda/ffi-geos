@@ -224,6 +224,14 @@ module Geos
         :pointer, :pointer, :pointer, :double, :int
       ],
 
+      :GEOSBufferWithStyle_r => [
+        :pointer, :pointer, :pointer, :double, :int, :int, :int, :double
+      ],
+
+      :GEOSSingleSidedBuffer_r => [
+        :pointer, :pointer, :pointer, :double, :int, :int, :double, :int
+      ],
+
       :GEOSConvexHull_r => [
         :pointer, :pointer, :pointer
       ],
@@ -692,6 +700,18 @@ module Geos
   module ByteOrders
     XDR = 0 # Big Endian
     NDR = 1 # Little Endian
+  end
+
+  module BufferCapStyles
+    ROUND = 1
+    FLAT = 2
+    SQUARE = 3
+  end
+
+  module BufferJoinStyles
+    ROUND = 1
+    MITRE = 2
+    BEVEL = 3
   end
 
   module VersionConstants

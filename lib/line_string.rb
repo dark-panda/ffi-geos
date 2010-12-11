@@ -12,5 +12,24 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle, self.ptr, n))
       end
     end
+
+    def buffer_single_sided(width, options = {})
+      options = {
+        :quad_segs => 8,
+        :join => Geos::BufferJoinStyles::ROUND,
+        :mitre_limit => 5.0,
+        :left_side => false
+      }.merge(options)
+
+      cast_geometry_ptr(FFIGeos.GEOSSingleSidedBuffer_r(
+          Geos.current_handle,
+          self.ptr,
+          width,
+          options[:quad_segs],
+          options[:join],
+          options[:mitre_limit],
+          options[:left_side] ? 1 : 0
+      ))
+    end
   end
 end

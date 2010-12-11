@@ -63,6 +63,117 @@ class GeometryTests < Test::Unit::TestCase
     ))").eql_exact?(geom.buffer(1, 1), TOLERANCE))
   end
 
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:buffer_with_style)
+    def test_buffer_with_style
+      tester = lambda { |expected, g, width, style|
+        geom = read(g)
+        buffered = geom.buffer(width, style)
+
+        assert_equal(expected, write(buffered))
+      }
+
+      @writer.rounding_precision = 0
+
+      tester[
+        'POLYGON ((100 10, 110 0, 100 -10, 0 -10, -10 0, 0 10, 100 10))',
+        'LINESTRING(0 0, 100 0)',
+        10, {
+          :quad_segs => 1,
+          :endcap => Geos::BufferCapStyles::ROUND
+        }
+      ]
+
+      tester[
+        'POLYGON ((100 10, 100 -10, 0 -10, 0 10, 100 10))',
+        'LINESTRING(0 0, 100 0)',
+        10, {
+          :quad_segs => 1,
+          :endcap => Geos::BufferCapStyles::FLAT
+        }
+      ]
+
+      tester[
+        'POLYGON ((100 10, 110 10, 110 -10, 0 -10, -10 -10, -10 10, 100 10))',
+        'LINESTRING(0 0, 100 0)',
+        10, {
+          :quad_segs => 1,
+          :endcap => Geos::BufferCapStyles::SQUARE
+        }
+      ]
+
+      tester[
+        'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 0, 107 -7, 100 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
+        'LINESTRING(0 0, 100 0, 100 100)',
+        10, {
+          :quad_segs => 2,
+          :join => Geos::BufferJoinStyles::ROUND
+        }
+      ]
+
+      tester[
+        'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 0, 100 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
+        'LINESTRING(0 0, 100 0, 100 100)',
+        10, {
+          :quad_segs => 2,
+          :join => Geos::BufferJoinStyles::BEVEL
+        }
+      ]
+
+      tester[
+        'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
+        'LINESTRING(0 0, 100 0, 100 100)',
+        10, {
+          :quad_segs => 2,
+          :join => Geos::BufferJoinStyles::MITRE
+        }
+      ]
+
+      tester[
+        'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 109 -5, 105 -9, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
+        'LINESTRING(0 0, 100 0, 100 100)',
+        10, {
+          :quad_segs => 2,
+          :join => Geos::BufferJoinStyles::MITRE,
+          :mitre_limit => 1.0
+        }
+      ]
+    end
+  end
+
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:buffer_single_sided)
+    def test_buffer_single_sided
+      tester = lambda { |expected, g, width, style|
+        geom = read(g)
+        buffered = geom.buffer_single_sided(width, style)
+
+        assert_equal(expected, write(buffered))
+      }
+
+      @writer.rounding_precision = 0
+
+      tester[
+        'LINESTRING (0 2, 10 2)',
+        'LINESTRING(0 0, 10 0)',
+        2, {
+          :quad_segs => 2,
+          :join => Geos::BufferJoinStyles::ROUND,
+          :mitre_limit => 2.0,
+          :left_side => true
+        }
+      ]
+
+      tester[
+        'LINESTRING (10 -2, 0 -2)',
+        'LINESTRING(0 0, 10 0)',
+        2, {
+          :quad_segs => 2,
+          :join => Geos::BufferJoinStyles::ROUND,
+          :mitre_limit => 2.0
+        }
+      ]
+    end
+  end
+
   def test_convex_hull
     geom = read('POINT(0 0)')
         assert(read('POINT(0 0)').eql_exact?(geom.convex_hull, TOLERANCE))
