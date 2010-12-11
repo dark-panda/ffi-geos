@@ -8,6 +8,8 @@ else
   require File.join(File.dirname(__FILE__), %w{ .. lib ffi-geos })
 end
 
+puts "GEOS version #{Geos::GEOS_VERSION}"
+
 module TestHelper
   TOLERANCE = 0.0000000000001
 
