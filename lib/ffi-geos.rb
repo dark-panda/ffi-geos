@@ -17,6 +17,8 @@ module Geos
     File.join(GEOS_BASE, 'coordinate_sequence')
   autoload :Geometry,
     File.join(GEOS_BASE, 'geometry')
+  autoload :PreparedGeometry,
+    File.join(GEOS_BASE, 'prepared_geometry')
   autoload :GeometryCollection,
     File.join(GEOS_BASE, 'geometry_collection')
   autoload :LineString,
@@ -409,8 +411,33 @@ module Geos
       :GEOSGeomGetEndPoint_r => [
         :pointer, :pointer, :pointer
       ],
-
       #### /Geometry functions ####
+
+      #### PreparedGeometry functions ####
+      :GEOSPrepare_r => [
+        :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedGeom_destroy_r => [
+        :void, :pointer, :pointer
+      ],
+
+      :GEOSPreparedContains_r => [
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedContainsProperly_r => [
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedCovers_r => [
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedIntersects_r => [
+        :char, :pointer, :pointer, :pointer
+      ],
+      #### /PreparedGeometry functions ####
 
       #### WktReader functions ####
       :GEOSWKTReader_create_r => [

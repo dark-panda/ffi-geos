@@ -342,5 +342,9 @@ module Geos
 
       cast_geometry_ptr(FFIGeos.GEOSPolygonizer_getCutEdges_r(Geos.current_handle, ary, 1)).to_a
     end
+
+    def to_prepared
+      Geos::PreparedGeometry.new(FFIGeos.GEOSPrepare_r(Geos.current_handle, self.ptr))
+    end
   end
 end
