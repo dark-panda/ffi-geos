@@ -217,20 +217,14 @@ module Geos
     end
 
     def eql?(geom)
-      if geom.is_a?(Geometry)
-        bool_result(FFIGeos.GEOSEquals_r(Geos.current_handle, self.ptr, geom.ptr))
-      else
-        raise TypeError.new("Expected Geos::Geometry type")
-      end
+      check_geometry(geom)
+      bool_result(FFIGeos.GEOSEquals_r(Geos.current_handle, self.ptr, geom.ptr))
     end
     alias :== :eql?
 
     def eql_exact?(geom, tolerance)
-      if geom.is_a?(Geometry)
-        bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle, self.ptr, geom.ptr, tolerance))
-      else
-        raise TypeError.new("Expected Geos::Geometry type")
-      end
+      check_geometry(geom)
+      bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle, self.ptr, geom.ptr, tolerance))
     end
 
     def empty?
