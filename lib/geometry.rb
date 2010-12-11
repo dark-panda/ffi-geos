@@ -12,10 +12,10 @@ module Geos
       )
     end
 
-    def self.no_release(ptr)
+    def self.no_release(ptr) #:nodoc:
     end
 
-    def self.release(ptr)
+    def self.release(ptr) #:nodoc:
       FFIGeos.GEOSGeom_destroy_r(Geos.current_handle, ptr)
     end
 

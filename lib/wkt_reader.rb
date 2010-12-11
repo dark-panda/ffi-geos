@@ -22,7 +22,7 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSWKTReader_read_r(Geos.current_handle, self.ptr, wkt))
     end
 
-    def self.release(ptr)
+    def self.release(ptr) #:nodoc:
       FFIGeos.GEOSWKTReader_destroy_r(Geos.current_handle, ptr)
     end
   end

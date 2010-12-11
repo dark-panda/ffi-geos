@@ -20,7 +20,7 @@ module Geos
       @built = false
     end
 
-    def self.release(ptr)
+    def self.release(ptr) #:nodoc:
       FFIGeos.GEOSSTRtree_destroy_r(Geos.current_handle, ptr)
     end
 

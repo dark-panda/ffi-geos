@@ -26,7 +26,7 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize))
     end
 
-    def self.release(ptr)
+    def self.release(ptr) #:nodoc:
       FFIGeos.GEOSWKBReader_destroy_r(Geos.current_handle, ptr)
     end
   end

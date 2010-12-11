@@ -18,10 +18,10 @@ module Geos
       )
     end
 
-    def self.no_release(ptr)
+    def self.no_release(ptr) #:nodoc:
     end
 
-    def self.release(ptr)
+    def self.release(ptr) #:nodoc:
       FFIGeos.GEOSCoordSeq_destroy_r(Geos.current_handle, ptr)
     end
 
@@ -101,7 +101,7 @@ module Geos
 
     protected
 
-    def check_bounds(idx)
+    def check_bounds(idx) #:nodoc:
       if idx < 0 || idx >= self.length
         raise RuntimeError.new("Index out of bounds")
       end

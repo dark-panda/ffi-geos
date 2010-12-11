@@ -16,7 +16,7 @@ module Geos
       )
     end
 
-    def self.release(ptr)
+    def self.release(ptr) #:nodoc:
       FFIGeos.GEOSWKTWriter_destroy_r(Geos.current_handle, ptr)
     end
 
