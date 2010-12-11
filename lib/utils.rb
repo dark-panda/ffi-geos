@@ -41,26 +41,94 @@ module Geos
         }
       end
 
-      def create_polygon(outer, inner = nil)
-        inner = if inner
-          Array(inner).tap { |i|
-            if i.detect { |g| !g.is_a?(Geos::LinearRing) }
-              raise TypeError.new("Expected inner Array to contain Geometry::LinearRing objects")
-            end
-          }
-        else
-          []
-        end
+      def create_polygon(outer, *inner)
+        inner = Array(inner).flatten.tap { |i|
+          if i.detect { |g| !g.is_a?(Geos::LinearRing) }
+            raise TypeError.new("Expected inner Array to contain Geometry::LinearRing objects")
+          end
+        }
 
         ary = FFI::MemoryPointer.new(:pointer, inner.length)
         ary.write_array_of_pointer(inner.map(&:ptr))
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer.ptr, ary, inner.length)).tap {
           outer.ptr.autorelease = false
-          if !inner.empty?
-            inner.each { |i| i.ptr.autorelease = false }
+          inner.each { |i| i.ptr.autorelease = false }
+        }
+      end
+
+      def create_empty_point
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPoint_r(Geos.current_handle))
+      end
+
+      def create_empty_line_string
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyLineString_r(Geos.current_handle))
+      end
+
+      def create_empty_polygon
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPolygon_r(Geos.current_handle))
+      end
+
+      def create_empty_collection(t)
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyCollection_r(Geos.current_handle, t))
+      end
+
+      def create_empty_multi_point
+        create_empty_collection(Geos::GeomTypes::GEOS_MULTIPOINT)
+      end
+
+      def create_empty_multi_line_string
+        create_empty_collection(Geos::GeomTypes::GEOS_MULTILINESTRING)
+      end
+
+      def create_empty_multi_polygon
+        create_empty_collection(Geos::GeomTypes::GEOS_MULTIPOLYGON)
+      end
+
+      def create_empty_geometry_collection
+        create_empty_collection(Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION)
+      end
+
+      def create_collection(t, *geoms)
+        klass = case t
+          when Geos::GeomTypes::GEOS_MULTIPOINT
+            Geos::Point
+          when Geos::GeomTypes::GEOS_MULTILINESTRING
+            Geos::LineString
+          when Geos::GeomTypes::GEOS_MULTIPOLYGON
+            Geos::Polygon
+          when Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
+            Geos::Geometry
+        end
+
+        geoms = Array(geoms).flatten.tap { |i|
+          if i.detect { |g| !g.is_a?(klass) }
+            raise TypeError.new("Expected geoms Array to contain #{klass} objects")
           end
         }
+
+        ary = FFI::MemoryPointer.new(:pointer, geoms.length)
+        ary.write_array_of_pointer(geoms.map(&:ptr))
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms.length)).tap {
+          geoms.each { |i| i.ptr.autorelease = false }
+        }
+      end
+
+      def create_multi_point(*geoms)
+        create_collection(Geos::GeomTypes::GEOS_MULTIPOINT, *geoms)
+      end
+
+      def create_multi_line_string(*geoms)
+        create_collection(Geos::GeomTypes::GEOS_MULTILINESTRING, *geoms)
+      end
+
+      def create_multi_polygon(*geoms)
+        create_collection(Geos::GeomTypes::GEOS_MULTIPOLYGON, *geoms)
+      end
+
+      def create_geometry_collection(*geoms)
+        create_collection(Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION, *geoms)
       end
     end
   end

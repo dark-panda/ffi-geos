@@ -104,6 +104,14 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      :GEOSGeom_createEmptyPoint_r => [
+        :pointer, :pointer
+      ],
+
+      :GEOSGeom_createEmptyLineString_r => [
+        :pointer, :pointer
+      ],
+
       :GEOSGeom_createLinearRing_r => [
         :pointer, :pointer, :pointer
       ],
@@ -114,6 +122,18 @@ module Geos
 
       :GEOSGeom_createPolygon_r => [
         :pointer, :pointer, :pointer, :pointer, :uint
+      ],
+
+      :GEOSGeom_createEmptyPolygon_r => [
+        :pointer, :pointer
+      ],
+
+      :GEOSGeom_createCollection_r => [
+        :pointer, :pointer, :int, :pointer, :uint
+      ],
+
+      :GEOSGeom_createEmptyCollection_r => [
+        :pointer, :pointer, :int
       ],
       #### /Utility functions ####
 
@@ -660,20 +680,29 @@ module Geos
       Thread.current[:ffi_geos_handle].ptr
     end
 
-    def create_point(*args)
-      Geos::Utils.create_point(*args)
-    end
+    %w{
+      create_point
+      create_line_string
+      create_linear_ring
+      create_polygon
+      create_multi_point
+      create_multi_line_string
+      create_multi_polygon
+      create_geometry_collection
 
-    def create_line_string(*args)
-      Geos::Utils.create_line_string(*args)
-    end
-
-    def create_linear_ring(*args)
-      Geos::Utils.create_linear_ring(*args)
-    end
-
-    def create_polygon(*args)
-      Geos::Utils.create_polygon(*args)
+      create_empty_point
+      create_empty_line_string
+      create_empty_polygon
+      create_empty_multi_point
+      create_empty_multi_line_string
+      create_empty_multi_polygon
+      create_empty_geometry_collection
+    }.each do |m|
+      self.class_eval <<-EOF
+        def #{m}(*args)
+          Geos::Utils.#{m}(*args)
+        end
+      EOF
     end
   end
 

@@ -194,4 +194,107 @@ class UtilsTests < Test::Unit::TestCase
 
     assert_equal(1, geom.num_geometries)
   end
+
+  def test_create_multi_point
+    @writer.rounding_precision = 0
+    assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
+    assert_equal('MULTIPOINT (0 0, 10 10)', write(Geos.create_multi_point(
+      read('POINT(0 0)'),
+      read('POINT(10 10)')
+    )))
+  end
+
+  def test_create_multi_line_string
+    @writer.rounding_precision = 0
+    assert_equal('MULTILINESTRING EMPTY', write(Geos.create_multi_line_string))
+    assert_equal('MULTILINESTRING ((0 0, 10 10), (10 10, 20 20))', write(Geos.create_multi_line_string(
+      read('LINESTRING(0 0, 10 10)'),
+      read('LINESTRING(10 10, 20 20)')
+    )))
+  end
+
+  def test_create_multi_polygon
+    @writer.rounding_precision = 0
+    assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_multi_polygon))
+    assert_equal('MULTIPOLYGON (((0 0, 0 5, 5 5, 5 0, 0 0)), ((10 10, 10 15, 15 15, 15 10, 10 10)))', write(Geos.create_multi_polygon(
+      read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
+      read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+    )))
+  end
+
+  def test_create_geometry_collection
+    @writer.rounding_precision = 0
+    assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_geometry_collection))
+    assert_equal('GEOMETRYCOLLECTION (POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0)), POLYGON ((10 10, 10 15, 15 15, 15 10, 10 10)))',
+      write(Geos.create_geometry_collection(
+        read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+      ))
+    )
+  end
+
+  def test_create_bad_multi_point
+    assert_raise(TypeError) do
+      Geos.create_multi_point(
+        read('POINT(0 0)'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+      )
+    end
+  end
+
+  def test_create_bad_multi_line_string
+    assert_raise(TypeError) do
+      Geos.create_multi_point(
+        read('POINT(0 0)'),
+        read('LINESTRING(0 0, 10 0)')
+      )
+    end
+  end
+
+  def test_create_bad_multi_polygon
+    assert_raise(TypeError) do
+      Geos.create_multi_polygon(
+        read('POINT(0 0)'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+      )
+    end
+  end
+
+  def test_create_bad_geometry_collection
+    assert_raise(TypeError) do
+      Geos.create_geometry_collection(
+        read('POINT(0 0)'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))'),
+        'gibberish'
+      )
+    end
+  end
+
+  def test_create_empty_point
+    assert_equal('POINT EMPTY', write(Geos.create_empty_point))
+  end
+
+  def test_create_empty_line_string
+    assert_equal('LINESTRING EMPTY', write(Geos.create_empty_line_string))
+  end
+
+  def test_create_empty_polygon
+    assert_equal('POLYGON EMPTY', write(Geos.create_empty_polygon))
+  end
+
+  def test_create_empty_multi_point
+    assert_equal('MULTIPOINT EMPTY', write(Geos.create_empty_multi_point))
+  end
+
+  def test_create_empty_multi_line_string
+    assert_equal('MULTILINESTRING EMPTY', write(Geos.create_empty_multi_line_string))
+  end
+
+  def test_create_empty_multi_polygon
+    assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_empty_multi_polygon))
+  end
+
+  def test_create_empty_geometry_collection
+    assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_empty_geometry_collection))
+  end
 end
