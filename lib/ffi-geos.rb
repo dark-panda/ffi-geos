@@ -35,6 +35,8 @@ module Geos
     File.join(GEOS_BASE, 'polygon')
   autoload :Point,
     File.join(GEOS_BASE, 'point')
+  autoload :STRtree,
+    File.join(GEOS_BASE, 'strtree')
   autoload :Tools,
     File.join(GEOS_BASE, 'tools')
   autoload :Utils,
@@ -412,6 +414,32 @@ module Geos
         :pointer, :pointer, :pointer
       ],
       #### /Geometry functions ####
+
+      #### STRtree functions ####
+      :GEOSSTRtree_create_r => [
+        :pointer, :pointer, :size_t
+      ],
+
+      :GEOSSTRtree_insert_r => [
+        :void, :pointer, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSSTRtree_query_r => [
+        :void, :pointer, :pointer, :pointer, callback([ :pointer, :pointer ], :void), :pointer
+      ],
+
+      :GEOSSTRtree_iterate_r => [
+        :void, :pointer, :pointer, callback([ :pointer, :pointer ], :void), :pointer
+      ],
+
+      :GEOSSTRtree_remove_r => [
+        :char, :pointer, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSSTRtree_destroy_r => [
+        :void, :pointer, :pointer
+      ],
+      #### /STRtree functions ####
 
       #### PreparedGeometry functions ####
       :GEOSPrepare_r => [
