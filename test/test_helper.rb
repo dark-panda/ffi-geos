@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'test/unit'
 
-if ENV['USE_BINARY_GEM']
+if ENV['USE_BINARY_GEOS']
   require 'geos'
 else
   require 'ffi-geos'
