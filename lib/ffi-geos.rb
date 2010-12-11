@@ -43,7 +43,9 @@ module Geos
     File.join(GEOS_BASE, 'utils')
 
   module FFIGeos
-    def self.geos_library_name
+    def self.geos_library_paths
+      return @geos_library_paths if @geos_library_paths
+
       paths = if ENV['GEOS_LIBRARY_PATH']
         [ ENV['GEOS_LIBRARY_PATH'] ]
       else
@@ -57,14 +59,14 @@ module Geos
           %w{ libgeos.so libgeos_c.so }
       end
 
-      libs.collect { |lib|
+      @geos_library_paths = libs.collect { |lib|
         Dir.glob(paths.collect { |path| "#{path}/#{lib}" }).first
       }
     end
 
     extend ::FFI::Library
 
-    ffi_lib(*geos_library_name)
+    ffi_lib(*geos_library_paths)
 
     FFI_LAYOUT = {
       #### Utility functions ####
