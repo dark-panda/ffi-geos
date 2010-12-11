@@ -176,13 +176,13 @@ class GeometryTests < Test::Unit::TestCase
 
   def test_convex_hull
     geom = read('POINT(0 0)')
-        assert(read('POINT(0 0)').eql_exact?(geom.convex_hull, TOLERANCE))
+    assert(read('POINT(0 0)').eql_exact?(geom.convex_hull, TOLERANCE))
 
     geom = read('LINESTRING(0 0, 10 10)')
-        assert(read('LINESTRING(0 0, 10 10)').eql_exact?(geom.convex_hull, TOLERANCE))
+    assert(read('LINESTRING(0 0, 10 10)').eql_exact?(geom.convex_hull, TOLERANCE))
 
     geom = read('POLYGON((0 0, 0 10, 5 5, 10 10, 10 0, 0 0))')
-        assert(read('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))').eql_exact?(geom.convex_hull, TOLERANCE))
+    assert(read('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))').eql_exact?(geom.convex_hull, TOLERANCE))
   end
 
   def test_difference
@@ -741,19 +741,19 @@ class GeometryTests < Test::Unit::TestCase
 
   def test_simple
     assert(read('POINT(0 0)').simple?)
-        assert(read('LINESTRING(0 0, 10 0)').simple?)
-        assert(!read('LINESTRING(0 0, 10 0, 5 5, 5 -5)').simple?)
+    assert(read('LINESTRING(0 0, 10 0)').simple?)
+    assert(!read('LINESTRING(0 0, 10 0, 5 5, 5 -5)').simple?)
   end
 
   def test_ring
     assert(!read('POINT(0 0)').ring?)
-        assert(!read('LINESTRING(0 0, 10 0, 5 5, 5 -5)').ring?)
-        assert(read('LINESTRING(0 0, 10 0, 5 5, 0 0)').ring?)
+    assert(!read('LINESTRING(0 0, 10 0, 5 5, 5 -5)').ring?)
+    assert(read('LINESTRING(0 0, 10 0, 5 5, 0 0)').ring?)
   end
 
   def test_has_z
     assert(!read('POINT(0 0)').has_z?)
-        assert(read('POINT(0 0 0)').has_z?)
+    assert(read('POINT(0 0 0)').has_z?)
   end
 
   def test_closed
@@ -766,17 +766,17 @@ class GeometryTests < Test::Unit::TestCase
       assert_equal(expected, geom.num_geometries)
     }
 
-        tester[1, 'POINT(0 0)']
-        tester[2, 'MULTIPOINT (0 1, 2 3)']
-        tester[1, 'LINESTRING (0 0, 2 3)']
-        tester[2, 'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))']
-        tester[1, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
-        tester[2, 'MULTIPOLYGON(
-            ((0 0, 1 0, 1 1, 0 1, 0 0)),
-            ((10 10, 10 14, 14 14, 14 10, 10 10),
-            (11 11, 11 12, 12 12, 12 11, 11 11)))'
+    tester[1, 'POINT(0 0)']
+    tester[2, 'MULTIPOINT (0 1, 2 3)']
+    tester[1, 'LINESTRING (0 0, 2 3)']
+    tester[2, 'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))']
+    tester[1, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
+    tester[2, 'MULTIPOLYGON(
+      ((0 0, 1 0, 1 1, 0 1, 0 0)),
+      ((10 10, 10 14, 14 14, 14 10, 10 10),
+      (11 11, 11 12, 12 12, 12 11, 11 11)))'
     ]
-        tester[6, 'GEOMETRYCOLLECTION (
+    tester[6, 'GEOMETRYCOLLECTION (
       MULTIPOLYGON (
         ((0 0, 1 0, 1 1, 0 1, 0 0)),
         ((10 10, 10 14, 14 14, 14 10, 10 10),
@@ -818,12 +818,12 @@ class GeometryTests < Test::Unit::TestCase
 
     tester[0, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
     tester[1, 'POLYGON (
-            (10 10, 10 14, 14 14, 14 10, 10 10),
-            (11 11, 11 12, 12 12, 12 11, 11 11)
+      (10 10, 10 14, 14 14, 14 10, 10 10),
+      (11 11, 11 12, 12 12, 12 11, 11 11)
     )']
     tester[2, 'POLYGON (
-            (10 10, 10 14, 14 14, 14 10, 10 10),
-            (11 11, 11 12, 12 12, 12 11, 11 11),
+      (10 10, 10 14, 14 14, 14 10, 10 10),
+      (11 11, 11 12, 12 12, 12 11, 11 11),
       (13 11, 13 12, 13.5 12, 13.5 11, 13 11))'
     ]
 
@@ -848,7 +848,7 @@ class GeometryTests < Test::Unit::TestCase
       'LINEARRING(11 11, 11 12, 12 12, 12 11, 11 11)',
       'POLYGON(
         (10 10, 10 14, 14 14, 14 10, 10 10),
-                (11 11, 11 12, 12 12, 12 11, 11 11)
+        (11 11, 11 12, 12 12, 12 11, 11 11)
       )',
       0
     ]
@@ -857,9 +857,9 @@ class GeometryTests < Test::Unit::TestCase
       'LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)',
       'POLYGON (
         (10 10, 10 14, 14 14, 14 10, 10 10),
-                (11 11, 11 12, 12 12, 12 11, 11 11),
-                (13 11, 13 12, 13.5 12, 13.5 11, 13 11)
-            )',
+        (11 11, 11 12, 12 12, 12 11, 11 11),
+        (13 11, 13 12, 13.5 12, 13.5 11, 13 11)
+      )',
       0
     ]
 
@@ -867,9 +867,9 @@ class GeometryTests < Test::Unit::TestCase
       'LINEARRING (13 11, 13 12, 13.5 12, 13.5 11, 13 11)',
       'POLYGON (
         (10 10, 10 14, 14 14, 14 10, 10 10),
-                (11 11, 11 12, 12 12, 12 11, 11 11),
-                (13 11, 13 12, 13.5 12, 13.5 11, 13 11)
-            )',
+        (11 11, 11 12, 12 12, 12 11, 11 11),
+        (13 11, 13 12, 13.5 12, 13.5 11, 13 11)
+      )',
       1
     ]
 
@@ -906,7 +906,7 @@ class GeometryTests < Test::Unit::TestCase
       'LINEARRING (10 10, 10 14, 14 14, 14 10, 10 10)',
       'POLYGON (
         (10 10, 10 14, 14 14, 14 10, 10 10),
-                (11 11, 11 12, 12 12, 12 11, 11 11)
+        (11 11, 11 12, 12 12, 12 11, 11 11)
       )'
     ]
 
@@ -1015,22 +1015,22 @@ class GeometryTests < Test::Unit::TestCase
     tester[types[:curve], 'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))']
     tester[types[:surface], 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
     tester[types[:surface], 'MULTIPOLYGON (
-            ((0 0, 1 0, 1 1, 0 1, 0 0)),
-            ((10 10, 10 14, 14 14, 14 10, 10 10),
-            (11 11, 11 12, 12 12, 12 11, 11 11)))'
+      ((0 0, 1 0, 1 1, 0 1, 0 0)),
+      ((10 10, 10 14, 14 14, 14 10, 10 10),
+      (11 11, 11 12, 12 12, 12 11, 11 11)))'
     ]
-        tester[types[:surface], 'GEOMETRYCOLLECTION (
-            MULTIPOLYGON (
-                ((0 0, 1 0, 1 1, 0 1, 0 0)),
-                ((10 10, 10 14, 14 14, 14 10, 10 10),
-                (11 11, 11 12, 12 12, 12 11, 11 11))
-            ),
-            POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
-            MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
-            LINESTRING (0 0, 2 3),
-            MULTIPOINT (0 0, 2 3),
-            POINT (9 0))'
-    ]
+    tester[types[:surface], 'GEOMETRYCOLLECTION (
+      MULTIPOLYGON (
+        ((0 0, 1 0, 1 1, 0 1, 0 0)),
+        ((10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11))
+      ),
+      POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
+      MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
+      LINESTRING (0 0, 2 3),
+      MULTIPOINT (0 0, 2 3),
+      POINT (9 0)
+    )']
   end
 
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:project)
@@ -1040,7 +1040,7 @@ class GeometryTests < Test::Unit::TestCase
 
       # The method only accept lineal geometries
       assert_raise(RuntimeError) do
-        p geom_a.project(geom_b)
+        geom_a.project(geom_b)
       end
 
       geom_a = read('LINESTRING(0 0, 10 0)')
@@ -1155,8 +1155,8 @@ class GeometryTests < Test::Unit::TestCase
     }
 
     tester[4.0, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
-        tester[0.0, 'POINT (0 0)']
-        tester[10.0, 'LINESTRING (0 0 , 10 0)']
+    tester[0.0, 'POINT (0 0)']
+    tester[10.0, 'LINESTRING (0 0 , 10 0)']
   end
 
   def test_distance
