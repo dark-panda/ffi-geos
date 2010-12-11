@@ -558,6 +558,29 @@ module Geos
     end
   end
 
+  class Handle
+    attr_reader :ptr
+
+    def initialize
+      @ptr = FFIGeos.initGEOS_r(
+        @notice_handler = self.method(:notice_handler),
+        @error_handler = self.method(:error_handler)
+      )
+
+      Kernel.at_exit {
+        FFIGeos.finishGEOS_r(@ptr)
+      }
+    end
+
+    def notice_handler(*args)
+      # no-op, just to appease initGEOS.
+    end
+
+    def error_handler(*args)
+      raise RuntimeError.new(args[0] % args[1])
+    end
+  end
+
   class << self
     def version
       @version ||= FFIGeos.GEOSversion
@@ -568,23 +591,8 @@ module Geos
     end
 
     def current_handle
-      Thread.current[:ffi_geos_handle] or
-        Thread.current[:ffi_geos_handle] = FFIGeos.initGEOS_r(
-          Thread.current[:ffi_geos_notice_handler] = self.method(:notice_handler),
-          Thread.current[:ffi_geos_error_handler] = self.method(:error_handler)
-        ).tap { |handle|
-          Kernel.at_exit {
-            FFIGeos.finishGEOS_r(handle)
-          }
-        }
-    end
-
-    def notice_handler(*args)
-      # no-op, just to appease initGEOS.
-    end
-
-    def error_handler(*args)
-      raise RuntimeError.new(args[0] % args[1])
+      Thread.current[:ffi_geos_handle] ||= Geos::Handle.new
+      Thread.current[:ffi_geos_handle].ptr
     end
 
     def create_point(*args)
