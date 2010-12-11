@@ -5,7 +5,7 @@ require 'test/unit'
 if ENV['USE_BINARY_GEOS']
   require 'geos'
 else
-  require 'ffi-geos'
+  require File.join(File.dirname(__FILE__), %w{ .. lib ffi-geos })
 end
 
 module TestHelper
