@@ -31,5 +31,9 @@ module Geos
           options[:left_side] ? 1 : 0
       ))
     end
+
+    def closed?
+      bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle, self.ptr))
+    end
   end
 end

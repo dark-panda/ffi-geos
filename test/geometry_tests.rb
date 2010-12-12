@@ -757,7 +757,9 @@ class GeometryTests < Test::Unit::TestCase
   end
 
   def test_closed
-    raise_unimplemented
+    assert(read('LINESTRING(0 0, 1 1, 2 2, 0 0)').closed?)
+    assert(!read('LINESTRING(0 0, 1 1, 2 2)').closed?)
+    assert(read('LINEARRING(0 0, 1 1, 2 2, 0 0)').closed?)
   end
 
   def test_num_geometries
