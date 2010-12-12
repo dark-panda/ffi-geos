@@ -32,8 +32,4 @@ module TestHelper
   def write(geom)
     writer.write(geom)
   end
-
-  def raise_unimplemented
-    raise "Not yet implemented" if ENV['UNIMPLEMENTED']
-  end
 end
