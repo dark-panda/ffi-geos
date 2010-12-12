@@ -756,10 +756,12 @@ class GeometryTests < Test::Unit::TestCase
     assert(read('POINT(0 0 0)').has_z?)
   end
 
-  def test_closed
-    assert(read('LINESTRING(0 0, 1 1, 2 2, 0 0)').closed?)
-    assert(!read('LINESTRING(0 0, 1 1, 2 2)').closed?)
-    assert(read('LINEARRING(0 0, 1 1, 2 2, 0 0)').closed?)
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:closed?)
+    def test_closed
+      assert(read('LINESTRING(0 0, 1 1, 2 2, 0 0)').closed?)
+      assert(!read('LINESTRING(0 0, 1 1, 2 2)').closed?)
+      assert(read('LINEARRING(0 0, 1 1, 2 2, 0 0)').closed?)
+    end
   end
 
   def test_num_geometries
@@ -855,7 +857,7 @@ class GeometryTests < Test::Unit::TestCase
       0
     ]
 
-        tester[
+    tester[
       'LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)',
       'POLYGON (
         (10 10, 10 14, 14 14, 14 10, 10 10),
@@ -865,7 +867,7 @@ class GeometryTests < Test::Unit::TestCase
       0
     ]
 
-        tester[
+    tester[
       'LINEARRING (13 11, 13 12, 13.5 12, 13.5 11, 13 11)',
       'POLYGON (
         (10 10, 10 14, 14 14, 14 10, 10 10),
