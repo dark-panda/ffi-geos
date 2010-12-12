@@ -1,3 +1,117 @@
 
-== GEOS Ruby Bindings in FFI
+= GEOS Ruby Bindings in FFI
 
+== Requirements
+
+* Ruby 1.8.7 or greater
+* the ffi extension for Ruby
+* GEOS version 3.3.0 or greater
+
+== Features
+
+ffi-geos supports all of the features found in the binary SWIG-based GEOS
+Ruby bindings along with the following enhancements and additions:
+
+* support for prepared geometries via Geos::Geometry#to_prepared.
+
+* an implementation of Geos::STRtree.
+
+* use of GEOS's re-entrant interface for thread-safety.
+
+* new options for controlling WKT output like trim and rounding precision.
+
+* many new methods on geometry types. See below for a list.
+
+* Geos::CoordinateSequence and Geos::GeometryCollection and its descendants
+  are now enumerable.
+
+== New Methods and Additions
+
+=== Geos
+
+* Geos.create_multi_point
+
+* Geos.create_multi_line_string
+
+* Geos.create_multi_polygon
+
+* Geos.create_geometry_collection
+
+* Geos.create_collection
+
+* Geos.create_empty_point
+
+* Geos.create_empty_polygon
+
+* Geos.create_empty_line_string
+
+* Geos.create_empty_multi_point
+
+* Geos.create_empty_multi_line_string
+
+* Geos.create_empty_multi_polygon
+
+* Geos.create_empty_geometry_collection
+
+=== Geos::Geometry
+
+* Geos::Geometry#buffer_with_style
+
+* Geos::Geometry#num_coordinates
+
+* Geos::Geometry#union_cascaded. Geos::Geometry#union can also be called
+  without a geometry argument to produce the same effect.
+
+* Geos::Geometry#extract_unique_points (aliased to Geos::Geometry#unique_points)
+
+* Geos::Geometry#valid_reason
+
+* Geos::Geometry#valid_detail
+
+* Geos::Geometry#project
+
+* Geos::Geometry#project_normalized
+
+* Geos::Geometry#interpolate
+
+* Geos::Geometry#interpolate_normalized
+
+* Geos::Geometry#start_point
+
+* Geos::Geometry#end_point
+
+* Geos::Geometry#hausdorff_distance
+
+* Geos::Geometry#snap
+
+* Geos::Geometry#shared_paths
+
+* Geos::Geometry#polygonize_full
+
+* Geos::Geometry#polygonize
+
+* Geos::Geometry#polygonize_cut_edges
+
+* Geos::Geometry#to_prepared
+
+=== Geos::LineString and Geos::LinearRing
+
+* Geos::LineString#num_points
+
+* Geos::LineString#point_n
+
+* Geos::LineString#buffer_single_sided
+
+* Geos::LineString#closed?
+
+=== Geos::WktWriter
+
+* Geos::WktWriter#trim=
+
+* Geos::WktWriter#rounding_precision=
+
+* Geos::WktWriter#old_3d=
+
+=== Geos::Utils
+
+* Geos::Utils.orientation_index
