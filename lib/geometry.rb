@@ -266,18 +266,22 @@ module Geos
       bool_result(FFIGeos.GEOSHasZ_r(Geos.current_handle, self.ptr))
     end
 
-    def project(geom, normalized = false)
-      raise TypeError.new("Expected Geos::Point type") if !geom.is_a?(Geos::Point)
+    # GEOS versions prior to 3.3.0 didn't handle exceptions and can crash on
+    # bad input.
+    if FFIGeos.respond_to?(:GEOSProject_r) && Geos::GEOS_VERSION >= '3.3.0'
+      def project(geom, normalized = false)
+        raise TypeError.new("Expected Geos::Point type") if !geom.is_a?(Geos::Point)
 
-      if normalized
-        FFIGeos.GEOSProjectNormalized_r(Geos.current_handle, self.ptr, geom.ptr)
-      else
-        FFIGeos.GEOSProject_r(Geos.current_handle, self.ptr, geom.ptr)
+        if normalized
+          FFIGeos.GEOSProjectNormalized_r(Geos.current_handle, self.ptr, geom.ptr)
+        else
+          FFIGeos.GEOSProject_r(Geos.current_handle, self.ptr, geom.ptr)
+        end
       end
-    end
 
-    def project_normalized(geom)
-      self.project(geom, true)
+      def project_normalized(geom)
+        self.project(geom, true)
+      end
     end
 
     def interpolate(d, normalized = false)
