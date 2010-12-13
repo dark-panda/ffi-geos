@@ -3,9 +3,10 @@
 
 == Requirements
 
-* Ruby 1.8.7 or greater
-* the ffi extension for Ruby
-* GEOS version 3.3.0 or greater
+* Ruby 1.8.7 or greater.
+* the ffi extension for Ruby.
+* GEOS version 3.3.0 or greater. GEOS 3.2.2 and below will work to an extent,
+  but some features and methods will be disabled or missing.
 
 == Features
 
