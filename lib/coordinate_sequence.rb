@@ -9,7 +9,13 @@ module Geos
       ptr, auto_free = if args.first.is_a?(FFI::Pointer)
         [ args.first, args[1] ]
       else
-        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, *args), true ]
+        size, dims = if !args.length.between?(1, 2)
+          raise ArgumentError.new("wrong number of arguments (#{args.length} for 1-2)")
+        else
+          [ args[0], args[1] || 0]
+        end
+
+        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, size, dims), true ]
       end
 
       @ptr = FFI::AutoPointer.new(
