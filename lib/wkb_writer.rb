@@ -44,7 +44,7 @@ module Geos
     end
 
     def include_srid
-      Geos::Util.bool_result(FFIGeos.GEOSWKBWriter_getIncludeSRID_r(Geos.current_handle, self.ptr))
+      bool_result(FFIGeos.GEOSWKBWriter_getIncludeSRID_r(Geos.current_handle, self.ptr))
     end
 
     def include_srid=(val)
@@ -54,7 +54,7 @@ module Geos
     end
 
     def byte_order
-      Geos::Util.bool_result(FFIGeos.GEOSWKBWriter_getByteOrder_r(Geos.current_handle, self.ptr))
+      bool_result(FFIGeos.GEOSWKBWriter_getByteOrder_r(Geos.current_handle, self.ptr))
     end
 
     def byte_order=(val)
