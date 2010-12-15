@@ -28,11 +28,11 @@ module TestHelper
     @writer = Geos::WktWriter.new
   end
 
-  def read(geom)
-    reader.read(geom)
+  def read(*args)
+    reader.read(*args)
   end
 
-  def write(geom)
-    writer.write(geom)
+  def write(*args)
+    writer.write(*args)
   end
 end

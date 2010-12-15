@@ -100,6 +100,26 @@ class WktWriterTests < Test::Unit::TestCase
         writer.output_dimensions = 4
       end
     end
+
+    def test_write_with_options
+      @writer.rounding_precision = 2
+
+      geom = read('POINT(1 2 3)')
+      assert_equal('POINT (1 2)', write(geom, {
+        :trim => true
+      }))
+
+      assert_equal('POINT (1.0000 2.0000)', write(geom, {
+        :rounding_precision => 4
+      }))
+
+      assert_equal('POINT Z (1 2 3)', write(geom, {
+        :output_dimensions => 3,
+        :trim => true
+      }))
+
+      assert_equal('POINT (1.00 2.00)', write(geom))
+    end
   end
 
   if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:old_3d=)
