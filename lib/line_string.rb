@@ -1,6 +1,15 @@
 
 module Geos
   class LineString < Geometry
+    include Enumerable
+
+    def each
+      self.num_points.times do |n|
+        yield self.point_n(n)
+      end
+      nil
+    end
+
     def num_points
       FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle, self.ptr)
     end
