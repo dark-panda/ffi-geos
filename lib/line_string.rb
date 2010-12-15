@@ -22,6 +22,11 @@ module Geos
       end
     end
 
+    def [](*args)
+      self.to_a[*args]
+    end
+    alias :slice :[]
+
     def buffer_single_sided(width, options = {})
       options = {
         :quad_segs => 8,
