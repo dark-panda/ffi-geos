@@ -1347,4 +1347,76 @@ class GeometryTests < Test::Unit::TestCase
       )
     end
   end
+
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:select)
+    def test_line_string_enumerable
+      @writer.trim = true
+      geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2)')
+
+      assert_equal(2, geom.select { |point| point == read('POINT(2 2)') }.length)
+    end
+  end
+
+  if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:detect)
+    def test_geometry_collection_enumerable
+      @writer.trim = true
+      geom = read('GEOMETRYCOLLECTION(
+        LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2),
+        POINT(10 20),
+        POLYGON((0 0, 0 5, 5 5, 5 0, 0 0)),
+        POINT(10 20)
+      )')
+
+      assert_equal(2, geom.select { |point| point == read('POINT(10 20)') }.length)
+    end
+  end
+
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:[])
+    def test_line_string_array
+      @writer.trim = true
+      geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 4 4)')
+
+      assert_equal('POINT (0 0)', write(geom[0]))
+      assert_equal('POINT (4 4)', write(geom[-1]))
+
+      assert_equal([
+        'POINT (0 0)',
+        'POINT (1 1)'
+      ], geom[0, 2].collect { |g| write(g) })
+
+      assert_equal(nil, geom[0, -1])
+      assert_equal([], geom[-1, 0])
+      assert_equal([
+        'POINT (1 1)',
+        'POINT (2 2)'
+      ], geom[1..2].collect { |g| write(g) })
+    end
+  end
+
+  if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:[])
+    def test_geometry_collection_array
+      @writer.trim = true
+      geom = read('GEOMETRYCOLLECTION(
+        LINESTRING(0 0, 1 1, 2 2, 3 3),
+        POINT(10 20),
+        POLYGON((0 0, 0 5, 5 5, 5 0, 0 0)),
+        POINT(10 20)
+      )')
+
+      assert_equal('LINESTRING (0 0, 1 1, 2 2, 3 3)', write(geom[0]))
+      assert_equal('POINT (10 20)', write(geom[-1]))
+
+      assert_equal([
+        'LINESTRING (0 0, 1 1, 2 2, 3 3)',
+        'POINT (10 20)'
+      ], geom[0, 2].collect { |g| write(g) })
+
+      assert_equal(nil, geom[0, -1])
+      assert_equal([], geom[-1, 0])
+      assert_equal([
+        'POINT (10 20)',
+        'POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))'
+      ], geom[1..2].collect { |g| write(g) })
+    end
+  end
 end
