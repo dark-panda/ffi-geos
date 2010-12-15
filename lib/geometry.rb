@@ -381,5 +381,15 @@ module Geos
     def to_prepared
       Geos::PreparedGeometry.new(FFIGeos.GEOSPrepare_r(Geos.current_handle, self.ptr))
     end
+
+    def to_s
+      writer = WktWriter.new
+      wkt = writer.write(self)
+      if wkt.length > 120
+        wkt = "#{wkt[0...120]} ... "
+      end
+
+      "#<Geos::#{self.geom_type}: #{wkt}>"
+    end
   end
 end
