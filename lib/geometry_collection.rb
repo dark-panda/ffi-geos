@@ -3,6 +3,7 @@ module Geos
   class GeometryCollection < Geometry
     include Enumerable
 
+    # Yields each Geometry in the GeometryCollection.
     def each
       self.num_geometries.times do |n|
         yield self.get_geometry_n(n)

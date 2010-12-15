@@ -1,10 +1,17 @@
 
 module Geos
+
+  # A CoordinateSequence is a list of coordinates in a Geometry.
   class CoordinateSequence
     include Enumerable
 
     attr_reader :ptr
 
+    # :call-seq:
+    #   new(ptr, auto_free = true)
+    #   new(size, dims = 0)
+    #
+    # The ptr version of the initializer is for internal use.
     def initialize(*args)
       ptr, auto_free = if args.first.is_a?(FFI::Pointer)
         [ args.first, args[1] ]
@@ -35,6 +42,8 @@ module Geos
       self.class.new(FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle, self.ptr))
     end
 
+    # Yields coordinates as [ x, y, z ]. The z coordinate may be omitted for
+    # 2-dimensional CoordinateSequences.
     def each
       self.length.times do |n|
         yield [

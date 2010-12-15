@@ -23,8 +23,18 @@ Ruby bindings along with the following enhancements and additions:
 
 * many new methods on geometry types. See below for a list.
 
-* Geos::CoordinateSequence and Geos::GeometryCollection and its descendants
-  are now enumerable.
+* Geos::LineString, Geos::LinearRing, Geos::CoordinateSequence and
+  Geos::GeometryCollection and its descendants are now enumerable.
+
+* The aforementioned enumerable classes also define some additional Array-like
+  methods such as [] and slice.
+
+* Geos::WkbWriter and Geos::WktWriter have had their constructors extended
+  to allow for settings via an options Hash.
+
+* Geos::WkbWriter#write, Geos::WkbWriter#write_hex and Geos::WktWriter#write
+  have been enhanced to take options Hashes allowing you to set per-write
+  settings.
 
 == New Methods and Additions
 

@@ -5,6 +5,8 @@ module Geos
 
     attr_reader :ptr
 
+    # For internal use. Geometry objects should be created via WkbReader,
+    # WktReader and the various Geos.create_* methods.
     def initialize(ptr, auto_free = true)
       @ptr = FFI::AutoPointer.new(
         ptr,
@@ -23,10 +25,12 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSGeom_clone_r(Geos.current_handle, ptr))
     end
 
+    # Returns the name of the Geometry type, i.e. "Point", "Polygon", etc.
     def geom_type
       FFIGeos.GEOSGeomType_r(Geos.current_handle, self.ptr)
     end
 
+    # Returns one of the values from Geos::GeomTypes.
     def type_id
       FFIGeos.GEOSGeomTypeId_r(Geos.current_handle, self.ptr)
     end
@@ -64,6 +68,15 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle, self.ptr, geom.ptr))
     end
 
+    # :call-seq:
+    #   buffer(width)
+    #   buffer(width, options)
+    #   buffer(width, quad_segs)
+    #
+    # Calls buffer on the Geometry. Calling with an options Hash is equivalent
+    # to calling buffer_with_style.
+    #
+    # By default, quad_segs is set to 8.
     def buffer(width, *args)
       quad_segs, options = if args.length <= 0
         [ 8, nil ]
@@ -86,6 +99,12 @@ module Geos
       end
     end
 
+    # Options:
+    #
+    # * :quad_segs - defaults to 8.
+    # * :endcap - defaults Geos::BufferCapStyles::ROUND.
+    # * :join - defaults to Geos::BufferJoinStyles::ROUND.
+    # * :mitre_limit - defaults to 5.0.
     def buffer_with_style(width, options = {})
       options = {
         :quad_segs => 8,
@@ -123,6 +142,7 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr))
     end
 
+    # Calling withouth a geom argument is equivalent to calling union_cascaded.
     def union(geom = nil)
       if geom
         check_geometry(geom)
@@ -149,11 +169,14 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSEnvelope_r(Geos.current_handle, self.ptr))
     end
 
+    # Returns the Dimensionally Extended Nine-Intersection Model (DE-9IM)
+    # matrix of the geometries as a String.
     def relate(geom)
       check_geometry(geom)
       FFIGeos.GEOSRelate_r(Geos.current_handle, self.ptr, geom.ptr)
     end
 
+    # Checks the DE-9IM pattern against the geoms.
     def relate_pattern(geom, pattern)
       check_geometry(geom)
       bool_result(FFIGeos.GEOSRelatePattern_r(Geos.current_handle, self.ptr, geom.ptr, pattern))
@@ -235,10 +258,19 @@ module Geos
       bool_result(FFIGeos.GEOSisValid_r(Geos.current_handle, self.ptr))
     end
 
+    # Returns a String describing whether or not the Geometry is valid.
     def valid_reason
       FFIGeos.GEOSisValidReason_r(Geos.current_handle, self.ptr)
     end
 
+    # Returns a Hash containing the following structure on invalid geometries:
+    #
+    #   {
+    #     :detail => "String explaining the problem",
+    #     :location => Geos::Point # centered on the problem
+    #   }
+    #
+    # If the Geometry is valid, returns nil.
     def valid_detail
       detail = FFI::MemoryPointer.new(:pointer)
       location = FFI::MemoryPointer.new(:pointer)
@@ -343,6 +375,14 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSSharedPaths_r(Geos.current_handle, self.ptr, geom.ptr)).to_a
     end
 
+    # Returns a Hash with the following structure:
+    #
+    #   {
+    #     :rings => [ ... ],
+    #     :cuts => [ ... ],
+    #     :dangles => [ ... ],
+    #     :invalid_rings => [ ... ]
+    #   }
     def polygonize_full
       cuts = FFI::MemoryPointer.new(:pointer)
       dangles = FFI::MemoryPointer.new(:pointer)
