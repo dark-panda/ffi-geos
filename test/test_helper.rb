@@ -9,6 +9,9 @@ else
 end
 
 puts "GEOS version #{Geos::GEOS_VERSION}"
+if defined?(Geos::FFIGeos)
+  puts "Using #{Geos::FFIGeos.geos_library_paths.join(', ')}"
+end
 
 module TestHelper
   TOLERANCE = 0.0000000000001
