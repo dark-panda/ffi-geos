@@ -52,15 +52,19 @@ module Geos
         [ '/usr/{lib,lib64}', '/usr/local/{lib,lib64}', '/opt/local/{lib,lib64}' ]
       end
 
-      libs = case Config::CONFIG['arch']
-        when /darwin/
-          %w{ libgeos_c.dylib  libgeos.dylib }
-        else
-          %w{ libgeos.so libgeos_c.so }
+      libs = if [
+        Config::CONFIG['arch'],
+        Config::CONFIG['host_os']
+      ].detect { |c| c =~ /darwin/ }
+        %w{ libgeos_c.dylib libgeos.dylib }
+      else
+        %w{ libgeos.so libgeos_c.so }
       end
 
       @geos_library_paths = libs.collect { |lib|
-        Dir.glob(paths.collect { |path| "#{path}/#{lib}" }).first
+        Dir.glob(paths.collect { |path|
+          "#{path}/#{lib}"
+        }).first
       }
     end
 
