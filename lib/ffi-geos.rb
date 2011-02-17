@@ -296,6 +296,10 @@ module Geos
         :string, :pointer, :pointer, :pointer
       ],
 
+      :GEOSRelatePatternMatch_r => [
+        :char, :pointer, :string, :string
+      ],
+
       :GEOSLineMerge_r => [
         :pointer, :pointer, :pointer
       ],

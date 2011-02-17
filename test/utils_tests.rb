@@ -19,6 +19,13 @@ class UtilsTests < Test::Unit::TestCase
       assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000, 1000001))
       assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000,  999999))
     end
+
+    def test_relate_match
+      assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF2'))
+      assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF*'))
+      assert(Geos::Utils.relate_match('0FFFFFFF2', 'TFFFFFFF2'))
+      assert(!Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'))
+    end
   end
 
   def create_method_tester(expected, method, cs, type_id, klass)

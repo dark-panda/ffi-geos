@@ -11,6 +11,10 @@ module Geos
         )
       end
 
+      def relate_match(mat, pat)
+        bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle, mat, pat))
+      end
+
       def create_point(cs)
         if cs.length != 1
           raise RuntimeError.new("IllegalArgumentException: Point coordinate list must contain a single element")
