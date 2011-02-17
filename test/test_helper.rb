@@ -8,6 +8,7 @@ else
   require File.join(File.dirname(__FILE__), %w{ .. lib ffi-geos })
 end
 
+puts "Ruby version #{RUBY_VERSION} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
 puts "GEOS version #{Geos::GEOS_VERSION}"
 if defined?(Geos::FFIGeos)
   puts "Using #{Geos::FFIGeos.geos_library_paths.join(', ')}"
