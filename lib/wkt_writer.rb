@@ -29,7 +29,7 @@ module Geos
 
     def set_options(options) #:nodoc:
       [ :trim, :old_3d, :rounding_precision, :output_dimensions ].each do |k|
-        self.send("#{k}=", options[k]) if options.has_key?(k)
+        self.send("#{k}=", options[k]) if self.respond_to?("#{k}=") && options.has_key?(k)
       end
     end
     private :set_options
@@ -54,36 +54,44 @@ module Geos
       set_options(old_options) unless options.nil?
     end
 
-    def trim=(val)
-      @trim = !!val
-      FFIGeos.GEOSWKTWriter_setTrim_r(Geos.current_handle, self.ptr,
-        @trim ? 1 : 0
-      )
-    end
-
-    def rounding_precision=(r)
-      r = r.to_i
-      if r > 255
-        raise RuntimeError.new("Rounding precision cannot be greater than 255")
+    if FFIGeos.respond_to?(:GEOSWKTWriter_setTrim_r)
+      def trim=(val)
+        @trim = !!val
+        FFIGeos.GEOSWKTWriter_setTrim_r(Geos.current_handle, self.ptr,
+          @trim ? 1 : 0
+        )
       end
-
-      @rounding_precision = r
-      FFIGeos.GEOSWKTWriter_setRoundingPrecision_r(Geos.current_handle, self.ptr, @rounding_precision)
     end
 
-    def old_3d=(val)
-      @old_3d = !!val
-      FFIGeos.GEOSWKTWriter_setOld3D_r(Geos.current_handle, self.ptr,
-        @old_3d ? 1 : 0
-      )
-    end
+    if FFIGeos.respond_to?(:GEOSWKTWriter_setRoundingPrecision_r)
+      def rounding_precision=(r)
+        r = r.to_i
+        if r > 255
+          raise RuntimeError.new("Rounding precision cannot be greater than 255")
+        end
 
-    def output_dimensions=(dim)
-      dim = dim.to_i
-      if dim < 2 || dim > 3
-        raise RuntimeError.new("Output dimensions must be either 2 or 3")
+        @rounding_precision = r
+        FFIGeos.GEOSWKTWriter_setRoundingPrecision_r(Geos.current_handle, self.ptr, @rounding_precision)
       end
-      FFIGeos.GEOSWKTWriter_setOutputDimension_r(Geos.current_handle, self.ptr, dim)
+    end
+
+    if FFIGeos.respond_to?(:GEOSWKTWriter_setOld3D_r)
+      def old_3d=(val)
+        @old_3d = !!val
+        FFIGeos.GEOSWKTWriter_setOld3D_r(Geos.current_handle, self.ptr,
+          @old_3d ? 1 : 0
+        )
+      end
+    end
+
+    if FFIGeos.respond_to?(:GEOSWKTWriter_setOutputDimension_r)
+      def output_dimensions=(dim)
+        dim = dim.to_i
+        if dim < 2 || dim > 3
+          raise RuntimeError.new("Output dimensions must be either 2 or 3")
+        end
+        FFIGeos.GEOSWKTWriter_setOutputDimension_r(Geos.current_handle, self.ptr, dim)
+      end
     end
 
     def output_dimensions
