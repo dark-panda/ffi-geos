@@ -3,10 +3,14 @@
 
 == Requirements
 
-* Ruby 1.8.7 or greater.
 * the ffi extension for Ruby.
 * GEOS version 3.3.0 or greater. GEOS 3.2.2 and below will work to an extent,
   but some features and methods will be disabled or missing.
+
+Ruby versions known to work:
+
+* Ruby MRI 1.8.7 and 1.9.2, x86_64, OSX 10.6.5
+* JRuby 1.5.5 using JRE 1.6.0_22, x86_64, OSX 10.6.5
 
 == Features
 
