@@ -13,7 +13,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "ffi-geos"
     gem.version = "0.0.1"
-    gem.summary = "GEOS (Geometry Engine - Open Source) is a C++ port of the Java Topology Suite (JTS)."
+    gem.summary = "An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS)."
     gem.description = gem.summary
     gem.email = "dark.panda@gmail.com"
     gem.homepage = "http://github.com/dark-panda/ffi-geos"
@@ -33,6 +33,7 @@ end
 desc 'Build docs'
 Rake::RDocTask.new do |t|
   require 'rdoc/rdoc'
+  t.title = 'ffi-geos Documentation'
   t.main = 'README.rdoc'
   t.rdoc_dir = 'doc'
   t.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'lib/**/*.rb')
