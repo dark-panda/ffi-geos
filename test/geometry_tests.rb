@@ -725,8 +725,8 @@ class GeometryTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_detail)
     def test_valid_detail
-      tester = lambda { |detail, location, geom|
-        ret = read(geom).valid_detail
+      tester = lambda { |detail, location, geom, flags|
+        ret = read(geom).valid_detail(flags)
         assert_equal(detail, ret[:detail])
         assert_equal(location, write(ret[:location]))
       }
@@ -734,8 +734,14 @@ class GeometryTests < Test::Unit::TestCase
       writer.rounding_precision = 0
 
       assert_nil(read('POINT(0 0)').valid_detail)
-      tester["Invalid Coordinate", 'POINT (0 nan)', 'POINT(0 NaN)']
-      tester["Self-intersection", 'POINT (2 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))']
+      tester["Invalid Coordinate", 'POINT (0 nan)', 'POINT(0 NaN)', 0]
+      tester["Self-intersection", 'POINT (2 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
+
+      tester["Ring Self-intersection", 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
+
+      assert_nil(read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))').valid_detail(
+        Geos::ValidFlags::ALLOW_SELFTOUCHING_RING_FORMING_HOLE)
+      )
     end
   end
 

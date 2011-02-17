@@ -377,7 +377,7 @@ module Geos
       ],
 
       :GEOSisValidDetail_r => [
-        :char, :pointer, :pointer, :pointer, :pointer
+        :char, :pointer, :pointer, :int, :pointer, :pointer
       ],
 
       :GEOSisSimple_r => [
@@ -749,6 +749,10 @@ module Geos
     ROUND = 1
     MITRE = 2
     BEVEL = 3
+  end
+
+  module ValidFlags
+    ALLOW_SELFTOUCHING_RING_FORMING_HOLE = 1
   end
 
   module VersionConstants

@@ -271,11 +271,11 @@ module Geos
     #   }
     #
     # If the Geometry is valid, returns nil.
-    def valid_detail
+    def valid_detail(flags = 0)
       detail = FFI::MemoryPointer.new(:pointer)
       location = FFI::MemoryPointer.new(:pointer)
       valid = bool_result(
-        FFIGeos.GEOSisValidDetail_r(Geos.current_handle, self.ptr, detail, location)
+        FFIGeos.GEOSisValidDetail_r(Geos.current_handle, self.ptr, flags, detail, location)
       )
 
       if !valid
