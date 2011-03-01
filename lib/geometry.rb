@@ -234,6 +234,16 @@ module Geos
       bool_result(FFIGeos.GEOSOverlaps_r(Geos.current_handle, self.ptr, geom.ptr))
     end
 
+    def covers?(geom)
+      check_geometry(geom)
+      bool_result(FFIGeos.GEOSCovers_r(Geos.current_handle, self.ptr, geom.ptr))
+    end
+
+    def covered_by?(geom)
+      check_geometry(geom)
+      bool_result(FFIGeos.GEOSCoveredBy_r(Geos.current_handle, self.ptr, geom.ptr))
+    end
+
     def disjoint?(geom)
       check_geometry(geom)
       bool_result(FFIGeos.GEOSDisjoint_r(Geos.current_handle, self.ptr, geom.ptr))

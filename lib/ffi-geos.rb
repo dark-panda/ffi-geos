@@ -356,6 +356,14 @@ module Geos
         :char, :pointer, :pointer, :pointer
       ],
 
+      :GEOSCovers_r => [
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSCoveredBy_r => [
+        :char, :pointer, :pointer, :pointer
+      ],
+
       :GEOSEquals_r => [
         :char, :pointer, :pointer, :pointer
       ],

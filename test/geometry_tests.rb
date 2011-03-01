@@ -592,109 +592,127 @@ class GeometryTests < Test::Unit::TestCase
   end
 
   def test_relationships
-    geom_a = read('POINT(0 0)')
-    geom_b = read('POINT(0 0)')
+    tester = lambda { |geom_a, geom_b, tests|
+      tests.each do |test|
+        expected, method, args = test
+        if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:methods)
+          value = geom_a.send(method, *([ geom_b ] + Array(args)))
+          assert_equal(expected, value)
+        end
+      end
+    }
 
-    assert(!geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(geom_a.within?(geom_b))
-    assert(geom_a.contains?(geom_b))
-    assert(!geom_a.overlaps?(geom_b))
-    assert(geom_a.eql?(geom_b))
-    assert(geom_a.eql_exact?(geom_b, TOLERANCE))
+    tester[read('POINT(0 0)'), read('POINT(0 0)'), [
+      [false, :disjoint?],
+      [false, :touches?],
+      [true, :intersects?],
+      [false, :crosses?],
+      [true, :within?],
+      [true, :contains?],
+      [false, :overlaps?],
+      [true, :eql?],
+      [true, :eql_exact?, TOLERANCE],
+      [true, :covers?],
+      [true, :covered_by?]
+    ]]
 
-    geom_a = read('POINT(0 0)')
-    geom_b = read('LINESTRING(0 0, 10 0)')
+    tester[read('POINT(0 0)'), read('LINESTRING(0 0, 10 0)'), [
+      [false, :disjoint?],
+      [true, :touches?],
+      [true, :intersects?],
+      [false, :crosses?],
+      [false, :within?],
+      [false, :contains?],
+      [false, :overlaps?],
+      [false, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [false, :covers?],
+      [true, :covered_by?]
+    ]]
 
-    assert(!geom_a.disjoint?(geom_b))
-    assert(geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(!geom_a.within?(geom_b))
-    assert(!geom_a.contains?(geom_b))
-    assert(!geom_a.overlaps?(geom_b))
-    assert(!geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
+    tester[read('POINT(5 0)'), read('LINESTRING(0 0, 10 0)'), [
+      [false, :disjoint?],
+      [false, :touches?],
+      [true, :intersects?],
+      [false, :crosses?],
+      [true, :within?],
+      [false, :contains?],
+      [false, :overlaps?],
+      [false, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [false, :covers?],
+      [true, :covered_by?]
+    ]]
 
-    geom_a = read('POINT(5 0)')
-    geom_b = read('LINESTRING(0 0, 10 0)')
+    tester[read('LINESTRING(5 -5, 5 5)'), read('LINESTRING(0 0, 10 0)'), [
+      [false, :disjoint?],
+      [false, :touches?],
+      [true, :intersects?],
+      [true, :crosses?],
+      [false, :within?],
+      [false, :contains?],
+      [false, :overlaps?],
+      [false, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [false, :covers?],
+      [false, :covered_by?]
+    ]]
 
-    assert(!geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(geom_a.within?(geom_b))
-    assert(!geom_a.contains?(geom_b))
-    assert(!geom_a.overlaps?(geom_b))
-    assert(!geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
+    tester[read('LINESTRING(5 0, 15 0)'), read('LINESTRING(0 0, 10 0)'), [
+      [false, :disjoint?],
+      [false, :touches?],
+      [true, :intersects?],
+      [false, :crosses?],
+      [false, :within?],
+      [false, :contains?],
+      [true, :overlaps?],
+      [false, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [false, :covers?],
+      [false, :covered_by?]
+    ]]
 
-    geom_a = read('LINESTRING(5 -5, 5 5)')
-    geom_b = read('LINESTRING(0 0, 10 0)')
+    tester[read('LINESTRING(0 0, 5 0, 10 0)'), read('LINESTRING(0 0, 10 0)'), [
+      [false, :disjoint?],
+      [false, :touches?],
+      [true, :intersects?],
+      [false, :crosses?],
+      [true, :within?],
+      [true, :contains?],
+      [false, :overlaps?],
+      [true, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [true, :covers?],
+      [true, :covered_by?]
+    ]]
 
-    assert(!geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(geom_a.crosses?(geom_b))
-    assert(!geom_a.within?(geom_b))
-    assert(!geom_a.contains?(geom_b))
-    assert(!geom_a.overlaps?(geom_b))
-    assert(!geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
+    tester[read('POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))'), read('POLYGON((5 -5, 5 5, 15 5, 15 -5, 5 -5))'), [
+      [false, :disjoint?],
+      [false, :touches?],
+      [true, :intersects?],
+      [false, :crosses?],
+      [false, :within?],
+      [false, :contains?],
+      [true, :overlaps?],
+      [false, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [false, :covers?],
+      [false, :covered_by?]
+    ]]
 
-    geom_a = read('LINESTRING(5 0, 15 0)')
-    geom_b = read('LINESTRING(0 0, 10 0)')
-
-    assert(!geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(!geom_a.within?(geom_b))
-    assert(!geom_a.contains?(geom_b))
-    assert(geom_a.overlaps?(geom_b))
-    assert(!geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
-
-    geom_a = read('LINESTRING(0 0, 5 0, 10 0)')
-    geom_b = read('LINESTRING(0 0, 10 0)')
-
-    assert(!geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(geom_a.within?(geom_b))
-    assert(geom_a.contains?(geom_b))
-    assert(!geom_a.overlaps?(geom_b))
-    assert(geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
-
-    geom_a = read('POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))')
-    geom_b = read('POLYGON((5 -5, 5 5, 15 5, 15 -5, 5 -5))')
-
-    assert(!geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(!geom_a.within?(geom_b))
-    assert(!geom_a.contains?(geom_b))
-    assert(geom_a.overlaps?(geom_b))
-    assert(!geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
-
-    geom_a = read('POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))')
-    geom_b = read('POINT(15 15)')
-
-    assert(geom_a.disjoint?(geom_b))
-    assert(!geom_a.touches?(geom_b))
-    assert(!geom_a.intersects?(geom_b))
-    assert(!geom_a.crosses?(geom_b))
-    assert(!geom_a.within?(geom_b))
-    assert(!geom_a.contains?(geom_b))
-    assert(!geom_a.overlaps?(geom_b))
-    assert(!geom_a.eql?(geom_b))
-    assert(!geom_a.eql_exact?(geom_b, TOLERANCE))
+    tester[read('POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))'), read('POINT(15 15)'), [
+      [true, :disjoint?],
+      [false, :touches?],
+      [false, :intersects?],
+      [false, :crosses?],
+      [false, :within?],
+      [false, :contains?],
+      [false, :overlaps?],
+      [false, :eql?],
+      [false, :eql_exact?, TOLERANCE],
+      [false, :covers?],
+      [false, :covered_by?]
+    ]]
   end
 
   def test_empty
