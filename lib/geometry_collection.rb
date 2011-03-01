@@ -23,5 +23,6 @@ module Geos
       self.to_a[*args]
     end
     alias :slice :[]
+    alias :at :[]
   end
 end
