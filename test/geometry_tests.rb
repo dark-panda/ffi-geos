@@ -424,6 +424,42 @@ class GeometryTests < Test::Unit::TestCase
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:union_cascaded)
     def test_union_cascaded
       self_tester(
+        :union_cascaded,
+        'MULTIPOLYGON(
+          ((0 0, 1 0, 1 1, 0 1, 0 0)),
+          ((10 10, 10 14, 14 14, 14 10, 10 10),
+          (11 11, 11 12, 12 12, 12 11, 11 11)),
+          ((0 0, 11 0, 11 11, 0 11, 0 0))
+        ))',
+        'POLYGON ((
+          1 0, 0 0, 0 1, 0 11, 10 11,
+          10 14, 14 14, 14 10, 11 10,
+          11 0, 1 0
+        ), (11 11, 12 11, 12 12, 11 12, 11 11))'
+      )
+    end
+  end
+
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:unary_union)
+    def test_unary_union
+      self_tester(
+        :unary_union,
+        'MULTIPOLYGON(
+          ((0 0, 1 0, 1 1, 0 1, 0 0)),
+          ((10 10, 10 14, 14 14, 14 10, 10 10),
+          (11 11, 11 12, 12 12, 12 11, 11 11)),
+          ((0 0, 11 0, 11 11, 0 11, 0 0))
+        ))',
+        'POLYGON ((
+          1 0, 0 0, 0 1, 0 11, 10 11,
+          10 14, 14 14, 14 10, 11 10,
+          11 0, 1 0
+        ), (11 11, 12 11, 12 12, 11 12, 11 11))'
+      )
+    end
+
+    def test_union_without_arguments
+      self_tester(
         :union,
         'MULTIPOLYGON(
           ((0 0, 1 0, 1 1, 0 1, 0 0)),

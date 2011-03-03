@@ -276,6 +276,10 @@ module Geos
         :pointer, :pointer, :pointer, :pointer
       ],
 
+      :GEOSUnaryUnion_r => [
+        :pointer, :pointer, :pointer
+      ],
+
       :GEOSUnionCascaded_r => [
         :pointer, :pointer, :pointer
       ],

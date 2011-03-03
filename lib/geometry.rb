@@ -142,18 +142,22 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr))
     end
 
-    # Calling withouth a geom argument is equivalent to calling union_cascaded.
+    # Calling withouth a geom argument is equivalent to calling unary_union.
     def union(geom = nil)
       if geom
         check_geometry(geom)
         cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle, self.ptr, geom.ptr))
       else
-        self.union_cascaded
+        self.unary_union
       end
     end
 
     def union_cascaded
       cast_geometry_ptr(FFIGeos.GEOSUnionCascaded_r(Geos.current_handle, self.ptr))
+    end
+
+    def unary_union
+      cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle, self.ptr))
     end
 
     def point_on_surface
