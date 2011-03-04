@@ -2,6 +2,7 @@
 module Geos
   class Geometry
     include Geos::Tools
+    include Geos::RelateBoundaryNodeRules
 
     attr_reader :ptr
 
@@ -184,6 +185,11 @@ module Geos
     def relate_pattern(geom, pattern)
       check_geometry(geom)
       bool_result(FFIGeos.GEOSRelatePattern_r(Geos.current_handle, self.ptr, geom.ptr, pattern))
+    end
+
+    def relate_boundary_node_rule(geom, bnr = MOD2)
+      check_geometry(geom)
+      FFIGeos.GEOSRelateBoundaryNodeRule_r(Geos.current_handle, self.ptr, geom.ptr, bnr)
     end
 
     def line_merge

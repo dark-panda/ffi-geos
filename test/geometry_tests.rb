@@ -572,6 +572,19 @@ class GeometryTests < Test::Unit::TestCase
     tester['T*******2', geom_a, geom_b, false]
   end
 
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:relate_boundary_node_rule)
+    def test_relate_boundary_node_rule
+      geom_a = read('LINESTRING(0 0, 2 4, 5 5, 0 0)')
+      geom_b = read('POINT(0 0)')
+
+      ret = geom_a.relate_boundary_node_rule(geom_b, Geos::RelateBoundaryNodeRules::OGC)
+      assert_equal('0F1FFFFF2', ret)
+
+      ret = geom_a.relate_boundary_node_rule(geom_b, Geos::RelateBoundaryNodeRules::ENDPOINT)
+      assert_equal('FF10FFFF2', ret)
+    end
+  end
+
   def test_line_merge
     self_tester(
       :line_merge,

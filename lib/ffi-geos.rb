@@ -296,14 +296,6 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSRelate_r => [
-        :string, :pointer, :pointer, :pointer
-      ],
-
-      :GEOSRelatePatternMatch_r => [
-        :char, :pointer, :string, :string
-      ],
-
       :GEOSLineMerge_r => [
         :pointer, :pointer, :pointer
       ],
@@ -328,8 +320,20 @@ module Geos
         :pointer, :pointer, :pointer, :pointer, :double
       ],
 
+      :GEOSRelate_r => [
+        :string, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSRelatePatternMatch_r => [
+        :char, :pointer, :string, :string
+      ],
+
       :GEOSRelatePattern_r => [
         :char, :pointer, :pointer, :pointer, :string
+      ],
+
+      :GEOSRelateBoundaryNodeRule_r => [
+        :string, :pointer, :pointer, :pointer, :int
       ],
 
       :GEOSDisjoint_r => [
@@ -765,6 +769,14 @@ module Geos
 
   module ValidFlags
     ALLOW_SELFTOUCHING_RING_FORMING_HOLE = 1
+  end
+
+  module RelateBoundaryNodeRules
+    MOD2 = 1
+    OGC = 1
+    ENDPOINT = 2
+    MULTIVALENT_ENDPOINT = 3
+    MONOVALENT_ENDPOINT = 4
   end
 
   module VersionConstants
