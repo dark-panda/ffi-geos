@@ -2,7 +2,6 @@
 module Geos
   class Geometry
     include Geos::Tools
-    include Geos::RelateBoundaryNodeRules
 
     attr_reader :ptr
 
@@ -103,16 +102,19 @@ module Geos
     # Options:
     #
     # * :quad_segs - defaults to 8.
-    # * :endcap - defaults Geos::BufferCapStyles::ROUND.
-    # * :join - defaults to Geos::BufferJoinStyles::ROUND.
+    # * :endcap - defaults :round.
+    # * :join - defaults to :round.
     # * :mitre_limit - defaults to 5.0.
     def buffer_with_style(width, options = {})
       options = {
         :quad_segs => 8,
-        :endcap => Geos::BufferCapStyles::ROUND,
-        :join => Geos::BufferJoinStyles::ROUND,
+        :endcap => :round,
+        :join => :round,
         :mitre_limit => 5.0
       }.merge(options)
+
+      check_enum_value(Geos::BufferCapStyles, options[:endcap]) if options[:endcap]
+      check_enum_value(Geos::BufferJoinStyles, options[:join]) if options[:join]
 
       cast_geometry_ptr(FFIGeos.GEOSBufferWithStyle_r(
           Geos.current_handle,
@@ -187,8 +189,9 @@ module Geos
       bool_result(FFIGeos.GEOSRelatePattern_r(Geos.current_handle, self.ptr, geom.ptr, pattern))
     end
 
-    def relate_boundary_node_rule(geom, bnr = MOD2)
+    def relate_boundary_node_rule(geom, bnr = :mod2)
       check_geometry(geom)
+      check_enum_value(Geos::RelateBoundaryNodeRules, bnr)
       FFIGeos.GEOSRelateBoundaryNodeRule_r(Geos.current_handle, self.ptr, geom.ptr, bnr)
     end
 

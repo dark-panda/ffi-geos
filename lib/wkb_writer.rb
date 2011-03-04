@@ -84,18 +84,11 @@ module Geos
     end
 
     def byte_order
-      bool_result(FFIGeos.GEOSWKBWriter_getByteOrder_r(Geos.current_handle, self.ptr))
+      FFIGeos.GEOSWKBWriter_getByteOrder_r(Geos.current_handle, self.ptr)
     end
 
     def byte_order=(val)
-      val = if !val.is_a?(Fixnum)
-        raise TypeError.new("Expected Fixnum")
-      elsif [ Geos::ByteOrders::XDR, Geos::ByteOrders::NDR ].include?(val)
-        val
-      else
-        Geos::ByteOrders::NDR
-      end
-
+      check_enum_value(Geos::ByteOrders, val)
       FFIGeos.GEOSWKBWriter_setByteOrder_r(Geos.current_handle, self.ptr, val)
     end
   end

@@ -30,7 +30,7 @@ module Geos
     def buffer_single_sided(width, options = {})
       options = {
         :quad_segs => 8,
-        :join => Geos::BufferJoinStyles::ROUND,
+        :join => :round,
         :mitre_limit => 5.0,
         :left_side => false
       }.merge(options)

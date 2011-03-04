@@ -33,7 +33,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '010100000000000000000018400000000000001C40',
       'POINT(6 7)',
       2,
-      1,
+      :ndr,
       43,
       false
     )
@@ -44,7 +44,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '01010000202B00000000000000000018400000000000001C40',
       'POINT(6 7)',
       2,
-      1,
+      :ndr,
       43,
       true
     )
@@ -55,7 +55,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '00000000014018000000000000401C000000000000',
       'POINT(6 7)',
       2,
-      0,
+      :xdr,
       43,
       false
     )
@@ -66,7 +66,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '00200000010000002B4018000000000000401C000000000000',
       'POINT(6 7)',
       2,
-      0,
+      :xdr,
       43,
       true
     )
@@ -77,7 +77,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '010100000000000000000018400000000000001C40',
       'POINT(6 7)',
       3,
-      1,
+      :ndr,
       43,
       false
     )
@@ -88,7 +88,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '01010000202B00000000000000000018400000000000001C40',
       'POINT(6 7)',
       3,
-      1,
+      :ndr,
       43,
       true
     )
@@ -99,7 +99,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '00000000014018000000000000401C000000000000',
       'POINT(6 7)',
       3,
-      0,
+      :xdr,
       43,
       false
     )
@@ -110,7 +110,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '00200000010000002B4018000000000000401C000000000000',
       'POINT(6 7)',
       3,
-      0,
+      :xdr,
       43,
       true
     )
@@ -123,7 +123,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '010100000000000000000018400000000000001C40',
       'POINT(6 7 8)',
       2,
-      1,
+      :ndr,
       53,
       false
     )
@@ -134,7 +134,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '01010000203500000000000000000018400000000000001C40',
       'POINT(6 7 8)',
       2,
-      1,
+      :ndr,
       53,
       true
     )
@@ -147,7 +147,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '00000000014018000000000000401C000000000000',
       'POINT(6 7 8)',
       2,
-      0,
+      :xdr,
       53,
       false
     )
@@ -158,7 +158,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '0020000001000000354018000000000000401C000000000000',
       'POINT(6 7 8)',
       2,
-      0,
+      :xdr,
       53,
       true
     )
@@ -169,7 +169,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '010100008000000000000018400000000000001C400000000000002040',
       'POINT(6 7 8)',
       3,
-      1,
+      :ndr,
       53,
       false
     )
@@ -180,7 +180,7 @@ class WkbWriterTests < Test::Unit::TestCase
       '00800000014018000000000000401C0000000000004020000000000000',
       'POINT(6 7 8)',
       3,
-      0,
+      :xdr,
       53,
       false
     )
@@ -191,14 +191,13 @@ class WkbWriterTests < Test::Unit::TestCase
       '00A0000001000000354018000000000000401C0000000000004020000000000000',
       'POINT(6 7 8)',
       3,
-      0,
+      :xdr,
       53,
       true
     )
   end
 
   def test_try_bad_byte_order_value
-    # raise on anything that's not a Fixnum
     assert_raise(TypeError) do
       wkb_tester(
         '010100008000000000000018400000000000001C400000000000002040',
@@ -210,19 +209,17 @@ class WkbWriterTests < Test::Unit::TestCase
       )
     end
 
-    # any Fixnums seem okay; anything other than 0 or 1 is set to 1.
-    wkb_tester(
-      '010100008000000000000018400000000000001C400000000000002040',
-      'POINT(6 7 8)',
-      3,
-      1000,
-      53,
-      false
-    )
+    assert_raise(TypeError) do
+      wkb_tester(
+        '010100008000000000000018400000000000001C400000000000002040',
+        'POINT(6 7 8)',
+        3,
+        1000,
+        53,
+        false
+      )
+    end
   end
-
-
-
 
   def test_2d_little_endian_binary
     wkb_tester(
@@ -397,7 +394,6 @@ class WkbWriterTests < Test::Unit::TestCase
   end
 
   def test_try_bad_byte_order_value_binary
-    # raise on anything that's not a Fixnum
     assert_raise(TypeError) do
       wkb_tester(
         "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
@@ -410,16 +406,17 @@ class WkbWriterTests < Test::Unit::TestCase
       )
     end
 
-    # any Fixnums seem okay; anything other than 0 or 1 is set to 1.
-    wkb_tester(
-      "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
-      'POINT(6 7 8)',
-      3,
-      1000,
-      53,
-      false,
-      false
-    )
+    assert_raise(TypeError) do
+      wkb_tester(
+        "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
+        'POINT(6 7 8)',
+        3,
+        1000,
+        53,
+        false,
+        false
+      )
+    end
   end
 
   if ENV['FORCE_TESTS'] || defined?(Geos::FFIGeos)

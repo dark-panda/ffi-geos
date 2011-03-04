@@ -46,5 +46,9 @@ module Geos
         raise RuntimeError.new("Unexpected boolean result: #{r}")
       end
     end
+
+    def check_enum_value(enum, value)
+      raise TypeError.new("Couldn't find valid #{enum.tag} value: #{value}") unless enum[value]
+    end
   end
 end

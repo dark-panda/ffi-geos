@@ -79,7 +79,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0)',
         10, {
           :quad_segs => 1,
-          :endcap => Geos::BufferCapStyles::ROUND
+          :endcap => :round
         }
       ]
 
@@ -88,7 +88,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0)',
         10, {
           :quad_segs => 1,
-          :endcap => Geos::BufferCapStyles::FLAT
+          :endcap => :flat
         }
       ]
 
@@ -97,7 +97,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0)',
         10, {
           :quad_segs => 1,
-          :endcap => Geos::BufferCapStyles::SQUARE
+          :endcap => :square
         }
       ]
 
@@ -106,7 +106,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0, 100 100)',
         10, {
           :quad_segs => 2,
-          :join => Geos::BufferJoinStyles::ROUND
+          :join => :round
         }
       ]
 
@@ -115,7 +115,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0, 100 100)',
         10, {
           :quad_segs => 2,
-          :join => Geos::BufferJoinStyles::BEVEL
+          :join => :bevel
         }
       ]
 
@@ -124,7 +124,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0, 100 100)',
         10, {
           :quad_segs => 2,
-          :join => Geos::BufferJoinStyles::MITRE
+          :join => :mitre
         }
       ]
 
@@ -133,7 +133,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 100 0, 100 100)',
         10, {
           :quad_segs => 2,
-          :join => Geos::BufferJoinStyles::MITRE,
+          :join => :mitre,
           :mitre_limit => 1.0
         }
       ]
@@ -156,7 +156,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 10 0)',
         2, {
           :quad_segs => 2,
-          :join => Geos::BufferJoinStyles::ROUND,
+          :join => :round,
           :mitre_limit => 2.0,
           :left_side => true
         }
@@ -167,7 +167,7 @@ class GeometryTests < Test::Unit::TestCase
         'LINESTRING(0 0, 10 0)',
         2, {
           :quad_segs => 2,
-          :join => Geos::BufferJoinStyles::ROUND,
+          :join => :round,
           :mitre_limit => 2.0
         }
       ]
@@ -577,11 +577,15 @@ class GeometryTests < Test::Unit::TestCase
       geom_a = read('LINESTRING(0 0, 2 4, 5 5, 0 0)')
       geom_b = read('POINT(0 0)')
 
-      ret = geom_a.relate_boundary_node_rule(geom_b, Geos::RelateBoundaryNodeRules::OGC)
+      ret = geom_a.relate_boundary_node_rule(geom_b, :ogc)
       assert_equal('0F1FFFFF2', ret)
 
-      ret = geom_a.relate_boundary_node_rule(geom_b, Geos::RelateBoundaryNodeRules::ENDPOINT)
+      ret = geom_a.relate_boundary_node_rule(geom_b, :endpoint)
       assert_equal('FF10FFFF2', ret)
+
+      assert_raise(TypeError) do
+        geom_a.relate_boundary_node_rule(geom_b, :gibberish)
+      end
     end
   end
 
@@ -807,8 +811,8 @@ class GeometryTests < Test::Unit::TestCase
       tester["Ring Self-intersection", 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
 
       assert_nil(read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))').valid_detail(
-        Geos::ValidFlags::ALLOW_SELFTOUCHING_RING_FORMING_HOLE)
-      )
+        :allow_selftouching_ring_forming_hole
+      ))
     end
   end
 

@@ -72,6 +72,44 @@ module Geos
 
     ffi_lib(*geos_library_paths)
 
+    Geos::DimensionTypes = enum(:dimension_type, [
+      :dontcare, -3,
+      :non_empty, -2,
+      :empty, -1,
+      :point, 0,
+      :curve, 1,
+      :surface, 2
+    ])
+
+    Geos::ByteOrders = enum(:byte_order, [
+      :xdr, 0, # Big Endian
+      :ndr, 1 # Little Endian
+    ])
+
+    Geos::BufferCapStyles = enum(:buffer_cap_style, [
+      :round, 1,
+      :flat, 2,
+      :square, 3
+    ])
+
+    Geos::BufferJoinStyles = enum(:buffer_join_style, [
+      :round, 1,
+      :mitre, 2,
+      :bevel, 3
+    ])
+
+    Geos::ValidFlags = enum(:valid_flag, [
+      :allow_selftouching_ring_forming_hole, 1
+    ])
+
+    Geos::RelateBoundaryNodeRules = enum(:relate_boundary_node_rule, [
+      :mod2, 1,
+      :ogc, 1,
+      :endpoint, 2,
+      :multivalent_endpoint, 3,
+      :monovalent_endpoint, 4
+    ])
+
     FFI_LAYOUT = {
       #### Utility functions ####
       :initGEOS_r => [
@@ -249,11 +287,11 @@ module Geos
       ],
 
       :GEOSBufferWithStyle_r => [
-        :pointer, :pointer, :pointer, :double, :int, :int, :int, :double
+        :pointer, :pointer, :pointer, :double, :int, :buffer_cap_style, :buffer_join_style, :double
       ],
 
       :GEOSSingleSidedBuffer_r => [
-        :pointer, :pointer, :pointer, :double, :int, :int, :double, :int
+        :pointer, :pointer, :pointer, :double, :int, :buffer_join_style, :double, :int
       ],
 
       :GEOSConvexHull_r => [
@@ -333,7 +371,7 @@ module Geos
       ],
 
       :GEOSRelateBoundaryNodeRule_r => [
-        :string, :pointer, :pointer, :pointer, :int
+        :string, :pointer, :pointer, :pointer, :relate_boundary_node_rule
       ],
 
       :GEOSDisjoint_r => [
@@ -613,11 +651,11 @@ module Geos
       ],
 
       :GEOSWKBWriter_getByteOrder_r => [
-        :int, :pointer, :pointer
+        :byte_order, :pointer, :pointer
       ],
 
       :GEOSWKBWriter_setByteOrder_r => [
-        :void, :pointer, :pointer, :int
+        :void, :pointer, :pointer, :byte_order
       ],
 
       :GEOSWKBWriter_getIncludeSRID_r => [
@@ -739,44 +777,6 @@ module Geos
     GEOS_MULTILINESTRING = 5
     GEOS_MULTIPOLYGON = 6
     GEOS_GEOMETRYCOLLECTION = 7
-  end
-
-  module DimensionTypes
-    DONTCARE = -3
-    NON_EMPTY = -2
-    EMPTY = -1
-    POINT = 0
-    CURVE = 1
-    SURFACE = 2
-  end
-
-  module ByteOrders
-    XDR = 0 # Big Endian
-    NDR = 1 # Little Endian
-  end
-
-  module BufferCapStyles
-    ROUND = 1
-    FLAT = 2
-    SQUARE = 3
-  end
-
-  module BufferJoinStyles
-    ROUND = 1
-    MITRE = 2
-    BEVEL = 3
-  end
-
-  module ValidFlags
-    ALLOW_SELFTOUCHING_RING_FORMING_HOLE = 1
-  end
-
-  module RelateBoundaryNodeRules
-    MOD2 = 1
-    OGC = 1
-    ENDPOINT = 2
-    MULTIVALENT_ENDPOINT = 3
-    MONOVALENT_ENDPOINT = 4
   end
 
   module VersionConstants
