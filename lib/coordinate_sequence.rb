@@ -76,41 +76,41 @@ module Geos
 
     def get_x(idx)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle, self.ptr, idx, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def get_y(idx)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle, self.ptr, idx, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def get_z(idx)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle, self.ptr, idx, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def get_ordinate(idx, dim)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle, self.ptr, idx, dim, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def length
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:int).tap { |ret|
         FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle, self.ptr, ret)
       }.read_int
     end
     alias :size :length
 
     def dimensions
-      @dimensions ||= FFI::MemoryPointer.new(:pointer).tap { |ret|
+      @dimensions ||= FFI::MemoryPointer.new(:int).tap { |ret|
         FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, ret)
       }.read_int
     end

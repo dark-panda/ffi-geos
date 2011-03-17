@@ -41,7 +41,7 @@ module Geos
         set_options(options)
       end
 
-      size_t = FFI::MemoryPointer.new(:pointer)
+      size_t = FFI::MemoryPointer.new(:size_t)
       FFIGeos.GEOSWKBWriter_write_r(Geos.current_handle, self.ptr, geom.ptr, size_t).get_bytes(0, size_t.read_int)
     ensure
       set_options(old_options) unless old_options.nil?
@@ -56,7 +56,7 @@ module Geos
         set_options(options)
       end
 
-      size_t = FFI::MemoryPointer.new(:pointer)
+      size_t = FFI::MemoryPointer.new(:size_t)
       FFIGeos.GEOSWKBWriter_writeHEX_r(Geos.current_handle, self.ptr, geom.ptr, size_t).get_string(0, size_t.read_int)
     ensure
       set_options(old_options) unless old_options.nil?

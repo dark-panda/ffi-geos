@@ -362,29 +362,29 @@ module Geos
     end
 
     def area
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSArea_r(Geos.current_handle, self.ptr, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def length
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSLength_r(Geos.current_handle, self.ptr, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def distance(geom)
       check_geometry(geom)
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSDistance_r(Geos.current_handle, self.ptr, geom.ptr, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def hausdorff_distance(geom)
       check_geometry(geom)
-      FFI::MemoryPointer.new(:pointer).tap { |ret|
+      FFI::MemoryPointer.new(:double).tap { |ret|
         FFIGeos.GEOSHausdorffDistance_r(Geos.current_handle, self.ptr, geom.ptr, ret)
-      }.get_double(0)
+      }.read_double
     end
 
     def snap(geom, tolerance)
