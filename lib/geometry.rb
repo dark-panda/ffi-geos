@@ -145,7 +145,9 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr))
     end
 
-    # Calling withouth a geom argument is equivalent to calling unary_union.
+    # Calling without a geom argument is equivalent to calling unary_union when
+    # using GEOS 3.3+ and is equivalent to calling union_cascaded in older
+    # versions.
     def union(geom = nil)
       if geom
         check_geometry(geom)
@@ -164,6 +166,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSUnaryUnion_r)
+      # Available in GEOS 3.3+
       def unary_union
         cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle, self.ptr))
       end
@@ -196,6 +199,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSRelateBoundaryNodeRule_r)
+      # Available in GEOS 3.3+.
       def relate_boundary_node_rule(geom, bnr = :mod2)
         check_geometry(geom)
         check_enum_value(Geos::RelateBoundaryNodeRules, bnr)
@@ -256,6 +260,9 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSCovers_r)
+      # In GEOS versions 3.3+, the native GEOSCoveredBy method will be used,
+      # while in older GEOS versions we'll use a relate_pattern-based
+      # implementation.
       def covers?(geom)
         check_geometry(geom)
         bool_result(FFIGeos.GEOSCovers_r(Geos.current_handle, self.ptr, geom.ptr))
@@ -275,6 +282,9 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSCoveredBy_r)
+      # In GEOS versions 3.3+, the native GEOSCovers method will be used,
+      # while in older GEOS versions we'll use a relate_pattern-based
+      # implementation.
       def covered_by?(geom)
         check_geometry(geom)
         bool_result(FFIGeos.GEOSCoveredBy_r(Geos.current_handle, self.ptr, geom.ptr))

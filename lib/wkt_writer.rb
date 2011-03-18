@@ -55,6 +55,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSWKTWriter_setTrim_r)
+      # Available in GEOS 3.3+.
       def trim=(val)
         @trim = !!val
         FFIGeos.GEOSWKTWriter_setTrim_r(Geos.current_handle, self.ptr,
@@ -64,6 +65,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSWKTWriter_setRoundingPrecision_r)
+      # Available in GEOS 3.3+.
       def rounding_precision=(r)
         r = r.to_i
         if r > 255
@@ -76,6 +78,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSWKTWriter_setOld3D_r)
+      # Available in GEOS 3.3+.
       def old_3d=(val)
         @old_3d = !!val
         FFIGeos.GEOSWKTWriter_setOld3D_r(Geos.current_handle, self.ptr,
@@ -85,6 +88,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSWKTWriter_setOutputDimension_r)
+      # Available in GEOS 3.3+.
       def output_dimensions=(dim)
         dim = dim.to_i
         if dim < 2 || dim > 3
@@ -95,6 +99,7 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSWKTWriter_getOutputDimension_r)
+      # Available in GEOS 3.3+.
       def output_dimensions
         FFIGeos.GEOSWKTWriter_getOutputDimension_r(Geos.current_handle, self.ptr)
       end

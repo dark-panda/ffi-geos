@@ -5,6 +5,7 @@ module Geos
       include Geos::Tools
 
       if FFIGeos.respond_to?(:GEOSOrientationIndex_r)
+        # Available in GEOS 3.3+.
         def orientation_index(ax, ay, bx, by, px, py)
           FFIGeos.GEOSOrientationIndex_r(
             Geos.current_handle,
@@ -14,6 +15,7 @@ module Geos
       end
 
       if FFIGeos.respond_to?(:GEOSRelatePatternMatch_r)
+        # Available in GEOS 3.3+.
         def relate_match(mat, pat)
           bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle, mat, pat))
         end
