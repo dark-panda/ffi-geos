@@ -49,7 +49,7 @@ module Geos
       paths = if ENV['GEOS_LIBRARY_PATH']
         [ ENV['GEOS_LIBRARY_PATH'] ]
       else
-        [ '/usr/{lib,lib64}', '/usr/local/{lib,lib64}', '/opt/local/{lib,lib64}' ]
+        [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
       end
 
       libs = if [
