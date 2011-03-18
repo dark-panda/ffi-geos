@@ -247,14 +247,42 @@ module Geos
       bool_result(FFIGeos.GEOSOverlaps_r(Geos.current_handle, self.ptr, geom.ptr))
     end
 
-    def covers?(geom)
-      check_geometry(geom)
-      bool_result(FFIGeos.GEOSCovers_r(Geos.current_handle, self.ptr, geom.ptr))
+    if FFIGeos.respond_to?(:GEOSCovers_r)
+      def covers?(geom)
+        check_geometry(geom)
+        bool_result(FFIGeos.GEOSCovers_r(Geos.current_handle, self.ptr, geom.ptr))
+      end
+    else
+      def covers?(geom) #:nodoc:
+        check_geometry(geom)
+        !!%w{
+          T*****FF*
+          *T****FF*
+          ***T**FF*
+          ****T*FF*
+        }.detect do |pattern|
+          self.relate_pattern(geom, pattern)
+        end
+      end
     end
 
-    def covered_by?(geom)
-      check_geometry(geom)
-      bool_result(FFIGeos.GEOSCoveredBy_r(Geos.current_handle, self.ptr, geom.ptr))
+    if FFIGeos.respond_to?(:GEOSCoveredBy_r)
+      def covered_by?(geom)
+        check_geometry(geom)
+        bool_result(FFIGeos.GEOSCoveredBy_r(Geos.current_handle, self.ptr, geom.ptr))
+      end
+    else
+      def covered_by?(geom) #:nodoc:
+        check_geometry(geom)
+        !!%w{
+          T*F**F***
+          *TF**F***
+          **FT*F***
+          **F*TF***
+        }.detect do |pattern|
+          self.relate_pattern(geom, pattern)
+        end
+      end
     end
 
     def disjoint?(geom)
