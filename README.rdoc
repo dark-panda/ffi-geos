@@ -9,8 +9,11 @@
 
 Ruby versions known to work:
 
-* Ruby MRI 1.8.7 and 1.9.2, x86_64, OSX 10.6.5
-* JRuby 1.5.5 using JRE 1.6.0_22, x86_64, OSX 10.6.5
+* Ruby MRI 1.8.7 and 1.9.2, x86_64, OSX 10.6.5+
+* Ruby MRI 1.8.7 and 1.9.2, i386, linux
+* Ruby MRI 1.8.7, x86_64, linux
+* JRuby 1.5 and 1.6 using JRE 1.6.0_22, x86_64, OSX 10.6.5+
+* JRuby 1.5 and 1.6 using JRE 1.6.0_18, i386, linux
 
 == Features
 
