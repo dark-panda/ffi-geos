@@ -10,8 +10,14 @@ module Geos
       nil
     end
 
-    def num_points
-      FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle, self.ptr)
+    if FFIGeos.respond_to?(:GEOSGeomGetNumPoints_r)
+      def num_points
+        FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle, self.ptr)
+      end
+    else
+      def num_points
+        self.coord_seq.length
+      end
     end
 
     def point_n(n)
