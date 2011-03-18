@@ -159,8 +159,10 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSUnionCascaded_r(Geos.current_handle, self.ptr))
     end
 
-    def unary_union
-      cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle, self.ptr))
+    if FFIGeos.respond_to?(:GEOSUnaryUnion_r)
+      def unary_union
+        cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle, self.ptr))
+      end
     end
 
     def point_on_surface
@@ -189,10 +191,12 @@ module Geos
       bool_result(FFIGeos.GEOSRelatePattern_r(Geos.current_handle, self.ptr, geom.ptr, pattern))
     end
 
-    def relate_boundary_node_rule(geom, bnr = :mod2)
-      check_geometry(geom)
-      check_enum_value(Geos::RelateBoundaryNodeRules, bnr)
-      FFIGeos.GEOSRelateBoundaryNodeRule_r(Geos.current_handle, self.ptr, geom.ptr, bnr)
+    if FFIGeos.respond_to?(:GEOSRelateBoundaryNodeRule_r)
+      def relate_boundary_node_rule(geom, bnr = :mod2)
+        check_geometry(geom)
+        check_enum_value(Geos::RelateBoundaryNodeRules, bnr)
+        FFIGeos.GEOSRelateBoundaryNodeRule_r(Geos.current_handle, self.ptr, geom.ptr, bnr)
+      end
     end
 
     def line_merge

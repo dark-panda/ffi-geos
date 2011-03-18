@@ -4,15 +4,19 @@ module Geos
     class << self
       include Geos::Tools
 
-      def orientation_index(ax, ay, bx, by, px, py)
-        FFIGeos.GEOSOrientationIndex_r(
-          Geos.current_handle,
-          ax, ay, bx, by, px, py
-        )
+      if FFIGeos.respond_to?(:GEOSOrientationIndex_r)
+        def orientation_index(ax, ay, bx, by, px, py)
+          FFIGeos.GEOSOrientationIndex_r(
+            Geos.current_handle,
+            ax, ay, bx, by, px, py
+          )
+        end
       end
 
-      def relate_match(mat, pat)
-        bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle, mat, pat))
+      if FFIGeos.respond_to?(:GEOSRelatePatternMatch_r)
+        def relate_match(mat, pat)
+          bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle, mat, pat))
+        end
       end
 
       def create_point(cs)

@@ -94,8 +94,10 @@ module Geos
       end
     end
 
-    def output_dimensions
-      FFIGeos.GEOSWKTWriter_getOutputDimension_r(Geos.current_handle, self.ptr)
+    if FFIGeos.respond_to?(:GEOSWKTWriter_getOutputDimension_r)
+      def output_dimensions
+        FFIGeos.GEOSWKTWriter_getOutputDimension_r(Geos.current_handle, self.ptr)
+      end
     end
   end
 end

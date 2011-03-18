@@ -52,8 +52,10 @@ module Geos
       ))
     end
 
-    def closed?
-      bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle, self.ptr))
+    if FFIGeos.respond_to?(:GEOSisClosed_r)
+      def closed?
+        bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle, self.ptr))
+      end
     end
   end
 end
