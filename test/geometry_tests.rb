@@ -648,7 +648,7 @@ class GeometryTests < Test::Unit::TestCase
     tester = lambda { |geom_a, geom_b, tests|
       tests.each do |test|
         expected, method, args = test
-        if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:methods)
+        if ENV['FORCE_TESTS'] || geom_a.respond_to?(method)
           value = geom_a.send(method, *([ geom_b ] + Array(args)))
           assert_equal(expected, value)
         end
