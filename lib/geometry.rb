@@ -151,7 +151,11 @@ module Geos
         check_geometry(geom)
         cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle, self.ptr, geom.ptr))
       else
-        self.unary_union
+        if self.respond_to?(:unary_union)
+          self.unary_union
+        else
+          self.union_cascaded
+        end
       end
     end
 
