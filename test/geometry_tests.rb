@@ -409,16 +409,16 @@ class GeometryTests < Test::Unit::TestCase
     comparison_tester(
       :union,
       'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
-            'LINESTRING(10 0, 20 0)',
-            'GEOMETRYCOLLECTION (LINESTRING (10 0, 20 0), POLYGON ((10 0, 0 0, 0 10, 10 10, 10 0)))'
-        )
+      'LINESTRING(10 0, 20 0)',
+      'GEOMETRYCOLLECTION (LINESTRING (10 0, 20 0), POLYGON ((10 0, 0 0, 0 10, 10 10, 10 0)))'
+    )
 
     comparison_tester(
       :union,
       'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
       'POLYGON((5 -5, 5 5, 15 5, 15 -5, 5 -5))',
       'POLYGON ((5 0, 0 0, 0 10, 10 10, 10 5, 15 5, 15 -5, 5 -5, 5 0))'
-        )
+    )
   end
 
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:union_cascaded)
