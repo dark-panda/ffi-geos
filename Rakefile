@@ -12,7 +12,6 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "ffi-geos"
-    gem.version = "0.0.1.beta1"
     gem.summary = "An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS)."
     gem.description = gem.summary
     gem.email = "dark.panda@gmail.com"
