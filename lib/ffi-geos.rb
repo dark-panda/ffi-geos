@@ -780,6 +780,7 @@ module Geos
   end
 
   module VersionConstants
+    VERSION = File.read(File.join(GEOS_BASE, %w{ .. VERSION })) rescue nil
     GEOS_JTS_PORT = Geos.jts_port
     GEOS_VERSION,
       GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERISON_PATCH,
