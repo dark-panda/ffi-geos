@@ -12,3 +12,4 @@ doc/
 *.orig
 *.patch
 .vimrc_local
+*.rbc
