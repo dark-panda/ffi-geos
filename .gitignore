@@ -13,3 +13,4 @@ doc/
 *.patch
 .vimrc_local
 *.rbc
+test-all.sh
