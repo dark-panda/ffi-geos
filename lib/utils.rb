@@ -5,7 +5,11 @@ module Geos
       include Geos::Tools
 
       if FFIGeos.respond_to?(:GEOSOrientationIndex_r)
-        # Available in GEOS 3.3+.
+        # -1 if reaching P takes a counter-clockwise (left) turn
+        # 1 if reaching P takes a clockwise (right) turn
+        # 0 if P is collinear with A-B
+        #
+        # Available in GEOS 3.3.0+.
         def orientation_index(ax, ay, bx, by, px, py)
           FFIGeos.GEOSOrientationIndex_r(
             Geos.current_handle,
@@ -15,7 +19,7 @@ module Geos
       end
 
       if FFIGeos.respond_to?(:GEOSRelatePatternMatch_r)
-        # Available in GEOS 3.3+.
+        # Available in GEOS 3.3.0+.
         def relate_match(mat, pat)
           bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle, mat, pat))
         end
