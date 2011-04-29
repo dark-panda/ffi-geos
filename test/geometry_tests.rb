@@ -174,6 +174,63 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
+  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:offset_curve)
+    def test_offset_curve
+      tester = lambda { |expected, g, width, style|
+        geom = read(g)
+        buffered = geom.offset_curve(width, style)
+
+        assert_equal(expected, write(buffered))
+      }
+
+      @writer.rounding_precision = 0
+
+      # straight left
+      tester[
+        'LINESTRING (0 2, 10 2)',
+        'LINESTRING (0 0, 10 0)',
+        2, {
+          :quad_segs => 0,
+          :join => :round,
+          :mitre_limit => 2
+        }
+      ]
+
+      # straight right
+      tester[
+        'LINESTRING (10 -2, 0 -2)',
+        'LINESTRING (0 0, 10 0)',
+        -2, {
+          :quad_segs => 0,
+          :join => :round,
+          :mitre_limit => 2
+        }
+      ]
+
+      # outside curve
+      tester[
+        'LINESTRING (12 10, 12 0, 10 -2, 0 -2)',
+        'LINESTRING (0 0, 10 0, 10 10)',
+        -2, {
+          :quad_segs => 1,
+          :join => :round,
+          :mitre_limit => 2
+        }
+      ]
+
+      # inside curve
+      tester[
+        'LINESTRING (0 2, 8 2, 8 10)',
+        'LINESTRING (0 0, 10 0, 10 10)',
+        2, {
+          :quad_segs => 1,
+          :join => :round,
+          :mitre_limit => 2
+        }
+      ]
+    end
+  end
+
   def test_convex_hull
     geom = read('POINT(0 0)')
     assert(read('POINT(0 0)').eql_exact?(geom.convex_hull, TOLERANCE))

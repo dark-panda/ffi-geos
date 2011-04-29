@@ -290,8 +290,13 @@ module Geos
         :pointer, :pointer, :pointer, :double, :int, :buffer_cap_style, :buffer_join_style, :double
       ],
 
+      # Deprecated in GEOS 3.3.0.
       :GEOSSingleSidedBuffer_r => [
         :pointer, :pointer, :pointer, :double, :int, :buffer_join_style, :double, :int
+      ],
+
+      :GEOSOffsetCurve_r => [
+        :pointer, :pointer, :pointer, :double, :int, :buffer_join_style, :double
       ],
 
       :GEOSConvexHull_r => [
