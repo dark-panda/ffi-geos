@@ -36,31 +36,23 @@ module Geos
     # Deprecated in GEOS 3.3.0. Use Geos::LingString#offset_curve with a
     # negative width instead.
     def buffer_single_sided(width, options = {})
-      options = {
-        :quad_segs => 8,
-        :join => :round,
-        :mitre_limit => 5.0,
+      options = Constants::BUFFER_PARAM_DEFAULTS.merge(
         :left_side => false
-      }.merge(options)
+      ).merge(options)
 
       cast_geometry_ptr(FFIGeos.GEOSSingleSidedBuffer_r(
-          Geos.current_handle,
-          self.ptr,
-          width,
-          options[:quad_segs],
-          options[:join],
-          options[:mitre_limit],
-          options[:left_side] ? 1 : 0
+        Geos.current_handle,
+        self.ptr,
+        width,
+        options[:quad_segs],
+        options[:join],
+        options[:mitre_limit],
+        options[:left_side] ? 1 : 0
       ))
     end
 
     def offset_curve(width, options = {})
-      options = {
-        :quad_segs => 8,
-        :join => :round,
-        :mitre_limit => 5.0,
-        :left_side => false
-      }.merge(options)
+      options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 
       cast_geometry_ptr(FFIGeos.GEOSOffsetCurve_r(
           Geos.current_handle,

@@ -99,19 +99,10 @@ module Geos
       end
     end
 
-    # Options:
-    #
-    # * :quad_segs - defaults to 8.
-    # * :endcap - defaults :round.
-    # * :join - defaults to :round.
-    # * :mitre_limit - defaults to 5.0.
+    # The default for the options according to GEOS are as found in
+    # Geos::Constants::BUFFER_PARAMS_DEFAULTS.
     def buffer_with_style(width, options = {})
-      options = {
-        :quad_segs => 8,
-        :endcap => :round,
-        :join => :round,
-        :mitre_limit => 5.0
-      }.merge(options)
+      options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 
       check_enum_value(Geos::BufferCapStyles, options[:endcap]) if options[:endcap]
       check_enum_value(Geos::BufferJoinStyles, options[:join]) if options[:join]

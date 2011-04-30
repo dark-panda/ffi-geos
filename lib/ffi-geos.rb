@@ -955,6 +955,15 @@ module Geos
     GEOS_CAPI_LAST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i + GEOS_CAPI_VERSION_MINOR.to_i
   end
 
+  module Constants
+    BUFFER_PARAM_DEFAULTS = {
+      :quad_segs => 8,
+      :endcap => :round,
+      :join => :round,
+      :mitre_limit => 5.0
+    }.freeze
+  end
+
   include GeomTypes
   include VersionConstants
 end
