@@ -117,13 +117,13 @@ module Geos
       check_enum_value(Geos::BufferJoinStyles, options[:join]) if options[:join]
 
       cast_geometry_ptr(FFIGeos.GEOSBufferWithStyle_r(
-          Geos.current_handle,
-          self.ptr,
-          width,
-          options[:quad_segs],
-          options[:endcap],
-          options[:join],
-          options[:mitre_limit]
+        Geos.current_handle,
+        self.ptr,
+        width,
+        options[:quad_segs],
+        options[:endcap],
+        options[:join],
+        options[:mitre_limit]
       ))
     end
 
