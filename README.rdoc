@@ -43,7 +43,9 @@ Ruby bindings along with the following enhancements and additions:
   have been enhanced to take options Hashes allowing you to set per-write
   settings.
 
-== New Methods and Additions
+* Geos::BufferParams class and Geos::Geometry#buffer_with_params.
+
+== New Methods and Additions (not exhaustive)
 
 === Geos
 
