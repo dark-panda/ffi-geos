@@ -50,5 +50,13 @@ module Geos
     def check_enum_value(enum, value)
       raise TypeError.new("Couldn't find valid #{enum.tag} value: #{value}") unless enum[value]
     end
+
+    def symbol_for_enum(enum, value)
+      if value.is_a?(Symbol)
+        value
+      else
+        enum[value]
+      end
+    end
   end
 end
