@@ -37,6 +37,8 @@ module Geos
     File.join(GEOS_BASE, 'point')
   autoload :STRtree,
     File.join(GEOS_BASE, 'strtree')
+  autoload :BufferParams,
+    File.join(GEOS_BASE, 'buffer_params')
   autoload :Tools,
     File.join(GEOS_BASE, 'tools')
   autoload :Utils,
@@ -317,6 +319,11 @@ module Geos
       :GEOSIntersection_r => [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSBufferWithParams_r => [
+        # *geom, *handle, *geom, *oarams, width
+        :pointer, :pointer, :pointer, :pointer, :double
       ],
 
       :GEOSBuffer_r => [
@@ -831,6 +838,43 @@ module Geos
         :pointer, :pointer, :pointer, :double
       ],
       #### /Linearref functions ####
+
+      #### BufferParams functions ####
+      :GEOSBufferParams_create_r => [
+        # GEOSBufferParams*, *handle
+        :pointer, :pointer
+      ],
+
+      :GEOSBufferParams_destroy_r => [
+        # void, *handle, *params
+        :void, :pointer, :pointer
+      ],
+
+      :GEOSBufferParams_setEndCapStyle_r => [
+        # 0 on exception, *handle, *params, style
+        :int, :pointer, :pointer, :buffer_cap_style
+      ],
+
+      :GEOSBufferParams_setJoinStyle_r => [
+        # 0 on exception, *handle, *params, style
+        :int, :pointer, :pointer, :buffer_join_style
+      ],
+
+      :GEOSBufferParams_setMitreLimit_r => [
+        # 0 on exception, *handle, *params, mitre_limit
+        :int, :pointer, :pointer, :double
+      ],
+
+      :GEOSBufferParams_setQuadrantSegments_r => [
+        # 0 on exception, *handle, *params, quad_segs
+        :int, :pointer, :pointer, :double
+      ],
+
+      :GEOSBufferParams_setSingleSided_r => [
+        # 0 on exception, *handle, *params, bool
+        :int, :pointer, :pointer, :int
+      ],
+      #### /BufferParams functions ####
 
       #### Algorithms ####
       # -1 if reaching P takes a counter-clockwise (left) turn

@@ -140,6 +140,71 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
+  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:buffer_with_params)
+    def test_buffer_with_params
+      tester = lambda { |expected, g, width, params|
+        geom = read(g)
+        buffered = geom.buffer_with_params(width, params)
+
+        assert_equal(expected, write(buffered))
+      }
+
+      @writer.rounding_precision = 0
+
+      # flat end cap on a straight line
+      tester[
+        'POLYGON ((10 12, 12 12, 12 8, 5 8, 3 8, 3 12, 10 12))',
+        'LINESTRING (5 10, 10 10)',
+        2,
+        Geos::BufferParams.new(:endcap => :square)
+      ]
+
+      # flat end cap on a straight line, single sided
+      tester[
+        'POLYGON ((10 10, 5 10, 5 12, 10 12, 10 10))',
+        'LINESTRING (5 10, 10 10)',
+        2,
+        Geos::BufferParams.new(
+          :endcap => :square,
+          :single_sided => true
+        )
+      ]
+
+      # flat end cap on a straight line, single sided
+      tester[
+        'POLYGON ((5 10, 10 10, 10 8, 5 8, 5 10))',
+        'LINESTRING (5 10, 10 10)',
+        -2,
+        Geos::BufferParams.new(
+          :endcap => :square,
+          :single_sided => true
+        )
+      ]
+    end
+
+    def test_buffer_with_params_with_bad_options
+      assert_raise(TypeError) do
+        Geos::BufferParams.new(
+          :endcap => :nonsense
+        )
+      end
+
+      assert_raise(TypeError) do
+        Geos::BufferParams.new(
+          :join => :nonsense
+        )
+      end
+    end
+
+    def test_buffer_with_params_readers
+      params = Geos::BufferParams.new
+
+      Geos::Constants::BUFFER_PARAM_DEFAULTS.each do |k, v|
+        assert_equal(v, params.send(k))
+      end
+    end
+  end
+
   if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:buffer_single_sided)
     def test_buffer_single_sided
       tester = lambda { |expected, g, width, style|

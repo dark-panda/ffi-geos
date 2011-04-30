@@ -118,6 +118,14 @@ module Geos
       ))
     end
 
+    def buffer_with_params(width, params)
+      if !params.is_a?(Geos::BufferParams)
+        raise ArgumentError.new("Expected Geos::BufferParams for params argument")
+      end
+
+      cast_geometry_ptr(FFIGeos.GEOSBufferWithParams_r(Geos.current_handle, self.ptr, params.ptr, width))
+    end
+
     def convex_hull
       cast_geometry_ptr(FFIGeos.GEOSConvexHull_r(Geos.current_handle, self.ptr))
     end
