@@ -45,6 +45,9 @@ Ruby bindings along with the following enhancements and additions:
 
 * Geos::BufferParams class and Geos::Geometry#buffer_with_params.
 
+* Geos::PreparedGeometry class and Geos::Geometry#to_prepared method to
+  allow for prepared geometries and more efficient relationship testing.
+
 == New Methods and Additions (not exhaustive)
 
 === Geos
