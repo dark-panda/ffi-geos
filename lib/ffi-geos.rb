@@ -672,12 +672,42 @@ module Geos
         :char, :pointer, :pointer, :pointer
       ],
 
+      :GEOSPreparedCoveredBy_r => [
+        # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
+        :char, :pointer, :pointer, :pointer
+      ],
+
       :GEOSPreparedCovers_r => [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
+      :GEOSPreparedCrosses_r => [
+        # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedDisjoint_r => [
+        # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
+        :char, :pointer, :pointer, :pointer
+      ],
+
       :GEOSPreparedIntersects_r => [
+        # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedOverlaps_r => [
+        # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedTouches_r => [
+        # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
+        :char, :pointer, :pointer, :pointer
+      ],
+
+      :GEOSPreparedWithin_r => [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
