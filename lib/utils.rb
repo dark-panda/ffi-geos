@@ -3,6 +3,7 @@ module Geos
   module Utils
     class << self
       include Geos::Tools
+      include Geos::GeomTypes
 
       if FFIGeos.respond_to?(:GEOSOrientationIndex_r)
         # * -1 if reaching P takes a counter-clockwise (left) turn
@@ -84,34 +85,37 @@ module Geos
       end
 
       def create_empty_collection(t)
+        check_enum_value(Geos::GeometryTypes, t)
         cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyCollection_r(Geos.current_handle, t))
       end
 
       def create_empty_multi_point
-        create_empty_collection(Geos::GeomTypes::GEOS_MULTIPOINT)
+        create_empty_collection(:multi_point)
       end
 
       def create_empty_multi_line_string
-        create_empty_collection(Geos::GeomTypes::GEOS_MULTILINESTRING)
+        create_empty_collection(:multi_line_string)
       end
 
       def create_empty_multi_polygon
-        create_empty_collection(Geos::GeomTypes::GEOS_MULTIPOLYGON)
+        create_empty_collection(:multi_polygon)
       end
 
       def create_empty_geometry_collection
-        create_empty_collection(Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION)
+        create_empty_collection(:geometry_collection)
       end
 
       def create_collection(t, *geoms)
+        check_enum_value(Geos::GeometryTypes, t)
+
         klass = case t
-          when Geos::GeomTypes::GEOS_MULTIPOINT
+          when GEOS_MULTIPOINT, :multi_point
             Geos::Point
-          when Geos::GeomTypes::GEOS_MULTILINESTRING
+          when GEOS_MULTILINESTRING, :multi_line_string
             Geos::LineString
-          when Geos::GeomTypes::GEOS_MULTIPOLYGON
+          when GEOS_MULTIPOLYGON, :multi_polygon
             Geos::Polygon
-          when Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION
+          when GEOS_GEOMETRYCOLLECTION, :geometry_collection
             Geos::Geometry
         end
 
@@ -130,19 +134,19 @@ module Geos
       end
 
       def create_multi_point(*geoms)
-        create_collection(Geos::GeomTypes::GEOS_MULTIPOINT, *geoms)
+        create_collection(:multi_point, *geoms)
       end
 
       def create_multi_line_string(*geoms)
-        create_collection(Geos::GeomTypes::GEOS_MULTILINESTRING, *geoms)
+        create_collection(:multi_line_string, *geoms)
       end
 
       def create_multi_polygon(*geoms)
-        create_collection(Geos::GeomTypes::GEOS_MULTIPOLYGON, *geoms)
+        create_collection(:multi_polygon, *geoms)
       end
 
       def create_geometry_collection(*geoms)
-        create_collection(Geos::GeomTypes::GEOS_GEOMETRYCOLLECTION, *geoms)
+        create_collection(:geometry_collection, *geoms)
       end
     end
   end

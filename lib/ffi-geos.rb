@@ -112,6 +112,17 @@ module Geos
       :monovalent_endpoint, 4
     ])
 
+    Geos::GeometryTypes = enum(:geometry_type, [
+      :point, 0,
+      :line_string, 1,
+      :linear_ring, 2,
+      :polygon, 3,
+      :multi_point, 4,
+      :multi_line_string, 5,
+      :multi_polygon, 6,
+      :geometry_collection, 7
+    ])
+
     FFI_LAYOUT = {
       #### Utility functions ####
       :initGEOS_r => [
@@ -189,12 +200,12 @@ module Geos
 
       :GEOSGeom_createCollection_r => [
         # *geom, *handle, type, **geoms, ngeoms
-        :pointer, :pointer, :int, :pointer, :uint
+        :pointer, :pointer, :geometry_type, :pointer, :uint
       ],
 
       :GEOSGeom_createEmptyCollection_r => [
         # *geom, *handle, type
-        :pointer, :pointer, :int
+        :pointer, :pointer, :geometry_type
       ],
       #### /Utility functions ####
 
@@ -975,6 +986,7 @@ module Geos
       create_multi_line_string
       create_multi_polygon
       create_geometry_collection
+      create_collection
 
       create_empty_point
       create_empty_line_string
@@ -983,6 +995,7 @@ module Geos
       create_empty_multi_line_string
       create_empty_multi_polygon
       create_empty_geometry_collection
+      create_empty_collection
     }.each do |m|
       self.class_eval <<-EOF
         def #{m}(*args)
@@ -992,15 +1005,16 @@ module Geos
     end
   end
 
+  # For backwards compatibility with older native GEOS bindings.
   module GeomTypes
-    GEOS_POINT = 0
-    GEOS_LINESTRING = 1
-    GEOS_LINEARRING = 2
-    GEOS_POLYGON = 3
-    GEOS_MULTIPOINT = 4
-    GEOS_MULTILINESTRING = 5
-    GEOS_MULTIPOLYGON = 6
-    GEOS_GEOMETRYCOLLECTION = 7
+    GEOS_POINT = Geos::GeometryTypes[:point]
+    GEOS_LINESTRING = Geos::GeometryTypes[:line_string]
+    GEOS_LINEARRING = Geos::GeometryTypes[:linear_ring]
+    GEOS_POLYGON = Geos::GeometryTypes[:polygon]
+    GEOS_MULTIPOINT = Geos::GeometryTypes[:multi_point]
+    GEOS_MULTILINESTRING = Geos::GeometryTypes[:multi_line_string]
+    GEOS_MULTIPOLYGON = Geos::GeometryTypes[:multi_polygon]
+    GEOS_GEOMETRYCOLLECTION = Geos::GeometryTypes[:geometry_collection]
   end
 
   module VersionConstants

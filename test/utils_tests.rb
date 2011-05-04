@@ -278,6 +278,11 @@ class UtilsTests < Test::Unit::TestCase
       )
     end
 
+    def test_create_geometry_collection_with_constants_and_symbols
+      assert_kind_of(Geos::MultiLineString, Geos.create_collection(Geos::GeomTypes::GEOS_MULTILINESTRING))
+      assert_kind_of(Geos::MultiLineString, Geos.create_collection(:multi_line_string))
+    end
+
     def test_create_bad_geometry_collection
       assert_raise(TypeError) do
         Geos.create_geometry_collection(
