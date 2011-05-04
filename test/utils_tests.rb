@@ -206,7 +206,7 @@ class UtilsTests < Test::Unit::TestCase
     assert_equal(1, geom.num_geometries)
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_multi_point)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
     def test_create_multi_point
       @writer.rounding_precision = 0
       assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
@@ -226,7 +226,7 @@ class UtilsTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_multi_line_string)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_line_string)
     def test_create_multi_line_string
       @writer.rounding_precision = 0
       assert_equal('MULTILINESTRING EMPTY', write(Geos.create_multi_line_string))
@@ -246,7 +246,7 @@ class UtilsTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_multi_polygon)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_polygon)
     def test_create_multi_polygon
       @writer.rounding_precision = 0
       assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_multi_polygon))
@@ -266,7 +266,7 @@ class UtilsTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_geometry_collection)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
     def test_create_geometry_collection
       @writer.rounding_precision = 0
       assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_geometry_collection))
@@ -289,43 +289,43 @@ class UtilsTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_point)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_point)
     def test_create_empty_point
       assert_equal('POINT EMPTY', write(Geos.create_empty_point))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_line_string)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_line_string)
     def test_create_empty_line_string
       assert_equal('LINESTRING EMPTY', write(Geos.create_empty_line_string))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_polygon)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_polygon)
     def test_create_empty_polygon
       assert_equal('POLYGON EMPTY', write(Geos.create_empty_polygon))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_multi_point)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_point)
     def test_create_empty_multi_point
       assert_equal('MULTIPOINT EMPTY', write(Geos.create_empty_multi_point))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_multi_line_string)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_line_string)
     def test_create_empty_multi_line_string
       assert_equal('MULTILINESTRING EMPTY', write(Geos.create_empty_multi_line_string))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_multi_polygon)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_polygon)
     def test_create_empty_multi_polygon
       assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_empty_multi_polygon))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.method_defined?(:create_empty_geometry_collection)
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_geometry_collection)
     def test_create_empty_geometry_collection
       assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_empty_geometry_collection))
     end
