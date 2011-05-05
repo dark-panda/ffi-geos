@@ -425,10 +425,14 @@ module Geos
       }.read_double
     end
 
-    def hausdorff_distance(geom)
+    def hausdorff_distance(geom, densify_frac = nil)
       check_geometry(geom)
       FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSHausdorffDistance_r(Geos.current_handle, self.ptr, geom.ptr, ret)
+        if densify_frac
+          FFIGeos.GEOSHausdorffDistanceDensify_r(Geos.current_handle, self.ptr, geom.ptr, densify_frac, ret)
+        else
+          FFIGeos.GEOSHausdorffDistance_r(Geos.current_handle, self.ptr, geom.ptr, ret)
+        end
       }.read_double
     end
 

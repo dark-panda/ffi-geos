@@ -1389,6 +1389,20 @@ class GeometryTests < Test::Unit::TestCase
       tester[2.23606797749979, geom_a, 'POINT(-1 0)']
       tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
     end
+
+    def test_hausdorff_distance_with_densify_fract
+      tester = lambda { |expected, g1, g2|
+        geom_1 = read(g1)
+        geom_2 = read(g2)
+        assert_in_delta(expected, geom_1.hausdorff_distance(geom_2, 0.001), TOLERANCE)
+      }
+
+      geom_a = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
+
+      tester[10.0498756211209, geom_a, 'POINT(0 10)']
+      tester[2.23606797749979, geom_a, 'POINT(-1 0)']
+      tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
+    end
   end
 
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:snap)

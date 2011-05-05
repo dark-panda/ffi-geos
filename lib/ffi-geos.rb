@@ -574,6 +574,11 @@ module Geos
         :int, :pointer, :pointer, :pointer, :pointer
       ],
 
+      :GEOSHausdorffDistanceDensify_r => [
+        # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, densifyFrac, (double *) distance
+        :int, :pointer, :pointer, :pointer, :double, :pointer
+      ],
+
       :GEOSGetGeometryN_r => [
         # *geom, *handle, *geom, n
         :pointer, :pointer, :pointer, :int
