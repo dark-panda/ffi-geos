@@ -149,12 +149,12 @@ module Geos
       ],
 
       :GEOSPolygonize_r => [
-        # *geom, *handle, *geom_a, *geom_b, ngeoms
+        # *geom, *handle, **geoms, ngeoms
         :pointer, :pointer, :pointer, :uint
       ],
 
       :GEOSPolygonizer_getCutEdges_r => [
-        # *(geom, *handle, *geoms[], ngeoms
+        # *geom, *handle, **geoms, ngeoms
         :pointer, :pointer, :pointer, :uint
       ],
 
