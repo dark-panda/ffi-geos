@@ -1026,10 +1026,10 @@ module Geos
     VERSION = File.read(File.join(GEOS_BASE, %w{ .. VERSION })).strip
     GEOS_JTS_PORT = Geos.jts_port
     GEOS_VERSION,
-      GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERISON_PATCH,
+      GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERISON_PATCH, GEOS_VERSION_PRERELEASE,
       GEOS_CAPI_VERSION,
       GEOS_CAPI_VERSION_MAJOR, GEOS_CAPI_VERSION_MINOR, GEOS_CAPI_VERSION_PATCH =
-        if versions = Geos.version.scan(/^((\d+)\.(\d+)\.(\d+))-CAPI-((\d+)\.(\d+)\.(\d+))$/)
+        if !(versions = Geos.version.scan(/^((\d+)\.(\d+)\.(\d+)((?:rc|beta|alpha)\d+)?)-CAPI-((\d+)\.(\d+)\.(\d+))$/)).empty?
           versions = versions[0]
           [
             versions[0],
@@ -1037,12 +1037,13 @@ module Geos
             versions[2].to_i,
             versions[3].to_i,
             versions[4],
-            versions[5].to_i,
+            versions[5],
             versions[6].to_i,
-            versions[7].to_i
+            versions[7].to_i,
+            versions[8].to_i
           ]
         else
-          []
+          [ '0.0.0', 0, 0, 0, nil, '0.0.0', 0, 0, 0 ]
         end
     GEOS_CAPI_FIRST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i
     GEOS_CAPI_LAST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i + GEOS_CAPI_VERSION_MINOR.to_i
