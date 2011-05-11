@@ -43,7 +43,8 @@ Ruby bindings along with the following enhancements and additions:
   have been enhanced to take options Hashes allowing you to set per-write
   settings.
 
-* Geos::BufferParams class and Geos::Geometry#buffer_with_params.
+* Geos::BufferParams class that allows for more extensive Geos::Geometry#buffer
+  options.
 
 * Geos::PreparedGeometry class and Geos::Geometry#to_prepared method to
   allow for prepared geometries and more efficient relationship testing.
@@ -77,8 +78,6 @@ Ruby bindings along with the following enhancements and additions:
 * Geos.create_empty_geometry_collection
 
 === Geos::Geometry
-
-* Geos::Geometry#buffer_with_style
 
 * Geos::Geometry#num_coordinates
 

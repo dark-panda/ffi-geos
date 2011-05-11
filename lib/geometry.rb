@@ -71,56 +71,24 @@ module Geos
     # :call-seq:
     #   buffer(width)
     #   buffer(width, options)
+    #   buffer(width, buffer_params)
     #   buffer(width, quad_segs)
     #
-    # Calls buffer on the Geometry. Calling with an options Hash is equivalent
-    # to calling buffer_with_style.
-    #
-    # By default, quad_segs is set to 8.
-    def buffer(width, *args)
-      quad_segs, options = if args.length <= 0
-        [ 8, nil ]
-      else
-        if args.first.is_a?(Hash)
-          [ args.first[:quad_segs] || 8, args.first ]
+    # Calls buffer on the Geometry. Options can be passed as either a
+    # BufferParams object, as an equivalent Hash or as a quad_segs value. By
+    # default, the default values found in Geos::Constants::BUFFER_PARAMS_DEFAULTS
+    # are used.
+    def buffer(width, options = nil)
+      options ||= {}
+      params = case options
+        when Hash
+          Geos::BufferParams.new(options)
+        when Geos::BufferParams
+          options
+        when Numeric
+          Geos::BufferParams.new(:quad_segs => options)
         else
-          [ args.first, args[1] ]
-        end
-      end
-
-      if options
-        if options.is_a?(Hash)
-          self.buffer_with_style(width, options)
-        else
-          raise RuntimeError.new("Expected an options Hash")
-        end
-      else
-        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs))
-      end
-    end
-
-    # The default for the options according to GEOS are as found in
-    # Geos::Constants::BUFFER_PARAMS_DEFAULTS.
-    def buffer_with_style(width, options = {})
-      options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
-
-      check_enum_value(Geos::BufferCapStyles, options[:endcap]) if options[:endcap]
-      check_enum_value(Geos::BufferJoinStyles, options[:join]) if options[:join]
-
-      cast_geometry_ptr(FFIGeos.GEOSBufferWithStyle_r(
-        Geos.current_handle,
-        self.ptr,
-        width,
-        options[:quad_segs],
-        options[:endcap],
-        options[:join],
-        options[:mitre_limit]
-      ))
-    end
-
-    def buffer_with_params(width, params)
-      if !params.is_a?(Geos::BufferParams)
-        raise ArgumentError.new("Expected Geos::BufferParams for params argument")
+          raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
       end
 
       cast_geometry_ptr(FFIGeos.GEOSBufferWithParams_r(Geos.current_handle, self.ptr, params.ptr, width))
