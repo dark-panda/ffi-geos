@@ -33,24 +33,6 @@ module Geos
     end
     alias :slice :[]
 
-    # Deprecated in GEOS 3.3.0. Use Geos::LingString#offset_curve with a
-    # negative width instead.
-    def buffer_single_sided(width, options = {})
-      options = Constants::BUFFER_PARAM_DEFAULTS.merge(
-        :left_side => false
-      ).merge(options)
-
-      cast_geometry_ptr(FFIGeos.GEOSSingleSidedBuffer_r(
-        Geos.current_handle,
-        self.ptr,
-        width,
-        options[:quad_segs],
-        options[:join],
-        options[:mitre_limit],
-        options[:left_side] ? 1 : 0
-      ))
-    end
-
     def offset_curve(width, options = {})
       options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 

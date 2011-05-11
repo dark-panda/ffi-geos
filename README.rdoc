@@ -122,8 +122,6 @@ Ruby bindings along with the following enhancements and additions:
 
 * Geos::LineString#point_n
 
-* Geos::LineString#buffer_single_sided
-
 * Geos::LineString#closed?
 
 === Geos::WktWriter
