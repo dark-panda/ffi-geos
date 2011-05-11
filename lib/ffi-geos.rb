@@ -913,7 +913,7 @@ module Geos
 
       :GEOSBufferParams_setQuadrantSegments_r => [
         # 0 on exception, *handle, *params, quad_segs
-        :int, :pointer, :pointer, :double
+        :int, :pointer, :pointer, :int
       ],
 
       :GEOSBufferParams_setSingleSided_r => [
