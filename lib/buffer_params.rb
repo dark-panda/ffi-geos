@@ -6,11 +6,17 @@ module Geos
     attr_reader :ptr, :params
 
     VALID_PARAMETERS = [
-      :endcap, :join, :mitre_limit, :quad_segs, :single_sided
+      :quad_segs, :endcap, :join, :mitre_limit, :single_sided
     ].freeze
 
     # The defaults for the params according to GEOS are as found in
-    # Geos::Constants::BUFFER_PARAMS_DEFAULTS.
+    # Geos::Constants::BUFFER_PARAMS_DEFAULTS. Note that when setting the
+    # :quad_segs value that you should set it before setting other values like
+    # :join and :mitre_limit, as GEOS contains logic concerning how the
+    # :quad_segs value affects these parameters and vice versa. For details,
+    # refer to src/operation/buffer/BufferParameters.cpp and the
+    # BufferParameters::setQuadrantSegments(int) method in the GEOS source
+    # code for details.
     def initialize(params = {})
       params = Geos::Constants::BUFFER_PARAM_DEFAULTS.merge(params)
 
