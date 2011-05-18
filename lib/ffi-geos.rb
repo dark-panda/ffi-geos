@@ -3,7 +3,7 @@ require 'ffi'
 require 'rbconfig'
 
 module Geos
-  GEOS_BASE = File.dirname(__FILE__)
+  GEOS_BASE = File.join(File.dirname(__FILE__), 'ffi-geos')
 
   autoload :WktReader,
     File.join(GEOS_BASE, 'wkt_reader')
@@ -1023,7 +1023,7 @@ module Geos
   end
 
   module VersionConstants
-    VERSION = File.read(File.join(GEOS_BASE, %w{ .. VERSION })).strip
+    VERSION = File.read(File.join(GEOS_BASE, %w{ .. .. VERSION })).strip
     GEOS_JTS_PORT = Geos.jts_port
     GEOS_VERSION,
       GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERISON_PATCH, GEOS_VERSION_PRERELEASE,
