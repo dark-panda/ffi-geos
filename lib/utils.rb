@@ -31,8 +31,10 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: Point coordinate list must contain a single element")
         end
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs.ptr)).tap {
-          cs.ptr.autorelease = false
+        cs_clone = cs.clone
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_clone.ptr)).tap {
+          cs_clone.ptr.autorelease = false
         }
       end
 
@@ -41,8 +43,10 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs.ptr)).tap {
-          cs.ptr.autorelease = false
+        cs_clone = cs.clone
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_clone.ptr)).tap {
+          cs_clone.ptr.autorelease = false
         }
       end
 
@@ -51,8 +55,10 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs.ptr)).tap {
-          cs.ptr.autorelease = false
+        cs_clone = cs.clone
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs_clone.ptr)).tap {
+          cs_clone.ptr.autorelease = false
         }
       end
 
@@ -63,12 +69,15 @@ module Geos
           end
         }
 
-        ary = FFI::MemoryPointer.new(:pointer, inner.length)
-        ary.write_array_of_pointer(inner.map(&:ptr))
+        outer_clone = outer.clone
+        inner_clones = inner.map(&:clone)
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer.ptr, ary, inner.length)).tap {
-          outer.ptr.autorelease = false
-          inner.each { |i| i.ptr.autorelease = false }
+        ary = FFI::MemoryPointer.new(:pointer, inner.length)
+        ary.write_array_of_pointer(inner_clones.map(&:ptr))
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_clone.ptr, ary, inner_clones.length)).tap {
+          outer_clone.ptr.autorelease = false
+          inner_clones.each { |i| i.ptr.autorelease = false }
         }
       end
 
@@ -125,11 +134,13 @@ module Geos
           end
         }
 
-        ary = FFI::MemoryPointer.new(:pointer, geoms.length)
-        ary.write_array_of_pointer(geoms.map(&:ptr))
+        geoms_clones = geoms.map(&:clone)
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms.length)).tap {
-          geoms.each { |i| i.ptr.autorelease = false }
+        ary = FFI::MemoryPointer.new(:pointer, geoms.length)
+        ary.write_array_of_pointer(geoms_clones.map(&:ptr))
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_clones.length)).tap {
+          geoms_clones.each { |i| i.ptr.autorelease = false }
         }
       end
 

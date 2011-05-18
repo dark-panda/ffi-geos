@@ -50,4 +50,37 @@ class MiscTests < Test::Unit::TestCase
       "t2: [false]"
     ], @messages.sort)
   end
+
+  def test_segfault_on_cs_ownership
+    cs = Geos::CoordinateSequence.new(1, 2)
+    cs.set_x(0, 1)
+    cs.set_y(0, 2)
+
+    point = Geos.create_point(cs)
+    collection_a = Geos.create_geometry_collection(point)
+    collection_b = Geos.create_geometry_collection(point)
+
+    GC.start
+
+    writer.rounding_precision = 0
+
+    assert_equal('POINT (1 2)', write(point))
+    assert_equal(collection_a[0], point)
+    assert_equal(collection_a[0], collection_b[0])
+  end
+
+  def test_segfault_on_geom_ownership
+    point = read('POINT (10 20)')
+
+    collection_a = Geos.create_geometry_collection(point)
+    collection_b = Geos.create_geometry_collection(collection_a[0])
+
+    GC.start
+
+    writer.rounding_precision = 0
+
+    assert_equal('POINT (10 20)', write(point))
+    assert_equal(collection_a[0], point)
+    assert_equal(collection_a[0], collection_b[0])
+  end
 end
