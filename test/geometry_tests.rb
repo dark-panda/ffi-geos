@@ -1516,4 +1516,18 @@ class GeometryTests < Test::Unit::TestCase
       ], geom[1..2].collect { |g| write(g) })
     end
   end
+
+  def test_clone
+    geom_a = read('POINT(0 0)')
+    geom_b = geom_a.clone
+
+    assert(geom_a.eql?(geom_b))
+  end
+
+  def test_dup
+    geom_a = read('POINT(0 0)')
+    geom_b = geom_a.dup
+
+    assert(geom_a.eql?(geom_b))
+  end
 end

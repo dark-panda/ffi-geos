@@ -31,15 +31,18 @@ module Geos
       )
     end
 
+    def initialize_copy(source)
+      @ptr = FFI::AutoPointer.new(
+        FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle, source.ptr),
+        self.class.method(:release)
+      )
+    end
+
     def self.no_release(ptr) #:nodoc:
     end
 
     def self.release(ptr) #:nodoc:
       FFIGeos.GEOSCoordSeq_destroy_r(Geos.current_handle, ptr)
-    end
-
-    def clone
-      self.class.new(FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle, self.ptr))
     end
 
     # Yields coordinates as [ x, y, z ]. The z coordinate may be omitted for

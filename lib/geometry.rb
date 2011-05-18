@@ -14,15 +14,18 @@ module Geos
       )
     end
 
+    def initialize_copy(source)
+      @ptr = FFI::AutoPointer.new(
+        FFIGeos.GEOSGeom_clone_r(Geos.current_handle, source.ptr),
+        self.class.method(:release)
+      )
+    end
+
     def self.no_release(ptr) #:nodoc:
     end
 
     def self.release(ptr) #:nodoc:
       FFIGeos.GEOSGeom_destroy_r(Geos.current_handle, ptr)
-    end
-
-    def clone
-      cast_geometry_ptr(FFIGeos.GEOSGeom_clone_r(Geos.current_handle, ptr))
     end
 
     # Returns the name of the Geometry type, i.e. "Point", "Polygon", etc.

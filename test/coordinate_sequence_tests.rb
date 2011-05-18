@@ -67,4 +67,26 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_raise(RuntimeError) { @cs.get_ordinate(10, 0) }
     assert_raise(RuntimeError) { @cs.get_ordinate(-1, 0) }
   end
+
+  def test_clone
+    @cs.set_x(0, 1)
+    @cs.set_y(0, 2)
+
+    cs_b = @cs.clone
+
+    assert_equal(@cs.get_x(0), cs_b.get_x(0))
+    assert_equal(@cs.get_y(0), cs_b.get_y(0))
+    assert_equal(@cs.dimensions, cs_b.dimensions)
+  end
+
+  def test_dup
+    @cs.set_x(0, 1)
+    @cs.set_y(0, 2)
+
+    cs_b = @cs.dup
+
+    assert_equal(@cs.get_x(0), cs_b.get_x(0))
+    assert_equal(@cs.get_y(0), cs_b.get_y(0))
+    assert_equal(@cs.dimensions, cs_b.dimensions)
+  end
 end
