@@ -18,6 +18,7 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSGetGeometryN_r(Geos.current_handle, self.ptr, n), false)
       end
     end
+    alias :geometry_n :get_geometry_n
 
     def [](*args)
       self.to_a[*args]
