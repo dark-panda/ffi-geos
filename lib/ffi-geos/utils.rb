@@ -140,7 +140,9 @@ module Geos
         ary.write_array_of_pointer(geoms_clones.map(&:ptr))
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_clones.length)).tap {
-          geoms_clones.each { |i| i.ptr.autorelease = false }
+          geoms_clones.each { |i|
+            i.ptr.autorelease = false
+          }
         }
       end
 
