@@ -9,6 +9,8 @@ module Geos
       :quad_segs, :endcap, :join, :mitre_limit, :single_sided
     ].freeze
 
+    undef :clone, :dup
+
     # The defaults for the params according to GEOS are as found in
     # Geos::Constants::BUFFER_PARAMS_DEFAULTS. Note that when setting the
     # :quad_segs value that you should set it before setting other values like

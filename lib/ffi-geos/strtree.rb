@@ -6,6 +6,8 @@ module Geos
 
     attr_reader :ptr
 
+    undef :clone, :dup
+
     def initialize(capacity)
       ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle, capacity)
 

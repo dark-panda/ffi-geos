@@ -50,5 +50,17 @@ if defined?(Geos::STRtree)
       assert_equal(2, @tree.query(read('LINESTRING(25 25, 26 26)')).length)
       assert_equal(2, @tree.query(read('LINESTRING(0 0, 100 100)')).length)
     end
+
+    def test_cant_clone
+      assert_raise(NoMethodError) do
+        Geos::STRtree.new(3).clone
+      end
+    end
+
+    def test_cant_dup
+      assert_raise(NoMethodError) do
+        Geos::STRtree.new(3).dup
+      end
+    end
   end
 end

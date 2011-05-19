@@ -70,5 +70,17 @@ if defined?(Geos::PreparedGeometry)
     def test_covered_by
       relationship_tester(:covered_by?, true, true, true, false, false, true, false, false)
     end
+
+    def test_cant_clone
+      assert_raise(NoMethodError) do
+        read(POINT_A).to_prepared.clone
+      end
+    end
+
+    def test_cant_dup
+      assert_raise(NoMethodError) do
+        read(POINT_A).to_prepared.dup
+      end
+    end
   end
 end

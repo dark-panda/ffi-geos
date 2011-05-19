@@ -5,6 +5,8 @@ module Geos
 
     attr_reader :ptr
 
+    undef :clone, :dup
+
     def initialize(ptr, auto_free = true)
       @ptr = FFI::AutoPointer.new(
         ptr,

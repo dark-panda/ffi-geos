@@ -83,4 +83,16 @@ class MiscTests < Test::Unit::TestCase
     assert_equal(collection_a[0], point)
     assert_equal(collection_a[0], collection_b[0])
   end
+
+  def test_cant_clone_buffer_params
+    assert_raise(NoMethodError) do
+      Geos::BufferParams.new.clone
+    end
+  end
+
+  def test_cant_dup_buffer_params
+    assert_raise(NoMethodError) do
+      Geos::BufferParams.new.dup
+    end
+  end
 end
