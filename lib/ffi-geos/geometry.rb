@@ -12,6 +12,10 @@ module Geos
         ptr,
         auto_free ? self.class.method(:release) : self.class.method(:no_release)
       )
+
+      if !auto_free
+        @ptr.autorelease = false
+      end
     end
 
     def initialize_copy(source)
