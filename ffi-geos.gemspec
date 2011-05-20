@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ffi-geos}
-  s.version = "0.0.1.beta2"
+  s.version = "0.0.1.beta3"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["J Smith"]
-  s.date = %q{2011-05-11}
+  s.date = %q{2011-05-20}
   s.description = %q{An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS).}
   s.email = %q{dark.panda@gmail.com}
   s.extra_rdoc_files = [
@@ -21,26 +21,26 @@ Gem::Specification.new do |s|
     "Rakefile",
     "VERSION",
     "ffi-geos.gemspec",
-    "lib/buffer_params.rb",
-    "lib/coordinate_sequence.rb",
     "lib/ffi-geos.rb",
-    "lib/geometry.rb",
-    "lib/geometry_collection.rb",
-    "lib/line_string.rb",
-    "lib/linear_ring.rb",
-    "lib/multi_line_string.rb",
-    "lib/multi_point.rb",
-    "lib/multi_polygon.rb",
-    "lib/point.rb",
-    "lib/polygon.rb",
-    "lib/prepared_geometry.rb",
-    "lib/strtree.rb",
-    "lib/tools.rb",
-    "lib/utils.rb",
-    "lib/wkb_reader.rb",
-    "lib/wkb_writer.rb",
-    "lib/wkt_reader.rb",
-    "lib/wkt_writer.rb",
+    "lib/ffi-geos/buffer_params.rb",
+    "lib/ffi-geos/coordinate_sequence.rb",
+    "lib/ffi-geos/geometry.rb",
+    "lib/ffi-geos/geometry_collection.rb",
+    "lib/ffi-geos/line_string.rb",
+    "lib/ffi-geos/linear_ring.rb",
+    "lib/ffi-geos/multi_line_string.rb",
+    "lib/ffi-geos/multi_point.rb",
+    "lib/ffi-geos/multi_polygon.rb",
+    "lib/ffi-geos/point.rb",
+    "lib/ffi-geos/polygon.rb",
+    "lib/ffi-geos/prepared_geometry.rb",
+    "lib/ffi-geos/strtree.rb",
+    "lib/ffi-geos/tools.rb",
+    "lib/ffi-geos/utils.rb",
+    "lib/ffi-geos/wkb_reader.rb",
+    "lib/ffi-geos/wkb_writer.rb",
+    "lib/ffi-geos/wkt_reader.rb",
+    "lib/ffi-geos/wkt_writer.rb",
     "test/coordinate_sequence_tests.rb",
     "test/geometry_tests.rb",
     "test/misc_tests.rb",
@@ -58,20 +58,6 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.7.2}
   s.summary = %q{An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS).}
-  s.test_files = [
-    "test/coordinate_sequence_tests.rb",
-    "test/geometry_tests.rb",
-    "test/misc_tests.rb",
-    "test/point_tests.rb",
-    "test/prepared_geometry_tests.rb",
-    "test/strtree_tests.rb",
-    "test/test_helper.rb",
-    "test/utils_tests.rb",
-    "test/wkb_reader_tests.rb",
-    "test/wkb_writer_tests.rb",
-    "test/wkt_reader_tests.rb",
-    "test/wkt_writer_tests.rb"
-  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
