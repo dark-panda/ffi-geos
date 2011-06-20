@@ -2,9 +2,9 @@
 # -*- ruby -*-
 
 require 'rubygems'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 $:.push 'lib'
 
