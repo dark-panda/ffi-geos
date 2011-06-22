@@ -3,11 +3,12 @@ module Geos
   class PreparedGeometry
     include Geos::Tools
 
-    attr_reader :ptr
+    attr_reader :ptr, :geometry
 
     undef :clone, :dup
 
-    def initialize(ptr, auto_free = true)
+    def initialize(ptr, geometry, auto_free = true)
+      @geometry = geometry
       @ptr = FFI::AutoPointer.new(
         ptr,
         auto_free ? self.class.method(:release) : self.class.method(:no_release)

@@ -466,7 +466,7 @@ module Geos
     end
 
     def to_prepared
-      Geos::PreparedGeometry.new(FFIGeos.GEOSPrepare_r(Geos.current_handle, self.ptr))
+      Geos::PreparedGeometry.new(FFIGeos.GEOSPrepare_r(Geos.current_handle, self.ptr), self)
     end
 
     def to_s
