@@ -7,11 +7,12 @@ module Geos
 
     undef :clone, :dup
 
-    def initialize(ptr, auto_free = true)
+    def initialize(geom, auto_free = true)
       @ptr = FFI::AutoPointer.new(
-        ptr,
+        FFIGeos.GEOSPrepare_r(Geos.current_handle, geom.ptr),
         auto_free ? self.class.method(:release) : self.class.method(:no_release)
       )
+      @geom = geom
 
       if !auto_free
         @ptr.autorelease = false
