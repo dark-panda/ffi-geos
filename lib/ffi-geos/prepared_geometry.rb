@@ -3,7 +3,7 @@ module Geos
   class PreparedGeometry
     include Geos::Tools
 
-    attr_reader :ptr
+    attr_reader :ptr, :geometry
 
     undef :clone, :dup
 
@@ -12,7 +12,7 @@ module Geos
         FFIGeos.GEOSPrepare_r(Geos.current_handle, geom.ptr),
         auto_free ? self.class.method(:release) : self.class.method(:no_release)
       )
-      @geom = geom
+      @geometry = geom
 
       if !auto_free
         @ptr.autorelease = false
