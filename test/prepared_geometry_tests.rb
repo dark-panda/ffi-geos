@@ -82,5 +82,11 @@ if defined?(Geos::PreparedGeometry)
         read(POINT_A).to_prepared.dup
       end
     end
+
+    def test_initializer_type_exception
+      assert_raise(TypeError) do
+        Geos::PreparedGeometry.new('hello world')
+      end
+    end
   end
 end
