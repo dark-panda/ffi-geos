@@ -1,5 +1,5 @@
 
-= GEOS Ruby Bindings in FFI
+= GEOS Ruby Bindings via FFI
 
 == Requirements
 
@@ -12,8 +12,12 @@ Ruby versions known to work:
 * Ruby MRI 1.8.7 and 1.9.2, x86_64, OSX 10.6.5+
 * Ruby MRI 1.8.7 and 1.9.2, i386, linux
 * Ruby MRI 1.8.7, x86_64, linux
-* JRuby 1.5 and 1.6 using JRE 1.6.0_22, x86_64, OSX 10.6.5+
-* JRuby 1.5 and 1.6 using JRE 1.6.0_18, i386, linux
+
+Note that versions of JRuby prior to the as-of-yet (25 June 2011) unreleased
+version 1.6.3 have problems in their ffi implementation when dealing with
+AutoPointers that can lead to segfaults during garbage collection. Upcoming
+versions of JRuby should have the problem licked. For details, check out
+http://jira.codehaus.org/browse/JRUBY-5813.
 
 == Features
 
@@ -135,3 +139,11 @@ Ruby bindings along with the following enhancements and additions:
 === Geos::Utils
 
 * Geos::Utils.orientation_index
+
+== Thanks
+
+* Thanks to Daniel Azuma for the testing and JRuby help.
+
+* Christopher Meiklejohn for the bug reporting and PreparedGeometry fix.
+
+* Wayne Meissner for some help with some ffi issues.
