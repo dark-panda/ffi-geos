@@ -1026,7 +1026,7 @@ module Geos
     VERSION = File.read(File.join(GEOS_BASE, %w{ .. .. VERSION })).strip
     GEOS_JTS_PORT = Geos.jts_port
     GEOS_VERSION,
-      GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERISON_PATCH, GEOS_VERSION_PRERELEASE,
+      GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERSION_PATCH, GEOS_VERSION_PRERELEASE,
       GEOS_CAPI_VERSION,
       GEOS_CAPI_VERSION_MAJOR, GEOS_CAPI_VERSION_MINOR, GEOS_CAPI_VERSION_PATCH =
         if !(versions = Geos.version.scan(/^((\d+)\.(\d+)\.(\d+)((?:rc|beta|alpha)\d+)?)-CAPI-((\d+)\.(\d+)\.(\d+))$/)).empty?
