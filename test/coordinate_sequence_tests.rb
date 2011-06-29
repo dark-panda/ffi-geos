@@ -89,4 +89,30 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal(@cs.get_y(0), cs_b.get_y(0))
     assert_equal(@cs.dimensions, cs_b.dimensions)
   end
+
+  def test_read_from_array
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 1, 1 ],
+      [ 2, 2 ],
+      [ 3, 3 ],
+      [ 4, 4 ]
+    ])
+
+    assert_equal(2, cs.dimensions)
+    assert_equal(5, cs.length)
+
+    assert_raise(Geos::CoordinateSequence::ParseError) do
+      cs = Geos::CoordinateSequence.new([
+        [ 1, 2 ],
+        [ 1, 2, 3 ]
+      ])
+    end
+
+    assert_raise(Geos::CoordinateSequence::ParseError) do
+      cs = Geos::CoordinateSequence.new([
+        [ 1, 2, 3, 4 ]
+      ])
+    end
+  end
 end

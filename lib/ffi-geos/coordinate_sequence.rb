@@ -3,6 +3,9 @@ module Geos
 
   # A CoordinateSequence is a list of coordinates in a Geometry.
   class CoordinateSequence
+    class ParseError < ArgumentError
+    end
+
     include Enumerable
 
     attr_reader :ptr
@@ -10,16 +13,43 @@ module Geos
     # :call-seq:
     #   new(ptr, auto_free = true)
     #   new(size, dims = 0)
+    #   new(points)
     #
     # The ptr version of the initializer is for internal use.
+    #
+    # new(points) will try to glean the size and dimensions of your
+    # CoordinateSequence from an Array of points. The Array should contain
+    # uniform-sized Arrays which represent the [ x, y, z ] values of your
+    # coordinates.
     def initialize(*args)
+      points = nil # forward declaration we can use later
+
       ptr, auto_free = if args.first.is_a?(FFI::Pointer)
         [ args.first, args[1] ]
       else
-        size, dims = if !args.length.between?(1, 2)
-          raise ArgumentError.new("wrong number of arguments (#{args.length} for 1-2)")
+        size, dims = if args.first.is_a?(Array)
+          points = if args.first.first.is_a?(Array)
+            args.first
+          else
+            args
+          end
+          lengths = points.collect(&:length).uniq
+
+          if lengths.empty?
+            [ 0, 0 ]
+          elsif lengths.length != 1
+            raise ParseError.new("Different sized points found in Array")
+          elsif !lengths.first.between?(1, 3)
+            raise ParseError.new("Expected points to contain 1-3 elements")
+          else
+            [ points.length, points.first.length ]
+          end
         else
-          [ args[0], args[1] || 0]
+          if !args.length.between?(1, 2)
+            raise ArgumentError.new("wrong number of arguments (#{args.length} for 1-2)")
+          else
+            [ args[0], args[1] || 0 ]
+          end
         end
 
         [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, size, dims), true ]
@@ -32,6 +62,14 @@ module Geos
 
       if !auto_free
         @ptr.autorelease = false
+      end
+
+      if points
+        points.each_with_index do |point, idx|
+          point.each_with_index do |val, dim|
+            self.set_ordinate(idx, dim, val)
+          end
+        end
       end
     end
 
