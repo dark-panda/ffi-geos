@@ -63,16 +63,15 @@ module Geos
       end
 
       def create_polygon(outer, *inner)
-        inner = Array(inner).flatten.tap { |i|
-          if i.detect { |g| !g.is_a?(Geos::LinearRing) }
-            raise TypeError.new("Expected inner Array to contain Geometry::LinearRing objects")
-          end
+        inner_clones = Array(inner).flatten.collect { |i|
+          force_to_linear_ring(i) or
+            raise TypeError.new("Expected inner Array to contain Geos::LinearRing or Geos::CoordinateSequence objects")
         }
 
-        outer_clone = outer.clone
-        inner_clones = inner.map(&:clone)
+        outer_clone = force_to_linear_ring(outer) or
+          raise TypeError.new("Expected outer shell to be a Geos::LinearRing or Geos::CoordinateSequence")
 
-        ary = FFI::MemoryPointer.new(:pointer, inner.length)
+        ary = FFI::MemoryPointer.new(:pointer, inner_clones.length)
         ary.write_array_of_pointer(inner_clones.map(&:ptr))
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_clone.ptr, ary, inner_clones.length)).tap {
@@ -161,6 +160,16 @@ module Geos
       def create_geometry_collection(*geoms)
         create_collection(:geometry_collection, *geoms)
       end
+
+      private
+        def force_to_linear_ring(geom)
+          case geom
+            when Geos::CoordinateSequence
+              geom.to_linear_ring
+            when Geos::LinearRing
+              geom.clone
+          end
+        end
     end
   end
 end

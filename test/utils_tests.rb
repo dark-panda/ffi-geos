@@ -131,21 +131,13 @@ class UtilsTests < Test::Unit::TestCase
   end
 
   def test_create_polygon
-    cs = Geos::CoordinateSequence.new(5, 2)
-    cs.set_x(0, 0)
-    cs.set_y(0, 0)
-
-    cs.set_x(1, 0)
-    cs.set_y(1, 10)
-
-    cs.set_x(2, 10)
-    cs.set_y(2, 10)
-
-    cs.set_x(3, 10)
-    cs.set_y(3, 0)
-
-    cs.set_x(4, 0)
-    cs.set_y(4, 0)
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 0, 10 ],
+      [ 10, 10 ],
+      [ 10, 0 ],
+      [ 0, 0 ]
+    ])
 
     exterior_ring = Geos::create_linear_ring(cs)
 
@@ -153,44 +145,57 @@ class UtilsTests < Test::Unit::TestCase
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
-    assert(read('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))').eql_exact?(geom, TOLERANCE))
+    assert_equal('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))', write(geom, :trim => true))
   end
 
-  def test_create_polygon_with_holes
-    create_ring = lambda { |*points|
-      Geos.create_linear_ring(
-        Geos::CoordinateSequence.new(points.length, 2).tap { |cs|
-          points.each_with_index do |(x, y), i|
-            cs.set_x(i, x)
-            cs.set_y(i, y)
-          end
-        }
-      )
-    }
-
-    exterior_ring = create_ring[
+  def test_create_polygon_with_coordinate_sequences
+    outer = Geos::CoordinateSequence.new(
       [ 0, 0 ],
       [ 0, 10 ],
       [ 10, 10 ],
       [ 10, 0 ],
       [ 0, 0 ]
-    ]
+    )
 
-    hole_1 = create_ring[
+    inner = Geos::CoordinateSequence.new(
       [ 2, 2 ],
       [ 2, 4 ],
       [ 4, 4 ],
       [ 4, 2 ],
       [ 2, 2 ]
-    ]
+    )
 
-    hole_2 = create_ring[
+    geom = Geos::create_polygon(outer, inner)
+    assert_instance_of(Geos::Polygon, geom)
+    assert_equal('Polygon', geom.geom_type)
+    assert_equal(Geos::GEOS_POLYGON, geom.type_id)
+    assert_equal('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0), (2 2, 2 4, 4 4, 4 2, 2 2))', write(geom, :trim => true))
+  end
+
+  def test_create_polygon_with_holes
+    exterior_ring = Geos::CoordinateSequence.new(
+      [ 0, 0 ],
+      [ 0, 10 ],
+      [ 10, 10 ],
+      [ 10, 0 ],
+      [ 0, 0 ]
+    )
+
+    hole_1 = Geos::CoordinateSequence.new(
+      [ 2, 2 ],
+      [ 2, 4 ],
+      [ 4, 4 ],
+      [ 4, 2 ],
+      [ 2, 2 ]
+    )
+
+    hole_2 = Geos::CoordinateSequence.new(
       [ 6, 6 ],
       [ 6, 8 ],
       [ 8, 8 ],
       [ 8, 6 ],
       [ 6, 6 ]
-    ]
+    )
 
     geom = Geos::create_polygon(exterior_ring, [ hole_1, hole_2 ])
     assert_instance_of(Geos::Polygon, geom)
