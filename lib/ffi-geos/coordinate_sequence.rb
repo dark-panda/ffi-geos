@@ -160,6 +160,18 @@ module Geos
       }.read_int
     end
 
+    def to_linear_ring
+      Geos.create_linear_ring(self)
+    end
+
+    def to_line_string
+      Geos.create_line_string(self)
+    end
+
+    def to_polygon
+      Geos.create_polygon(self)
+    end
+
     protected
 
     def check_bounds(idx) #:nodoc:

@@ -7,6 +7,7 @@ class CoordinateSequenceTests < Test::Unit::TestCase
 
   def setup
     @cs = Geos::CoordinateSequence.new(3, 0)
+    super
   end
 
   def test_set_and_get_x
@@ -120,5 +121,58 @@ class CoordinateSequenceTests < Test::Unit::TestCase
         [ 1, 2, 3, 4 ]
       ])
     end
+  end
+
+  def test_to_to_linear_ring
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 0, 5 ],
+      [ 5, 5 ],
+      [ 5, 0 ],
+      [ 0, 0 ]
+    ])
+
+    assert_equal('LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', write(cs.to_linear_ring, :trim => true))
+  end
+
+  def test_to_empty_linear_ring
+    cs = Geos::CoordinateSequence.new
+
+    assert_equal('LINEARRING EMPTY', write(cs.to_linear_ring, :trim => true))
+  end
+
+  def test_to_line_string
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 0, 5 ],
+      [ 5, 5 ],
+      [ 5, 0 ]
+    ])
+
+    assert_equal('LINESTRING (0 0, 0 5, 5 5, 5 0)', write(cs.to_line_string, :trim => true))
+  end
+
+  def test_to_empty_line_string
+    cs = Geos::CoordinateSequence.new
+
+    assert_equal('LINESTRING EMPTY', write(cs.to_line_string, :trim => true))
+  end
+
+  def test_to_polygon
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 0, 5 ],
+      [ 5, 5 ],
+      [ 5, 0 ],
+      [ 0, 0 ]
+    ])
+
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(cs.to_polygon, :trim => true))
+  end
+
+  def test_to_empty_polygon
+    cs = Geos::CoordinateSequence.new
+
+    assert_equal('POLYGON EMPTY', write(cs.to_polygon, :trim => true))
   end
 end
