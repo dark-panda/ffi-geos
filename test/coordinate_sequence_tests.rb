@@ -12,17 +12,17 @@ class CoordinateSequenceTests < Test::Unit::TestCase
 
   def test_set_and_get_x
     @cs.set_x(0, 10.01)
-    assert_in_delta(10.01, @cs.get_x(0), 0.0000001)
+    assert_in_delta(10.01, @cs.get_x(0), TOLERANCE)
   end
 
   def test_set_and_get_y
     @cs.set_y(0, 20.02)
-    assert_in_delta(20.02, @cs.get_y(0), 0.0000001)
+    assert_in_delta(20.02, @cs.get_y(0), TOLERANCE)
   end
 
   def test_set_and_get_z
     @cs.set_z(0, 20.02)
-    assert_in_delta(20.02, @cs.get_z(0), 0.0000001)
+    assert_in_delta(20.02, @cs.get_z(0), TOLERANCE)
   end
 
   def test_set_and_get_ordinate
@@ -30,9 +30,9 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     @cs.set_ordinate(0, 1, 20.02)
     @cs.set_ordinate(0, 2, 30.03)
 
-    assert_in_delta(10.01, @cs.get_ordinate(0, 0), 0.0000001)
-    assert_in_delta(20.02, @cs.get_ordinate(0, 1), 0.0000001)
-    assert_in_delta(30.03, @cs.get_ordinate(0, 2), 0.0000001)
+    assert_in_delta(10.01, @cs.get_ordinate(0, 0), TOLERANCE)
+    assert_in_delta(20.02, @cs.get_ordinate(0, 1), TOLERANCE)
+    assert_in_delta(30.03, @cs.get_ordinate(0, 2), TOLERANCE)
   end
 
   def test_length
