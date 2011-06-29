@@ -12,7 +12,7 @@ module Geos
 
     # :call-seq:
     #   new(ptr, auto_free = true)
-    #   new(size, dims = 0)
+    #   new(size = 0, dims = 0)
     #   new(points)
     #
     # The ptr version of the initializer is for internal use.
@@ -45,10 +45,10 @@ module Geos
             [ points.length, points.first.length ]
           end
         else
-          if !args.length.between?(1, 2)
-            raise ArgumentError.new("wrong number of arguments (#{args.length} for 1-2)")
+          if !args.length.between?(0, 2)
+            raise ArgumentError.new("wrong number of arguments (#{args.length} for 0-2)")
           else
-            [ args[0], args[1] || 0 ]
+            [ args[0] || 0, args[1] || 0 ]
           end
         end
 

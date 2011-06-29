@@ -90,6 +90,12 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal(@cs.dimensions, cs_b.dimensions)
   end
 
+  def test_with_no_arguments
+    cs = Geos::CoordinateSequence.new
+    assert_equal(0, cs.size)
+    assert_equal(3, cs.dimensions)
+  end
+
   def test_read_from_array
     cs = Geos::CoordinateSequence.new([
       [ 0, 0 ],
