@@ -62,5 +62,37 @@ if defined?(Geos::STRtree)
         Geos::STRtree.new(3).dup
       end
     end
+
+    def test_setup_with_array
+      tree = Geos::STRtree.new(
+        [ read('LINESTRING(0 0, 10 10)'), item_1 = { :item_1 => :test } ],
+        [ read('LINESTRING(20 20, 30 30)'), item_2 = [ :test ] ],
+        [ read('LINESTRING(20 20, 30 30)'), item_3 = Object.new ]
+      )
+
+      assert_equal([item_1],
+        tree.query(read('LINESTRING(5 5, 6 6)')))
+
+      assert_equal([],
+        tree.query(read('LINESTRING(20 0, 30 10)')))
+
+      assert_equal([item_2, item_3],
+        tree.query(read('LINESTRING(25 25, 26 26)')))
+
+      assert_equal([item_1, item_2, item_3],
+        tree.query(read('LINESTRING(0 0, 100 100)')))
+    end
+
+    def test_capacity
+      assert_raise(ArgumentError) do
+        Geos::STRtree.new(0)
+      end
+    end
+
+    def test_geometries
+      assert_raise(TypeError) do
+        Geos::STRtree.new([])
+      end
+    end
   end
 end

@@ -8,7 +8,33 @@ module Geos
 
     undef :clone, :dup
 
-    def initialize(capacity)
+    # :call-seq:
+    #   new(capacity)
+    #   new(geoms_and_objects)
+    #
+    def initialize(*args)
+      geoms_and_objects = nil # forward declaration
+
+      capacity = if args.length == 1 && args.first.is_a?(Fixnum)
+        args.first
+      else
+        geoms_and_objects = if args.first.first.is_a?(Array)
+          args.first
+        else
+          args
+        end
+
+        geoms_and_objects.each do |geom, obj|
+          check_geometry(geom)
+        end
+
+        geoms_and_objects.length
+      end
+
+      if capacity <= 0
+        raise ArgumentError.new("STRtree capacity must be greater than 0")
+      end
+
       ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle, capacity)
 
       @ptr = FFI::AutoPointer.new(
