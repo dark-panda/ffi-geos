@@ -43,9 +43,16 @@ module Geos
       )
 
       @storage = {}
-      @storage_pointers = {}
+      @ptrs = {}
+
       @storage_key = 0
       @built = false
+
+      if geoms_and_objects
+        geoms_and_objects.each do |geom, obj|
+          self.insert(geom, obj)
+        end
+      end
     end
 
     def self.release(ptr) #:nodoc:
@@ -62,17 +69,21 @@ module Geos
     private :next_key
 
     def insert(geom, item)
-      check_geometry(geom)
-
       if self.built?
         raise RuntimeError.new("STRtree has already been built")
       else
+        check_geometry(geom)
+
         key = next_key
         key_ptr = FFI::MemoryPointer.new(:pointer)
         key_ptr.write_int(key)
 
-        @storage[key] = item
-        @storage_pointers[key] = key_ptr
+        @storage[key] = {
+          :item => item,
+          :geometry => geom
+        }
+        @ptrs[key] = key_ptr
+
         FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle, self.ptr, geom.ptr, key_ptr)
       end
     end
@@ -80,41 +91,36 @@ module Geos
     def remove(geom, item)
       check_geometry(geom)
 
-      key = if @storage.respond_to?(:key)
-        @storage.key(item)
-      else
-        @storage.index(item)
+      key = if storage = @storage.detect { |k, v| v[:item] == item }
+        storage[0]
       end
 
       if key
-        key_ptr = @storage_pointers[key]
+        key_ptr = @ptrs[key]
         result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle, self.ptr, geom.ptr, key_ptr)
         @built = true
 
         if result == 1
-          @storage[key] = nil
-          @storage_pointers[key] = nil
+          @storage.delete(key)
         end
       end
     end
 
-    def query(geom)
+    def query_all(geom)
       check_geometry(geom)
 
       @built = true
-      retval = nil
+      retval = []
 
-      callback = if block_given?
-        proc { |*args|
-          key = args.first.read_int
-          yield(@storage[key])
-        }
-      else
-        retval = []
-        proc { |*args|
-          retval << @storage[args.first.read_int]
-        }
-      end
+      callback = proc { |*args|
+        key = args.first.read_int
+        storage = @storage[key]
+        retval << storage
+
+        if block_given?
+          yield(storage)
+        end
+      }
 
       FFIGeos.GEOSSTRtree_query_r(
         Geos.current_handle,
@@ -124,11 +130,41 @@ module Geos
         nil
       )
 
-      if retval
-        retval.compact
-      end
       retval
     end
+
+    def query(geom, ret = :item)
+      self.query_all(geom).collect { |storage|
+        item = if ret.is_a?(Array)
+          storage.inject({}) do |memo, k|
+            memo.tap {
+              memo[k] = storage[k]
+            }
+          end
+        elsif ret == :all
+          storage
+        else
+          storage[ret]
+        end
+
+        item.tap {
+          if block_given?
+            yield(item)
+          end
+        }
+      }.compact
+    end
+
+    def query_geometries(geom)
+      self.query_all(geom).collect { |storage|
+        storage[:geometry].tap { |val|
+          if block_given?
+            yield(val)
+          end
+        }
+      }.compact
+    end
+    alias :query_geoms :query_geometries
 
     def iterate
       @storage.values.each do |v|

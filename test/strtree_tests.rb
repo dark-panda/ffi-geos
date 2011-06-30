@@ -34,10 +34,106 @@ if defined?(Geos::STRtree)
     def test_query
       setup_tree
 
-      assert_equal(1, @tree.query(read('LINESTRING(5 5, 6 6)')).length)
-      assert_equal(0, @tree.query(read('LINESTRING(20 0, 30 10)')).length)
-      assert_equal(2, @tree.query(read('LINESTRING(25 25, 26 26)')).length)
-      assert_equal(3, @tree.query(read('LINESTRING(0 0, 100 100)')).length)
+      assert_equal([@item_1],
+        @tree.query(read('LINESTRING(5 5, 6 6)')))
+
+      assert_equal([],
+        @tree.query(read('LINESTRING(20 0, 30 10)')))
+
+      assert_equal([@item_2, @item_3],
+        @tree.query(read('LINESTRING(25 25, 26 26)')))
+
+      assert_equal([@item_1, @item_2, @item_3],
+        @tree.query(read('LINESTRING(0 0, 100 100)')))
+    end
+
+    def test_query_with_ret_keys
+      setup_tree
+
+      assert_equal([@item_1],
+        @tree.query(read('LINESTRING(5 5, 6 6)'), :item))
+
+      assert_equal([],
+        @tree.query(read('LINESTRING(20 0, 30 10)'), :item))
+
+      assert_equal([@item_2, @item_3],
+        @tree.query(read('LINESTRING(25 25, 26 26)'), :item))
+
+      assert_equal([@item_1, @item_2, @item_3],
+        @tree.query(read('LINESTRING(0 0, 100 100)'), :item))
+
+
+      assert_equal([@geom_1],
+        @tree.query(read('LINESTRING(5 5, 6 6)'), :geometry))
+
+      assert_equal([],
+        @tree.query(read('LINESTRING(20 0, 30 10)'), :geometry))
+
+      assert_equal([@geom_2, @geom_3],
+        @tree.query(read('LINESTRING(25 25, 26 26)'), :geometry))
+
+      assert_equal([@geom_1, @geom_2, @geom_3],
+        @tree.query(read('LINESTRING(0 0, 100 100)'), :geometry))
+
+
+      assert_equal(
+        [
+          { :item => @item_1, :geometry => @geom_1 }
+        ],
+        @tree.query(read('LINESTRING(5 5, 6 6)'), :all)
+      )
+
+      assert_equal([],
+        @tree.query(read('LINESTRING(20 0, 30 10)'), :all))
+
+      assert_equal(
+        [
+          { :item => @item_2, :geometry => @geom_2 },
+          { :item => @item_3, :geometry => @geom_3 }
+        ],
+        @tree.query(read('LINESTRING(25 25, 26 26)'), :all)
+      )
+
+      assert_equal(
+        [
+          { :item => @item_1, :geometry => @geom_1 },
+          { :item => @item_2, :geometry => @geom_2 },
+          { :item => @item_3, :geometry => @geom_3 }
+        ],
+        @tree.query(read('LINESTRING(0 0, 100 100)'), :all)
+      )
+    end
+
+    def test_query_all
+      setup_tree
+
+      assert_equal([@item_1],
+        @tree.query_all(read('LINESTRING(5 5, 6 6)')).collect { |v| v[:item] })
+
+      assert_equal([],
+        @tree.query_all(read('LINESTRING(20 0, 30 10)')))
+
+      assert_equal([@item_2, @item_3],
+        @tree.query_all(read('LINESTRING(25 25, 26 26)')).collect { |v| v[:item] })
+
+      assert_equal([@item_1, @item_2, @item_3],
+        @tree.query_all(read('LINESTRING(0 0, 100 100)')).collect { |v| v[:item] })
+    end
+
+    def test_query_geometries
+      setup_tree
+
+      assert_equal([@geom_1],
+        @tree.query_geometries(read('LINESTRING(5 5, 6 6)')))
+
+      assert_equal([],
+        @tree.query_geometries(read('LINESTRING(20 0, 30 10)')))
+
+      assert_equal([@geom_2, @geom_3],
+        @tree.query_geometries(read('LINESTRING(25 25, 26 26)')))
+
+      assert_equal([@geom_1, @geom_2, @geom_3],
+        @tree.query_geometries(read('LINESTRING(0 0, 100 100)')))
     end
 
     def test_remove
@@ -45,10 +141,17 @@ if defined?(Geos::STRtree)
 
       @tree.remove(read('POINT(5 5)'), @item_1)
 
-      assert_equal(0, @tree.query(read('LINESTRING(5 5, 6 6)')).length)
-      assert_equal(0, @tree.query(read('LINESTRING(20 0, 30 10)')).length)
-      assert_equal(2, @tree.query(read('LINESTRING(25 25, 26 26)')).length)
-      assert_equal(2, @tree.query(read('LINESTRING(0 0, 100 100)')).length)
+      assert_equal([],
+        @tree.query(read('LINESTRING(5 5, 6 6)')))
+
+      assert_equal([],
+        @tree.query(read('LINESTRING(20 0, 30 10)')))
+
+      assert_equal([@item_2, @item_3],
+        @tree.query(read('LINESTRING(25 25, 26 26)')))
+
+      assert_equal([@item_2, @item_3],
+        @tree.query(read('LINESTRING(0 0, 100 100)')))
     end
 
     def test_cant_clone
