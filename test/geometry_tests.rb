@@ -1530,4 +1530,18 @@ class GeometryTests < Test::Unit::TestCase
 
     assert(geom_a.eql?(geom_b))
   end
+
+  def test_geometry_collection_enumerator
+    geom = read('GEOMETRYCOLLECTION(POINT(0 0))')
+    assert_kind_of(Enumerable, geom.each)
+    assert_kind_of(Enumerable, geom.to_enum)
+    assert_equal(geom, geom.each {})
+  end
+
+  def test_line_string_enumerator
+    geom = read('LINESTRING(0 0, 10 10))')
+    assert_kind_of(Enumerable, geom.each)
+    assert_kind_of(Enumerable, geom.to_enum)
+    assert_equal(geom, geom.each {})
+  end
 end

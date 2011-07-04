@@ -5,10 +5,16 @@ module Geos
 
     # Yields each Geometry in the GeometryCollection.
     def each
-      self.num_geometries.times do |n|
-        yield self.get_geometry_n(n)
+      if block_given?
+        self.num_geometries.times do |n|
+          yield self.get_geometry_n(n)
+        end
+        self
+      else
+        self.num_geometries.times.collect { |n|
+          self.get_geometry_n(n)
+        }.to_enum
       end
-      nil
     end
 
     def get_geometry_n(n)

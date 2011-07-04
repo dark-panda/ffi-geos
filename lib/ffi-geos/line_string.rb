@@ -4,10 +4,16 @@ module Geos
     include Enumerable
 
     def each
-      self.num_points.times do |n|
-        yield self.point_n(n)
+      if block_given?
+        self.num_points.times do |n|
+          yield self.point_n(n)
+        end
+        self
+      else
+        self.num_points.times.collect { |n|
+          self.point_n(n)
+        }.to_enum
       end
-      nil
     end
 
     if FFIGeos.respond_to?(:GEOSGeomGetNumPoints_r)
