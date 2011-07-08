@@ -1029,7 +1029,7 @@ module Geos
       GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERSION_PATCH, GEOS_VERSION_PRERELEASE,
       GEOS_CAPI_VERSION,
       GEOS_CAPI_VERSION_MAJOR, GEOS_CAPI_VERSION_MINOR, GEOS_CAPI_VERSION_PATCH =
-        if !(versions = Geos.version.scan(/^((\d+)\.(\d+)\.(\d+)((?:rc|beta|alpha)\d+)?)-CAPI-((\d+)\.(\d+)\.(\d+))$/)).empty?
+        if !(versions = Geos.version.scan(/^((\d+)\.(\d+)\.(\d+)((?:dev|rc|beta|alpha)\d*)?)-CAPI-((\d+)\.(\d+)\.(\d+))$/)).empty?
           versions = versions[0]
           [
             versions[0],
