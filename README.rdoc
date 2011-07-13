@@ -12,12 +12,11 @@ Ruby versions known to work:
 * Ruby MRI 1.8.7 and 1.9.2, x86_64, OSX 10.6.5+
 * Ruby MRI 1.8.7 and 1.9.2, i386, linux
 * Ruby MRI 1.8.7, x86_64, linux
+* JRuby 1.6.3, x86_64 OSX 10.6.5+
 
-Note that versions of JRuby prior to the as-of-yet (25 June 2011) unreleased
-version 1.6.3 have problems in their ffi implementation when dealing with
-AutoPointers that can lead to segfaults during garbage collection. Upcoming
-versions of JRuby should have the problem licked. For details, check out
-http://jira.codehaus.org/browse/JRUBY-5813.
+Note that versions of JRuby prior to version 1.6.3 have problems in their ffi
+implementation when dealing with AutoPointers that can lead to segfaults during
+garbage collection.
 
 == Features
 
