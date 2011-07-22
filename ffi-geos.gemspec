@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ffi-geos}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["J Smith"]
-  s.date = %q{2011-06-25}
+  s.date = %q{2011-07-22}
   s.description = %q{An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS).}
   s.email = %q{dark.panda@gmail.com}
   s.extra_rdoc_files = [
@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = %q{http://github.com/dark-panda/ffi-geos}
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.7.2}
+  s.rubygems_version = %q{1.6.2}
   s.summary = %q{An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS).}
 
   if s.respond_to? :specification_version then
