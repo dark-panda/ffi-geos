@@ -160,6 +160,10 @@ module Geos
       }.read_int
     end
 
+    def to_point
+      Geos.create_point(self)
+    end
+
     def to_linear_ring
       Geos.create_linear_ring(self)
     end

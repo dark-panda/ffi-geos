@@ -123,6 +123,11 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     end
   end
 
+  def test_to_point
+    cs = Geos::CoordinateSequence.new([5,7])
+    assert_equal('POINT (5 7)', write(cs.to_point, :trim => true))
+  end
+
   def test_to_to_linear_ring
     cs = Geos::CoordinateSequence.new([
       [ 0, 0 ],
