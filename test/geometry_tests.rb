@@ -1531,6 +1531,16 @@ class GeometryTests < Test::Unit::TestCase
     assert(geom_a.eql?(geom_b))
   end
 
+  def test_dup_srid
+    srid = 4326
+    geom_a = read('POINT(0 0)')
+    geom_a.srid = srid
+    geom_b = geom_a.dup
+
+    assert(geom_a.eql?(geom_b))
+    assert_equal(srid, geom_b.srid)
+  end
+
   def test_geometry_collection_enumerator
     geom = read('GEOMETRYCOLLECTION(POINT(0 0))')
     assert_kind_of(Enumerable, geom.each)
