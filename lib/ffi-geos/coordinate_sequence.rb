@@ -154,6 +154,10 @@ module Geos
     end
     alias :size :length
 
+    def empty?
+      length == 0
+    end
+    
     def dimensions
       @dimensions ||= FFI::MemoryPointer.new(:int).tap { |ret|
         FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, ret)
