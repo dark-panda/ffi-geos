@@ -140,6 +140,14 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal('LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', write(cs.to_linear_ring, :trim => true))
   end
 
+  def test_empty
+    cs = Geos::CoordinateSequence.new
+    assert(cs.empty?)
+
+    cs = Geos::CoordinateSequence.new([4,1])
+    assert(!cs.empty?)
+  end
+
   def test_to_empty_linear_ring
     cs = Geos::CoordinateSequence.new
 
