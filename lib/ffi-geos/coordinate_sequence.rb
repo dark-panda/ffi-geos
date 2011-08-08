@@ -180,6 +180,13 @@ module Geos
       Geos.create_polygon(self)
     end
 
+    def to_s
+      # For the moment do what georss does which is white space only
+      # between coordinates.  Note that georss only supports x/y though,
+      # so if there are 3 dimentions this isn't valid.
+      entries.join(' ')
+    end
+    
     protected
 
     def check_bounds(idx) #:nodoc:
