@@ -45,29 +45,37 @@ module Geos
     File.join(GEOS_BASE, 'utils')
 
   module FFIGeos
+    def self.search_paths
+      @search_paths ||= begin
+        if ENV['GEOS_LIBRARY_PATH']
+          [ ENV['GEOS_LIBRARY_PATH'] ]
+        elsif FFI::Platform::IS_WINDOWS
+          ENV['PATH'].split(File::PATH_SEPARATOR)
+        else
+          [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
+        end
+      end
+    end
+
+    def self.find_lib(lib)
+      files = search_paths.inject(Array.new) do |array, path|
+        file_name = File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
+        array << Dir.glob(file_name)
+        array
+      end
+      # We want libgeos before libgeos-3-3-0 so sort the results (I hope this work
+      # in all cases!)
+      files.flatten.sort.compact.first
+    end
+
     def self.geos_library_paths
-      return @geos_library_paths if @geos_library_paths
-
-      paths = if ENV['GEOS_LIBRARY_PATH']
-        [ ENV['GEOS_LIBRARY_PATH'] ]
-      else
-        [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
+      @geos_library_paths ||= begin
+        # On Mingw the libraries have version numbers
+        libs = ["libgeos_c{,-?}", "libgeos{,-?-?-?}"]
+        libs.map do |lib|
+          find_lib(lib)
+        end.compact
       end
-
-      libs = if [
-        Config::CONFIG['arch'],
-        Config::CONFIG['host_os']
-      ].detect { |c| c =~ /darwin/ }
-        %w{ libgeos_c.dylib libgeos.dylib }
-      else
-        %w{ libgeos.so libgeos_c.so }
-      end
-
-      @geos_library_paths = libs.collect { |lib|
-        Dir.glob(paths.collect { |path|
-          "#{path}/#{lib}"
-        }).first
-      }
     end
 
     extend ::FFI::Library
