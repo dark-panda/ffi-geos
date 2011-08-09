@@ -123,6 +123,11 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     end
   end
 
+  def test_to_point
+    cs = Geos::CoordinateSequence.new([5,7])
+    assert_equal('POINT (5 7)', write(cs.to_point, :trim => true))
+  end
+
   def test_to_to_linear_ring
     cs = Geos::CoordinateSequence.new([
       [ 0, 0 ],
@@ -133,6 +138,14 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     ])
 
     assert_equal('LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', write(cs.to_linear_ring, :trim => true))
+  end
+
+  def test_empty
+    cs = Geos::CoordinateSequence.new
+    assert(cs.empty?)
+
+    cs = Geos::CoordinateSequence.new([4,1])
+    assert(!cs.empty?)
   end
 
   def test_to_empty_linear_ring
@@ -174,5 +187,13 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     cs = Geos::CoordinateSequence.new
 
     assert_equal('POLYGON EMPTY', write(cs.to_polygon, :trim => true))
+  end
+
+  def test_to_s
+    cs = Geos::CoordinateSequence.new([[1, 2], [10, 11]])
+    assert_equal("1.0 2.0 10.0 11.0", cs.to_s)
+
+    cs = Geos::CoordinateSequence.new([[1, 2, 3], [10, 11, 12]])
+    assert_equal("1.0 2.0 3.0 10.0 11.0 12.0", cs.to_s)
   end
 end

@@ -154,10 +154,18 @@ module Geos
     end
     alias :size :length
 
+    def empty?
+      length == 0
+    end
+    
     def dimensions
       @dimensions ||= FFI::MemoryPointer.new(:int).tap { |ret|
         FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, ret)
       }.read_int
+    end
+
+    def to_point
+      Geos.create_point(self)
     end
 
     def to_linear_ring
@@ -172,6 +180,13 @@ module Geos
       Geos.create_polygon(self)
     end
 
+    def to_s
+      # For the moment do what georss does which is white space only
+      # between coordinates.  Note that georss only supports x/y though,
+      # so if there are 3 dimentions this isn't valid.
+      entries.join(' ')
+    end
+    
     protected
 
     def check_bounds(idx) #:nodoc:
