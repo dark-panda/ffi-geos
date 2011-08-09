@@ -63,13 +63,15 @@ module Geos
         array << Dir.glob(file_name)
         array
       end
-      files.flatten.compact.first
+      # We want libgeos before libgeos-3-3-0 so sort the results (I hope this work
+      # in all cases!)
+      files.flatten.sort.compact.first
     end
     
     def self.geos_library_paths
       @geos_library_paths ||= begin
-        libs = %w{libgeos_c libgeos libgeos_c-1 libgeos-3-3-0}
-
+        # On Mingw the libraries have version numbers
+        libs = ["libgeos_c{,-?}", "libgeos{,-?-?-?}"]
         libs.map do |lib|
           find_lib(lib)
         end.compact
