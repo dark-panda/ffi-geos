@@ -181,10 +181,9 @@ module Geos
     end
 
     def to_s
-      # For the moment do what georss does which is white space only
-      # between coordinates.  Note that georss only supports x/y though,
-      # so if there are 3 dimentions this isn't valid.
-      entries.join(' ')
+      entries.collect { |entry|
+        entry.join(' ')
+      }.join(', ')
     end
     
     protected

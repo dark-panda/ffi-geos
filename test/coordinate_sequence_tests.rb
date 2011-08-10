@@ -191,9 +191,9 @@ class CoordinateSequenceTests < Test::Unit::TestCase
 
   def test_to_s
     cs = Geos::CoordinateSequence.new([[1, 2], [10, 11]])
-    assert_equal("1.0 2.0 10.0 11.0", cs.to_s)
+    assert_equal("1.0 2.0, 10.0 11.0", cs.to_s)
 
     cs = Geos::CoordinateSequence.new([[1, 2, 3], [10, 11, 12]])
-    assert_equal("1.0 2.0 3.0 10.0 11.0 12.0", cs.to_s)
+    assert_equal("1.0 2.0 3.0, 10.0 11.0 12.0", cs.to_s)
   end
 end
