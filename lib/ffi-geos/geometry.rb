@@ -23,6 +23,9 @@ module Geos
         FFIGeos.GEOSGeom_clone_r(Geos.current_handle, source.ptr),
         self.class.method(:release)
       )
+
+      # Copy over SRID since GEOS does not
+      self.srid = source.srid
     end
 
     def self.no_release(ptr) #:nodoc:
