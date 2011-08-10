@@ -58,23 +58,18 @@ module Geos
     end
 
     def self.find_lib(lib)
-      files = search_paths.inject(Array.new) do |array, path|
+      search_paths.inject(Array.new) { |array, path|
         file_name = File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
         array << Dir.glob(file_name)
-        array
-      end
-      # We want libgeos before libgeos-3-3-0 so sort the results (I hope this work
-      # in all cases!)
-      files.flatten.sort.compact.first
+      }.flatten.sort.compact.first
     end
 
     def self.geos_library_paths
       @geos_library_paths ||= begin
-        # On Mingw the libraries have version numbers
-        libs = ["libgeos_c{,-?}", "libgeos{,-?-?-?}"]
-        libs.map do |lib|
+        # On MingW the libraries have version numbers
+        [ 'libgeos_c{,-?}', 'libgeos{,-?-?-?}' ].map { |lib|
           find_lib(lib)
-        end.compact
+        }.compact
       end
     end
 

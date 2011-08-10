@@ -155,9 +155,9 @@ module Geos
     alias :size :length
 
     def empty?
-      length == 0
+      self.length == 0
     end
-    
+
     def dimensions
       @dimensions ||= FFI::MemoryPointer.new(:int).tap { |ret|
         FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, ret)
@@ -181,11 +181,11 @@ module Geos
     end
 
     def to_s
-      entries.collect { |entry|
+      self.entries.collect { |entry|
         entry.join(' ')
       }.join(', ')
     end
-    
+
     protected
 
     def check_bounds(idx) #:nodoc:
