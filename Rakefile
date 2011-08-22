@@ -4,7 +4,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
 require 'rake/testtask'
-require 'rdoc/task'
+require 'rake/rdoctask'
 
 $:.push 'lib'
 
