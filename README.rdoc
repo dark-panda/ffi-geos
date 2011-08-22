@@ -146,3 +146,6 @@ Ruby bindings along with the following enhancements and additions:
 * Christopher Meiklejohn for the bug reporting and PreparedGeometry fix.
 
 * Wayne Meissner for some help with some ffi issues.
+
+* Charlie Savage for the original SWIG-based GEOS bindings implementation and
+  some fixes for MinGW.
