@@ -58,24 +58,27 @@ module Geos
     end
 
     def self.find_lib(lib)
-      search_paths.inject(Array.new) { |array, path|
-        file_name = File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
-        array << Dir.glob(file_name)
-      }.flatten.sort.compact.first
+      Dir.glob(search_paths.map { |path|
+        File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
+      }).first
     end
 
-    def self.geos_library_paths
-      @geos_library_paths ||= begin
+    def self.geos_library_path
+      @geos_library_path ||= begin
         # On MingW the libraries have version numbers
-        [ 'libgeos_c{,-?}', 'libgeos{,-?-?-?}' ].map { |lib|
-          find_lib(lib)
-        }.compact
+        find_lib('libgeos_c{,-?}')
       end
+    end
+
+    # For backwards compatibility with older ffi-geos versions where this
+    # used to return an Array.
+    def self.geos_library_paths
+      [ self.geos_library_path ]
     end
 
     extend ::FFI::Library
 
-    ffi_lib(*geos_library_paths)
+    ffi_lib(geos_library_path)
 
     Geos::DimensionTypes = enum(:dimension_type, [
       :dontcare, -3,

@@ -12,7 +12,7 @@ puts "Ruby version #{RUBY_VERSION} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
 puts "GEOS version #{Geos::GEOS_VERSION}"
 puts "ffi-geos version #{Geos::VERSION}" if defined?(Geos::VERSION)
 if defined?(Geos::FFIGeos)
-  puts "Using #{Geos::FFIGeos.geos_library_paths.join(', ')}"
+  puts "Using #{Geos::FFIGeos.geos_library_path}"
 end
 
 module TestHelper
