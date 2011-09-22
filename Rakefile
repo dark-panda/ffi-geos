@@ -7,7 +7,11 @@ require 'rake/testtask'
 require 'rake/rdoctask'
 
 if RUBY_VERSION >= '1.9'
-  gem 'psych'
+  begin
+    gem 'psych'
+  rescue Exception => e
+    # it's okay, fall back on the bundled psych
+  end
 end
 
 $:.push 'lib'
