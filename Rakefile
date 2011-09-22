@@ -6,7 +6,9 @@ require 'rubygems/package_task'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
-gem 'psych'
+if RUBY_VERSION >= '1.9'
+  gem 'psych'
+end
 
 $:.push 'lib'
 
