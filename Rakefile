@@ -6,6 +6,8 @@ require 'rubygems/package_task'
 require 'rake/testtask'
 require 'rake/rdoctask'
 
+gem 'psych'
+
 $:.push 'lib'
 
 version = File.read('VERSION') rescue ''
