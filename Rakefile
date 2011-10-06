@@ -4,7 +4,7 @@
 require 'rubygems'
 require 'rubygems/package_task'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 if RUBY_VERSION >= '1.9'
   begin
