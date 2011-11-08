@@ -113,6 +113,10 @@ module Geos
         create_empty_collection(:geometry_collection)
       end
 
+      def create_empty_linear_ring
+        Geos::WktReader.new.read('LINEARRING EMPTY')
+      end
+
       def create_collection(t, *geoms)
         check_enum_value(Geos::GeometryTypes, t)
 

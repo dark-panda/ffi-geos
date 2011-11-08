@@ -1007,6 +1007,7 @@ module Geos
       create_empty_multi_polygon
       create_empty_geometry_collection
       create_empty_collection
+      create_empty_linear_ring
     }.each do |m|
       self.class_eval <<-EOF
         def #{m}(*args)

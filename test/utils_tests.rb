@@ -340,4 +340,10 @@ class UtilsTests < Test::Unit::TestCase
       assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_empty_geometry_collection))
     end
   end
+
+  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_linear_ring)
+    def test_create_empty_linear_ring
+      assert_equal('LINEARRING EMPTY', write(Geos.create_empty_linear_ring))
+    end
+  end
 end
