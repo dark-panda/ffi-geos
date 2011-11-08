@@ -9,6 +9,7 @@ else
 end
 
 puts "Ruby version #{RUBY_VERSION} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
+puts "ffi version #{Gem.loaded_specs['ffi'].version}" if Gem.loaded_specs['ffi']
 puts "GEOS version #{Geos::GEOS_VERSION}"
 puts "ffi-geos version #{Geos::VERSION}" if defined?(Geos::VERSION)
 if defined?(Geos::FFIGeos)
