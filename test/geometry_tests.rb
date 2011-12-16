@@ -1068,7 +1068,7 @@ class GeometryTests < Test::Unit::TestCase
         POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
         MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
         LINESTRING (0 0, 2 3),
-        MULTIPOINT (0 0, 2 3),
+        MULTIPOINT ((0 0), (2 3)),
         POINT (9 0)
       )']
     end
