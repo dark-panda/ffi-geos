@@ -1005,6 +1005,41 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
+  def test_interior_rings
+    tester = lambda { |expected, g|
+      geom = read(g)
+      result = geom.interior_rings
+
+      if expected.nil?
+        assert_nil(result)
+      else
+        assert_equal(expected, result.collect { |r| write(r) } )
+      end
+    }
+
+    writer.trim = true
+
+    tester[
+      [ 'LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)' ],
+      'POLYGON(
+        (10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11)
+      )'
+    ]
+
+    tester[
+      [
+        'LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)',
+        'LINEARRING (13 11, 13 12, 13.5 12, 13.5 11, 13 11)'
+      ],
+      'POLYGON (
+        (10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11),
+        (13 11, 13 12, 13.5 12, 13.5 11, 13 11)
+      )'
+    ]
+  end
+
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:num_coordinates)
     def test_num_coordinates
       tester = lambda { |expected, g|

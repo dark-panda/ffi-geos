@@ -16,5 +16,11 @@ module Geos
     def exterior_ring
       cast_geometry_ptr(FFIGeos.GEOSGetExteriorRing_r(Geos.current_handle, self.ptr), false)
     end
+
+    def interior_rings
+      self.num_interior_rings.times.collect do |n|
+        self.interior_ring_n(n)
+      end
+    end
   end
 end
