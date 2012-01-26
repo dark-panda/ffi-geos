@@ -2,6 +2,9 @@
 # -*- ruby -*-
 
 require 'rubygems'
+
+gem 'rdoc', '~> 3.12'
+
 require 'rubygems/package_task'
 require 'rake/testtask'
 require 'rdoc/task'
@@ -42,7 +45,6 @@ end
 
 desc 'Build docs'
 Rake::RDocTask.new do |t|
-  require 'rdoc'
   t.title = "ffi-geos #{version}"
   t.main = 'README.rdoc'
   t.rdoc_dir = 'doc'
