@@ -280,11 +280,6 @@ module Geos
       end
     end
 
-    def disjoint?(geom)
-      check_geometry(geom)
-      bool_result(FFIGeos.GEOSDisjoint_r(Geos.current_handle, self.ptr, geom.ptr))
-    end
-
     def eql?(geom)
       check_geometry(geom)
       bool_result(FFIGeos.GEOSEquals_r(Geos.current_handle, self.ptr, geom.ptr))
