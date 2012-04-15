@@ -78,30 +78,49 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle, self.ptr, geom.ptr))
     end
 
-    # :call-seq:
-    #   buffer(width)
-    #   buffer(width, options)
-    #   buffer(width, buffer_params)
-    #   buffer(width, quad_segs)
-    #
-    # Calls buffer on the Geometry. Options can be passed as either a
-    # BufferParams object, as an equivalent Hash or as a quad_segs value. By
-    # default, the default values found in Geos::Constants::BUFFER_PARAMS_DEFAULTS
-    # are used.
-    def buffer(width, options = nil)
-      options ||= {}
-      params = case options
-        when Hash
-          Geos::BufferParams.new(options)
-        when Geos::BufferParams
-          options
-        when Numeric
-          Geos::BufferParams.new(:quad_segs => options)
-        else
-          raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
-      end
+    if FFIGeos.respond_to?(:GEOSBufferWithParams_r)
+      # :call-seq:
+      #   buffer(width)
+      #   buffer(width, options)
+      #   buffer(width, buffer_params)
+      #   buffer(width, quad_segs)
+      #
+      # Calls buffer on the Geometry. Options can be passed as either a
+      # BufferParams object, as an equivalent Hash or as a quad_segs value. By
+      # default, the default values found in Geos::Constants::BUFFER_PARAM_DEFAULTS
+      # are used.
+      def buffer(width, options = nil)
+        options ||= {}
+        params = case options
+          when Hash
+            Geos::BufferParams.new(options)
+          when Geos::BufferParams
+            options
+          when Numeric
+            Geos::BufferParams.new(:quad_segs => options)
+          else
+            raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
+        end
 
-      cast_geometry_ptr(FFIGeos.GEOSBufferWithParams_r(Geos.current_handle, self.ptr, params.ptr, width))
+        cast_geometry_ptr(FFIGeos.GEOSBufferWithParams_r(Geos.current_handle, self.ptr, params.ptr, width))
+      end
+    else
+      def buffer(width, options = nil)
+        options ||= {}
+        quad_segs = case options
+          when Hash
+            options[:quad_segs]
+          when Geos::BufferParams
+            options.quad_segs
+          when Numeric
+            options
+          else
+            raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
+        end
+        quad_segs ||= Geos::Constants::BUFFER_PARAM_DEFAULTS[:quad_segs]
+
+        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs.to_i))
+      end
     end
 
     def convex_hull
