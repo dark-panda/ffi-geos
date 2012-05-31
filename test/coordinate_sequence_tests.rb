@@ -248,4 +248,11 @@ class CoordinateSequenceTests < Test::Unit::TestCase
       cs.z[100] = 10
     end
   end
+
+  def test_options_hash
+    cs = Geos::CoordinateSequence.new(:size => 10, :dimensions => 2)
+
+    assert_equal(10, cs.size)
+    assert_equal(2, cs.dimensions)
+  end
 end

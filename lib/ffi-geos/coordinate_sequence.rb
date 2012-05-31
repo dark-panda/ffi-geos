@@ -29,7 +29,8 @@ module Geos
 
     # :call-seq:
     #   new(ptr, auto_free = true)
-    #   new(size = 0, dims = 0)
+    #   new(size = 0, dimensions = 0)
+    #   new(options)
     #   new(points)
     #
     # The ptr version of the initializer is for internal use.
@@ -44,7 +45,7 @@ module Geos
       ptr, auto_free = if args.first.is_a?(FFI::Pointer)
         [ args.first, args[1] ]
       else
-        size, dims = if args.first.is_a?(Array)
+        size, dimensions = if args.first.is_a?(Array)
           points = if args.first.first.is_a?(Array)
             args.first
           else
@@ -61,15 +62,20 @@ module Geos
           else
             [ points.length, points.first.length ]
           end
+        elsif args.first.is_a?(Hash)
+          args.first.values_at(:size, :dimensions)
         else
           if !args.length.between?(0, 2)
             raise ArgumentError.new("wrong number of arguments (#{args.length} for 0-2)")
           else
-            [ args[0] || 0, args[1] || 0 ]
+            [ args[0], args[1] ]
           end
         end
 
-        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, size, dims), true ]
+        size ||= 0
+        dimensions ||= 0
+
+        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, size, dimensions), true ]
       end
 
       @ptr = FFI::AutoPointer.new(
