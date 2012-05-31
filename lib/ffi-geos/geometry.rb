@@ -86,9 +86,12 @@ module Geos
       #   buffer(width, quad_segs)
       #
       # Calls buffer on the Geometry. Options can be passed as either a
-      # BufferParams object, as an equivalent Hash or as a quad_segs value. By
-      # default, the default values found in Geos::Constants::BUFFER_PARAM_DEFAULTS
-      # are used.
+      # BufferParams object, as an equivalent Hash or as a quad_segs value.
+      # Default values can be found in Geos::Constants::BUFFER_PARAM_DEFAULTS.
+      #
+      # Note that when using versions of GEOS prior to 3.3.0, only the
+      # quad_segs option is recognized when using Geometry#buffer and other
+      # options are ignored.
       def buffer(width, options = nil)
         options ||= {}
         params = case options
@@ -109,7 +112,7 @@ module Geos
         options ||= {}
         quad_segs = case options
           when Hash
-            options[:quad_segs]
+            Geos::BufferParams.new(options).quad_segs
           when Geos::BufferParams
             options.quad_segs
           when Numeric
@@ -117,9 +120,8 @@ module Geos
           else
             raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
         end
-        quad_segs ||= Geos::Constants::BUFFER_PARAM_DEFAULTS[:quad_segs]
 
-        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs.to_i))
+        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs))
       end
     end
 
