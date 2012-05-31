@@ -481,6 +481,16 @@ class GeometryTests < MiniTest::Unit::TestCase
     )
   end
 
+  def test_node
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:node)
+
+    self_tester(
+      :node,
+      'LINESTRING(0 0, 10 0, 5 -5, 5 5)',
+      'MULTILINESTRING ((0 0, 5 0), (5 0, 10 0, 5 -5, 5 0), (5 0, 5 5))'
+    )
+  end
+
   def test_union_without_arguments
     self_tester(
       :union,

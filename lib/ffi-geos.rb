@@ -399,6 +399,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      :GEOSNode_r => [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
+
       # Deprecated in GEOS 3.3.0. Use GEOSUnaryUnion_r instead.
       :GEOSUnionCascaded_r => [
         # *geom, *handle, *geom

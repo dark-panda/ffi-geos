@@ -189,6 +189,13 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSNode_r)
+      # Available in GEOS 3.3.4+
+      def node
+        cast_geometry_ptr(FFIGeos.GEOSNode_r(Geos.current_handle, self.ptr))
+      end
+    end
+
     def point_on_surface
       cast_geometry_ptr(FFIGeos.GEOSPointOnSurface_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
