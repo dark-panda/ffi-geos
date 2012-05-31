@@ -6,9 +6,26 @@ module Geos
     class ParseError < ArgumentError
     end
 
+    class CoordinateAccessor
+      attr_accessor :parent, :dimension
+
+      def initialize(parent, dimension)
+        @parent = parent
+        @dimension = dimension
+      end
+
+      def [](idx)
+        parent.get_ordinate(idx, dimension)
+      end
+
+      def []=(idx, value)
+        parent.set_ordinate(idx, dimension, value)
+      end
+    end
+
     include Enumerable
 
-    attr_reader :ptr
+    attr_reader :ptr, :x, :y, :z
 
     # :call-seq:
     #   new(ptr, auto_free = true)
@@ -64,6 +81,10 @@ module Geos
         @ptr.autorelease = false
       end
 
+      @x = CoordinateAccessor.new(self, 0)
+      @y = CoordinateAccessor.new(self, 1)
+      @z = CoordinateAccessor.new(self, 2)
+
       if points
         points.each_with_index do |point, idx|
           point.each_with_index do |val, dim|
@@ -99,16 +120,19 @@ module Geos
       end
     end
 
+    # Sets the x value of a coordinate. Can also be set via #x[]=.
     def set_x(idx, val)
       self.check_bounds(idx)
       FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle, self.ptr, idx, val)
     end
 
+    # Sets the y value of a coordinate. Can also be set via #y[]=.
     def set_y(idx, val)
       self.check_bounds(idx)
       FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle, self.ptr, idx, val)
     end
 
+    # Sets the z value of a coordinate. Can also be set via #z[]=.
     def set_z(idx, val)
       self.check_bounds(idx)
       FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle, self.ptr, idx, val)
@@ -119,6 +143,7 @@ module Geos
       FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle, self.ptr, idx, dim, val)
     end
 
+    # Gets the x value of a coordinate. Can also be retrieved via #x[].
     def get_x(idx)
       self.check_bounds(idx)
       FFI::MemoryPointer.new(:double).tap { |ret|
@@ -126,6 +151,7 @@ module Geos
       }.read_double
     end
 
+    # Gets the y value of a coordinate. Can also be retrieved via #y[].
     def get_y(idx)
       self.check_bounds(idx)
       FFI::MemoryPointer.new(:double).tap { |ret|
@@ -133,6 +159,7 @@ module Geos
       }.read_double
     end
 
+    # Gets the z value of a coordinate. Can also be retrieved via #z[].
     def get_z(idx)
       self.check_bounds(idx)
       FFI::MemoryPointer.new(:double).tap { |ret|

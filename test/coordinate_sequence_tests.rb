@@ -196,4 +196,56 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     cs = Geos::CoordinateSequence.new([[1, 2, 3], [10, 11, 12]])
     assert_equal("1.0 2.0 3.0, 10.0 11.0 12.0", cs.to_s)
   end
+
+  def test_get_by_proxy
+    cs = Geos::CoordinateSequence.new([[1, 2], [10, 11]])
+
+    assert_equal(1, cs.x[0])
+    assert_equal(10, cs.x[1])
+
+    assert_equal(2, cs.y[0])
+    assert_equal(11, cs.y[1])
+
+    assert_equal('NaN', cs.z[0].to_s)
+    assert_equal('NaN', cs.z[1].to_s)
+
+    assert_raise(RuntimeError) do
+      cs.x[100]
+    end
+
+    assert_raise(RuntimeError) do
+      cs.y[100]
+    end
+
+    assert_raise(RuntimeError) do
+      cs.z[100]
+    end
+  end
+
+  def test_set_by_proxy
+    cs = Geos::CoordinateSequence.new(2)
+    cs.x[0] = 1
+    cs.x[1] = 10
+
+    cs.y[0] = 2
+    cs.y[1] = 11
+
+    assert_equal(1, cs.get_x(0))
+    assert_equal(10, cs.get_x(1))
+
+    assert_equal(2, cs.get_y(0))
+    assert_equal(11, cs.get_y(1))
+
+    assert_raise(RuntimeError) do
+      cs.x[100] = 10
+    end
+
+    assert_raise(RuntimeError) do
+      cs.y[100] = 10
+    end
+
+    assert_raise(RuntimeError) do
+      cs.z[100] = 10
+    end
+  end
 end
