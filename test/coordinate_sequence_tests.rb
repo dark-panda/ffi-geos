@@ -249,10 +249,26 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     end
   end
 
+  def test_proxy_enumerator
+    cs = Geos::CoordinateSequence.new(10)
+
+    assert_kind_of(Enumerable, cs.x.each)
+    assert_kind_of(Enumerable, cs.x.to_enum)
+    assert_equal(cs.x, cs.x.each {})
+  end
+
   def test_options_hash
     cs = Geos::CoordinateSequence.new(:size => 10, :dimensions => 2)
 
     assert_equal(10, cs.size)
     assert_equal(2, cs.dimensions)
+  end
+
+  def test_enumerator
+    cs = Geos::CoordinateSequence.new(10)
+
+    assert_kind_of(Enumerable, cs.each)
+    assert_kind_of(Enumerable, cs.to_enum)
+    assert_equal(cs, cs.each {})
   end
 end

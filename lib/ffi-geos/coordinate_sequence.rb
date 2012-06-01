@@ -9,17 +9,32 @@ module Geos
     class CoordinateAccessor
       attr_accessor :parent, :dimension
 
+      include Enumerable
+
       def initialize(parent, dimension)
         @parent = parent
         @dimension = dimension
       end
 
       def [](idx)
-        parent.get_ordinate(idx, dimension)
+        parent.get_ordinate(idx, self.dimension)
       end
 
       def []=(idx, value)
-        parent.set_ordinate(idx, dimension, value)
+        parent.set_ordinate(idx, self.dimension, value)
+      end
+
+      def each
+        if block_given?
+          parent.length.times do |n|
+            yield parent.get_ordinate(n, self.dimension)
+          end
+          self
+        else
+          parent.length.times.collect { |n|
+            parent.get_ordinate(n, self.dimension)
+          }.to_enum
+        end
       end
     end
 
@@ -117,12 +132,15 @@ module Geos
     # Yields coordinates as [ x, y, z ]. The z coordinate may be omitted for
     # 2-dimensional CoordinateSequences.
     def each
-      self.length.times do |n|
-        yield [
-          self.get_x(n),
-          (self.dimensions >= 2 ? self.get_y(n) : nil),
-          (self.dimensions >= 3 ? self.get_z(n) : nil)
-        ].compact
+      if block_given?
+        self.length.times do |n|
+          yield self.build_coordinate(n)
+        end
+        self
+      else
+        self.length.times.collect { |n|
+          self.build_coordinate(n)
+        }.to_enum
       end
     end
 
@@ -225,6 +243,14 @@ module Geos
       if idx < 0 || idx >= self.length
         raise RuntimeError.new("Index out of bounds")
       end
+    end
+
+    def build_coordinate(n) #:nodoc:
+      [
+        self.get_x(n),
+        (self.dimensions >= 2 ? self.get_y(n) : nil),
+        (self.dimensions >= 3 ? self.get_z(n) : nil)
+      ].compact
     end
   end
 end
