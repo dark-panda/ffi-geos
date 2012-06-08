@@ -1,6 +1,7 @@
 
 require 'ffi'
 require 'rbconfig'
+require 'ffi-geos/version'
 
 module Geos
   GEOS_BASE = File.join(File.dirname(__FILE__), 'ffi-geos')
@@ -1030,7 +1031,6 @@ module Geos
   end
 
   module VersionConstants
-    VERSION = File.read(File.join(GEOS_BASE, %w{ .. .. VERSION })).strip
     GEOS_JTS_PORT = Geos.jts_port
     GEOS_VERSION,
       GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERSION_PATCH, GEOS_VERSION_PRERELEASE,

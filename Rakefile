@@ -8,6 +8,7 @@ gem 'rdoc', '~> 3.12'
 require 'rubygems/package_task'
 require 'rake/testtask'
 require 'rdoc/task'
+require 'bundler/gem_tasks'
 
 if RUBY_VERSION >= '1.9'
   begin
@@ -19,23 +20,7 @@ end
 
 $:.push 'lib'
 
-version = File.read('VERSION') rescue ''
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "ffi-geos"
-    gem.summary = "An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS)."
-    gem.description = gem.summary
-    gem.email = "dark.panda@gmail.com"
-    gem.homepage = "http://github.com/dark-panda/ffi-geos"
-    gem.authors =    [ "J Smith" ]
-    gem.add_dependency "ffi", "~> 1.0.0"
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
+version = Geos::VERSION
 
 desc 'Test GEOS interface'
 Rake::TestTask.new(:test) do |t|
