@@ -114,7 +114,7 @@ class WktReaderTests < Test::Unit::TestCase
 
   def test_read_exception
     assert_raise(RuntimeError) do
-      geom = read('gibberish')
+      read('gibberish')
     end
   end
 end

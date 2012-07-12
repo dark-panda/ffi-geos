@@ -55,7 +55,7 @@ class UtilsTests < Test::Unit::TestCase
   def test_bad_create_point
     cs = Geos::CoordinateSequence.new(0, 0)
     assert_raise(RuntimeError) do
-      geom = Geos.create_point(cs)
+      Geos.create_point(cs)
     end
   end
 
@@ -87,7 +87,7 @@ class UtilsTests < Test::Unit::TestCase
   def test_create_bad_line_string
     cs = Geos::CoordinateSequence.new(1, 0)
     assert_raise(RuntimeError) do
-      geom = Geos::create_line_string(cs)
+      Geos::create_line_string(cs)
     end
   end
 
@@ -126,7 +126,7 @@ class UtilsTests < Test::Unit::TestCase
     cs = Geos::CoordinateSequence.new(1, 0)
 
     assert_raise(RuntimeError) do
-      geom = Geos::create_linear_ring(cs)
+      Geos::create_linear_ring(cs)
     end
   end
 
