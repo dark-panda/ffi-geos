@@ -45,13 +45,14 @@ module Geos
       FFIGeos.GEOSGeomTypeId_r(Geos.current_handle, self.ptr)
     end
 
-    def normalize
+    def normalize!
       if FFIGeos.GEOSNormalize_r(Geos.current_handle, self.ptr) == -1
         raise RuntimeError.new("Couldn't normalize #{self.class}")
       end
 
       self
     end
+    alias :normalize :normalize!
 
     def srid
       FFIGeos.GEOSGetSRID_r(Geos.current_handle, self.ptr)
