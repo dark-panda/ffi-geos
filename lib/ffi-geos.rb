@@ -340,7 +340,7 @@ module Geos
       ],
 
       :GEOSBufferWithParams_r => [
-        # *geom, *handle, *geom, *oarams, width
+        # *geom, *handle, *geom, *params, width
         :pointer, :pointer, :pointer, :pointer, :double
       ],
 
