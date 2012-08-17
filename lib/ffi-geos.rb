@@ -450,6 +450,11 @@ module Geos
         :pointer, :pointer, :pointer, :pointer, :double
       ],
 
+      :GEOSDelaunayTriangulation_r => [
+        # *geom, *handle, *geom, tolerance, only_edges
+        :pointer, :pointer, :pointer, :double, :int
+      ],
+
       :GEOSRelate_r => [
         # string, *handle, *geom_a, *geom_b
         :string, :pointer, :pointer, :pointer

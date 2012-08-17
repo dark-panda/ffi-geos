@@ -533,6 +533,12 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSPolygonizer_getCutEdges_r(Geos.current_handle, ary, 1), :srid_copy => self.srid).to_a
     end
 
+    if FFIGeos.respond_to?(:GEOSDelaunayTriangulation_r)
+      def delaunay_triangulation(tolerance, options = {})
+        cast_geometry_ptr(FFIGeos.GEOSDelaunayTriangulation_r(Geos.current_handle, self.ptr, tolerance, options[:only_edges] ? 1 : 0))
+      end
+    end
+
     def to_prepared
       Geos::PreparedGeometry.new(self)
     end
