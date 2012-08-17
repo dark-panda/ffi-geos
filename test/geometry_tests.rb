@@ -1598,4 +1598,10 @@ class GeometryTests < Test::Unit::TestCase
     assert_kind_of(Enumerable, geom.to_enum)
     assert_equal(geom, geom.each {})
   end
+
+  def test_normalize
+    geom = read('POLYGON((0 0, 5 0, 5 5, 0 5, 0 0))')
+    geom.normalize
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom, :trim => true))
+  end
 end
