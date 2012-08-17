@@ -49,6 +49,8 @@ module Geos
       if FFIGeos.GEOSNormalize_r(Geos.current_handle, self.ptr) == -1
         raise RuntimeError.new("Couldn't normalize #{self.class}")
       end
+
+      self
     end
 
     def srid
