@@ -1035,8 +1035,14 @@ module Geos
     GEOS_VERSION,
       GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERSION_PATCH, GEOS_VERSION_PRERELEASE,
       GEOS_CAPI_VERSION,
-      GEOS_CAPI_VERSION_MAJOR, GEOS_CAPI_VERSION_MINOR, GEOS_CAPI_VERSION_PATCH =
-        if !(versions = Geos.version.scan(/^((\d+)\.(\d+)\.(\d+)((?:dev|rc|beta|alpha)\d*)?)-CAPI-((\d+)\.(\d+)\.(\d+))$/)).empty?
+      GEOS_CAPI_VERSION_MAJOR, GEOS_CAPI_VERSION_MINOR, GEOS_CAPI_VERSION_PATCH,
+      GEOS_SVN_REVISION =
+        if !(versions = Geos.version.scan(/^
+          ((\d+)\.(\d+)\.(\d+)((?:dev|rc|beta|alpha)\d*)?)
+          -CAPI-
+          ((\d+)\.(\d+)\.(\d+))
+          (?:\s+r(\d+))?
+        $/x)).empty?
           versions = versions[0]
           [
             versions[0],
@@ -1047,7 +1053,8 @@ module Geos
             versions[5],
             versions[6].to_i,
             versions[7].to_i,
-            versions[8].to_i
+            versions[8].to_i,
+            (versions[9].to_i if versions[9])
           ]
         else
           [ '0.0.0', 0, 0, 0, nil, '0.0.0', 0, 0, 0 ]

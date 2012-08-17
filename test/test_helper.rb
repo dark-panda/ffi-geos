@@ -10,8 +10,15 @@ end
 
 puts "Ruby version #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
 puts "ffi version #{Gem.loaded_specs['ffi'].version}" if Gem.loaded_specs['ffi']
-puts "GEOS version #{Geos::GEOS_VERSION}"
+
+if Geos.respond_to?(:version)
+  puts "GEOS version #{Geos.version}"
+else
+  puts "GEOS version #{Geos::GEOS_VERSION}"
+end
+
 puts "ffi-geos version #{Geos::VERSION}" if defined?(Geos::VERSION)
+
 if defined?(Geos::FFIGeos)
   puts "Using #{Geos::FFIGeos.geos_library_path}"
 end
