@@ -1616,4 +1616,22 @@ class GeometryTests < Test::Unit::TestCase
     geom = read('POLYGON((0 0, 5 0, 5 5, 0 5, 0 0))').normalize!
     assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom, :trim => true))
   end
+
+  def test_eql
+    geom_a = read('POINT(1.0 1.0)')
+    geom_b = read('POINT(2.0 2.0)')
+
+    %w{ eql? equals? == }.each do |method|
+      assert(!geom_a.send(method, geom_b))
+    end
+  end
+
+  def test_eql_exact
+    geom_a = read('POINT(1.0 1.0)')
+    geom_b = read('POINT(2.0 2.0)')
+
+    %w{ eql_exact? equals_exact? exactly_equals? }.each do |method|
+      assert(!geom_a.send(method, geom_b, 0.001))
+    end
+  end
 end

@@ -311,11 +311,14 @@ module Geos
       bool_result(FFIGeos.GEOSEquals_r(Geos.current_handle, self.ptr, geom.ptr))
     end
     alias :== :eql?
+    alias :equals? :eql?
 
     def eql_exact?(geom, tolerance)
       check_geometry(geom)
       bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle, self.ptr, geom.ptr, tolerance))
     end
+    alias :equals_exact? :eql_exact?
+    alias :exactly_equals? :eql_exact?
 
     def empty?
       bool_result(FFIGeos.GEOSisEmpty_r(Geos.current_handle, self.ptr))
