@@ -320,6 +320,13 @@ module Geos
     alias :equals_exact? :eql_exact?
     alias :exactly_equals? :eql_exact?
 
+    def eql_almost?(geom, decimal = 6)
+      check_geometry(geom)
+      bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle, self.ptr, geom.ptr, 0.5 * 10 ** (-decimal)))
+    end
+    alias :equals_almost? :eql_almost?
+    alias :almost_equals? :eql_almost?
+
     def empty?
       bool_result(FFIGeos.GEOSisEmpty_r(Geos.current_handle, self.ptr))
     end

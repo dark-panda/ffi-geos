@@ -1634,4 +1634,27 @@ class GeometryTests < Test::Unit::TestCase
       assert(!geom_a.send(method, geom_b, 0.001))
     end
   end
+
+  def test_eql_almost_default
+    geom = read('POINT (1 1)')
+    geom_a = read('POINT (1.0000001 1.0000001)')
+    geom_b = read('POINT (1.000001 1.000001)')
+
+    %w{ eql_almost? equals_almost? almost_equals? }.each do |method|
+      assert(geom.send(method, geom_a))
+      assert(!geom.send(method, geom_b))
+    end
+  end
+
+  def test_eql_almost
+    geom_a = read('POINT(1.0 1.0)')
+    geom_b = read('POINT(1.1 1.1)')
+
+    assert(!geom_a.eql?(geom_b))
+
+    %w{ eql_almost? equals_almost? almost_equals? }.each do |method|
+      assert(geom_a.send(method, geom_b, 0))
+      assert(!geom_a.send(method, geom_b, 1))
+    end
+  end
 end
