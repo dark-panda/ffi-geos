@@ -52,6 +52,14 @@ class UtilsTests < Test::Unit::TestCase
     create_method_tester('POINT(10 20)', :create_point, cs, Geos::GEOS_POINT, Geos::Point)
   end
 
+  def test_create_point_with_x_and_y_arguments
+    assert_equal('POINT (10 20)', write(Geos.create_point(10, 20), :trim => true))
+  end
+
+  def test_create_point_with_x_y_and_z_arguments
+    assert_equal('POINT Z (10 20 30)', write(Geos.create_point(10, 20, 30), :trim => true, :output_dimensions => 3))
+  end
+
   def test_bad_create_point
     cs = Geos::CoordinateSequence.new(0, 0)
     assert_raise(RuntimeError) do

@@ -26,7 +26,19 @@ module Geos
         end
       end
 
-      def create_point(cs)
+      def create_point(*args)
+        if args.length == 1
+          cs = args.first
+        elsif args.length == 2
+          cs = CoordinateSequence.new(1, 2)
+          cs.x[0], cs.y[0] = args[0], args[1]
+        elsif args.length == 3
+          cs = CoordinateSequence.new(1, 3)
+          cs.x[0], cs.y[0], cs.z[0] = args
+        else
+          raise ArgumentError.new("Wrong number of arguments (#{args.length} for 1-3)")
+        end
+
         if cs.length != 1
           raise RuntimeError.new("IllegalArgumentException: Point coordinate list must contain a single element")
         end
