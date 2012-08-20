@@ -143,6 +143,7 @@ module Geos
       check_geometry(geom)
       cast_geometry_ptr(FFIGeos.GEOSSymDifference_r(Geos.current_handle, self.ptr, geom.ptr))
     end
+    alias :symmetric_difference :sym_difference
 
     def boundary
       cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr))

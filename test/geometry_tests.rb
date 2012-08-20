@@ -335,6 +335,78 @@ class GeometryTests < Test::Unit::TestCase
     )
   end
 
+  def test_symmetric_difference
+    comparison_tester(
+      :symmetric_difference,
+      'POINT(0 0)',
+      'POINT(0 0)',
+      'GEOMETRYCOLLECTION EMPTY'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'POINT(0 0)',
+      'POINT(1 0)',
+      'MULTIPOINT (0 0, 1 0)'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'LINESTRING(0 0, 10 0)',
+      'POINT(5 0)',
+      'LINESTRING (0 0, 10 0)'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'POINT(5 0)',
+      'LINESTRING(0 0, 10 0)',
+      'LINESTRING (0 0, 10 0)'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'POINT(5 0)',
+      'LINESTRING(0 1, 10 1)',
+      'GEOMETRYCOLLECTION (POINT (5 0), LINESTRING (0 1, 10 1))'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'LINESTRING(0 0, 10 0)',
+      'LINESTRING(5 -10, 5 10)',
+      'MULTILINESTRING ((0 0, 5 0), (5 0, 10 0), (5 -10, 5 0), (5 0, 5 10))'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'LINESTRING(0 0, 10 0)',
+      'LINESTRING(5 0, 20 0)',
+      'MULTILINESTRING ((0 0, 5 0), (10 0, 20 0))'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
+      'LINESTRING(5 -10, 5 10)',
+      'GEOMETRYCOLLECTION (LINESTRING (5 -10, 5 0), POLYGON ((5 0, 0 0, 0 10, 5 10, 10 10, 10 0, 5 0)))'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
+      'LINESTRING(10 0, 20 0)',
+      'GEOMETRYCOLLECTION (LINESTRING (10 0, 20 0), POLYGON ((10 0, 0 0, 0 10, 10 10, 10 0)))'
+    )
+
+    comparison_tester(
+      :symmetric_difference,
+      'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
+      'POLYGON((5 -5, 5 5, 15 5, 15 -5, 5 -5))',
+      'MULTIPOLYGON (((5 0, 0 0, 0 10, 10 10, 10 5, 5 5, 5 0)), ((5 0, 10 0, 10 5, 15 5, 15 -5, 5 -5, 5 0)))'
+    )
+  end
+
   def test_boundary
     self_tester(
       :boundary,
