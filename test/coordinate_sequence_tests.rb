@@ -271,4 +271,17 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_kind_of(Enumerable, cs.to_enum)
     assert_equal(cs, cs.each {})
   end
+
+  def test_proxy_clone
+    cs = Geos::CoordinateSequence.new([ 10, 20 ])
+    cs2 = cs.clone
+
+    cs.x[0] = 100
+
+    assert_equal(100, cs.x[0])
+    assert_equal(10, cs2.x[0])
+
+    assert_not_equal(cs.x, cs2.x)
+    assert_not_equal(cs.y, cs2.y)
+  end
 end

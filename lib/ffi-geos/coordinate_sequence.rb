@@ -120,6 +120,10 @@ module Geos
         FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle, source.ptr),
         self.class.method(:release)
       )
+
+      @x = CoordinateAccessor.new(self, 0)
+      @y = CoordinateAccessor.new(self, 1)
+      @z = CoordinateAccessor.new(self, 2)
     end
 
     def self.no_release(ptr) #:nodoc:
