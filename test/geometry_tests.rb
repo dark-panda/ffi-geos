@@ -502,6 +502,26 @@ class GeometryTests < Test::Unit::TestCase
     )
   end
 
+  def test_representative_point
+    self_tester(
+      :representative_point,
+      'POINT(0 0)',
+      'POINT(0 0)'
+    )
+
+    self_tester(
+      :representative_point,
+      'LINESTRING(0 0, 5 5, 10 10)',
+      'POINT (5 5)'
+    )
+
+    self_tester(
+      :representative_point,
+      'POLYGON((0 0, 0 10, 5 5, 10 10, 10 0, 0 0))',
+      'POINT (2.5 5)'
+    )
+  end
+
   def test_centroid
     self_tester(
       :centroid,

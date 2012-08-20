@@ -178,6 +178,7 @@ module Geos
     def point_on_surface
       cast_geometry_ptr(FFIGeos.GEOSPointOnSurface_r(Geos.current_handle, self.ptr))
     end
+    alias :representative_point :point_on_surface
 
     def centroid
       cast_geometry_ptr(FFIGeos.GEOSGetCentroid_r(Geos.current_handle, self.ptr))
