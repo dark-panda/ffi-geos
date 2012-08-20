@@ -73,5 +73,9 @@ module Geos
     def to_polygon
       to_linear_ring.to_polygon
     end
+
+    def dump_points(cur_path = [])
+      cur_path.concat(to_a)
+    end
   end
 end

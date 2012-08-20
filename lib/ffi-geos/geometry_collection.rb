@@ -36,5 +36,12 @@ module Geos
     end
     alias slice []
     alias at []
+
+    def dump_points(cur_path = [])
+      each do |geom|
+        cur_path << geom.dump_points
+      end
+      cur_path
+    end
   end
 end
