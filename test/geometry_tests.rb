@@ -38,7 +38,7 @@ class GeometryTests < Test::Unit::TestCase
       assert_equal(expected, write(read(geom).buffer(width, params)))
     }
 
-    @writer.rounding_precision = 0
+    writer.rounding_precision = 0
 
     tester['POLYGON EMPTY', 'POINT(0 0)', 0]
 
@@ -132,7 +132,7 @@ class GeometryTests < Test::Unit::TestCase
         assert_equal(expected, write(buffered))
       }
 
-      @writer.rounding_precision = 0
+      writer.rounding_precision = 0
 
       # straight left
       tester[
@@ -1574,7 +1574,7 @@ class GeometryTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:select)
     def test_line_string_enumerable
-      @writer.trim = true
+      writer.trim = true
       geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2)')
 
       assert_equal(2, geom.select { |point| point == read('POINT(2 2)') }.length)
@@ -1583,7 +1583,7 @@ class GeometryTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:detect)
     def test_geometry_collection_enumerable
-      @writer.trim = true
+      writer.trim = true
       geom = read('GEOMETRYCOLLECTION(
         LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2),
         POINT(10 20),
@@ -1597,7 +1597,7 @@ class GeometryTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:[])
     def test_line_string_array
-      @writer.trim = true
+      writer.trim = true
       geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 4 4)')
 
       assert_equal('POINT (0 0)', write(geom[0]))
@@ -1619,7 +1619,7 @@ class GeometryTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:[])
     def test_geometry_collection_array
-      @writer.trim = true
+      writer.trim = true
       geom = read('GEOMETRYCOLLECTION(
         LINESTRING(0 0, 1 1, 2 2, 3 3),
         POINT(10 20),
@@ -1692,21 +1692,25 @@ class GeometryTests < Test::Unit::TestCase
   end
 
   def test_normalize
+    writer.trim = true
+
     geom = read('POLYGON((0 0, 5 0, 5 5, 0 5, 0 0))')
     geom.normalize
-    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom))
 
     geom = read('POLYGON((0 0, 5 0, 5 5, 0 5, 0 0))').normalize
-    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom))
   end
 
   def test_normalize_bang
+    writer.trim = true
+
     geom = read('POLYGON((0 0, 5 0, 5 5, 0 5, 0 0))')
     geom.normalize!
-    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom))
 
     geom = read('POLYGON((0 0, 5 0, 5 5, 0 5, 0 0))').normalize!
-    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(geom))
   end
 
   def test_eql

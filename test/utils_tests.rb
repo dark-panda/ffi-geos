@@ -213,7 +213,7 @@ class UtilsTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
     def test_create_multi_point
-      @writer.rounding_precision = 0
+      writer.rounding_precision = 0
       assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
       assert_equal('MULTIPOINT (0 0, 10 10)', write(Geos.create_multi_point(
         read('POINT(0 0)'),
@@ -233,7 +233,7 @@ class UtilsTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_line_string)
     def test_create_multi_line_string
-      @writer.rounding_precision = 0
+      writer.rounding_precision = 0
       assert_equal('MULTILINESTRING EMPTY', write(Geos.create_multi_line_string))
       assert_equal('MULTILINESTRING ((0 0, 10 10), (10 10, 20 20))', write(Geos.create_multi_line_string(
         read('LINESTRING(0 0, 10 10)'),
@@ -253,7 +253,7 @@ class UtilsTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_polygon)
     def test_create_multi_polygon
-      @writer.rounding_precision = 0
+      writer.rounding_precision = 0
       assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_multi_polygon))
       assert_equal('MULTIPOLYGON (((0 0, 0 5, 5 5, 5 0, 0 0)), ((10 10, 10 15, 15 15, 15 10, 10 10)))', write(Geos.create_multi_polygon(
         read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
@@ -273,7 +273,7 @@ class UtilsTests < Test::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
     def test_create_geometry_collection
-      @writer.rounding_precision = 0
+      writer.rounding_precision = 0
       assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_geometry_collection))
       assert_equal('GEOMETRYCOLLECTION (POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0)), POLYGON ((10 10, 10 15, 15 15, 15 10, 10 10)))',
         write(Geos.create_geometry_collection(
