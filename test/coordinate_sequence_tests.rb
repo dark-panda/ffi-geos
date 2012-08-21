@@ -284,4 +284,13 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_not_equal(cs.x, cs2.x)
     assert_not_equal(cs.y, cs2.y)
   end
+
+  def test_has_z
+    assert(Geos::CoordinateSequence.new([ 0, 1, 2 ]).has_z?)
+    assert(!Geos::CoordinateSequence.new([ 0, 1 ]).has_z?)
+    assert(!Geos::CoordinateSequence.new(1, 2).has_z?)
+    assert(Geos::CoordinateSequence.new(1, 3).has_z?)
+    assert(read('POINT (0 0 0)').coord_seq.has_z?)
+    assert(!read('POINT (0 0)').coord_seq.has_z?)
+  end
 end

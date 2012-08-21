@@ -148,6 +148,10 @@ module Geos
       end
     end
 
+    def has_z?
+      self.dimensions == 3
+    end
+
     # Sets the x value of a coordinate. Can also be set via #x[]=.
     def set_x(idx, val)
       self.check_bounds(idx)
