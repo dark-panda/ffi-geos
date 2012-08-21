@@ -123,63 +123,6 @@ class GeometryTests < Test::Unit::TestCase
     ]
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:offset_curve)
-    def test_offset_curve
-      tester = lambda { |expected, g, width, style|
-        geom = read(g)
-        buffered = geom.offset_curve(width, style)
-
-        assert_equal(expected, write(buffered))
-      }
-
-      writer.rounding_precision = 0
-
-      # straight left
-      tester[
-        'LINESTRING (0 2, 10 2)',
-        'LINESTRING (0 0, 10 0)',
-        2, {
-          :quad_segs => 0,
-          :join => :round,
-          :mitre_limit => 2
-        }
-      ]
-
-      # straight right
-      tester[
-        'LINESTRING (10 -2, 0 -2)',
-        'LINESTRING (0 0, 10 0)',
-        -2, {
-          :quad_segs => 0,
-          :join => :round,
-          :mitre_limit => 2
-        }
-      ]
-
-      # outside curve
-      tester[
-        'LINESTRING (12 10, 12 0, 10 -2, 0 -2)',
-        'LINESTRING (0 0, 10 0, 10 10)',
-        -2, {
-          :quad_segs => 1,
-          :join => :round,
-          :mitre_limit => 2
-        }
-      ]
-
-      # inside curve
-      tester[
-        'LINESTRING (0 2, 8 2, 8 10)',
-        'LINESTRING (0 0, 10 0, 10 10)',
-        2, {
-          :quad_segs => 1,
-          :join => :round,
-          :mitre_limit => 2
-        }
-      ]
-    end
-  end
-
   def test_convex_hull
     geom = read('POINT(0 0)')
     assert(read('POINT(0 0)').eql_exact?(geom.convex_hull, TOLERANCE))
@@ -931,14 +874,6 @@ class GeometryTests < Test::Unit::TestCase
     assert(read('POINT(0 0 0)').has_z?)
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:closed?)
-    def test_closed
-      assert(read('LINESTRING(0 0, 1 1, 2 2, 0 0)').closed?)
-      assert(!read('LINESTRING(0 0, 1 1, 2 2)').closed?)
-      assert(read('LINEARRING(0 0, 1 1, 2 2, 0 0)').closed?)
-    end
-  end
-
   def test_num_geometries
     tester = lambda { |expected, g|
       geom = read(g)
@@ -1181,31 +1116,6 @@ class GeometryTests < Test::Unit::TestCase
     tester[[[0, 0], [0, 5], [5, 5], [5, 0], [0, 0]], 'LINEARRING(0 0, 0 5, 5 5, 5 0, 0 0)']
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:num_points)
-    def test_num_points
-      assert_equal(4, read('LINESTRING (0 0, 1 0, 1 1, 0 1)').num_points)
-
-      assert_raise(NoMethodError) do
-        read('POINT (0 0)').num_points
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::Point.method_defined?(:get_x)
-    def test_get_x_and_get_y
-      geom = read('POINT (1 2)')
-      assert_equal(1, geom.get_x)
-      assert_equal(2, geom.get_y)
-
-      assert_equal(1, geom.x)
-      assert_equal(2, geom.y)
-
-      assert_raise(NoMethodError) do
-        read('LINESTRING (0 0, 1 1)').get_x
-      end
-    end
-  end
-
   def test_dimensions
     tester = lambda { |expected, g|
       geom = read(g)
@@ -1301,36 +1211,6 @@ class GeometryTests < Test::Unit::TestCase
 
       assert_raise(RuntimeError) do
         read('POINT(1 2)').interpolate(0)
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:point_n)
-    def test_point_n
-      writer.rounding_precision = 0
-
-      tester = lambda { |expected, geom, n|
-        assert_equal(expected, write(geom.point_n(n)))
-      }
-
-      geom = read('LINESTRING (10 10, 10 14, 14 14, 14 10)')
-      tester['POINT (10 10)', geom, 0]
-      tester['POINT (10 14)', geom, 1]
-      tester['POINT (14 14)', geom, 2]
-      tester['POINT (14 10)', geom, 3]
-
-      assert_raise(RuntimeError) do
-        tester['POINT (0 0)', geom, 4]
-      end
-
-      geom = read('LINEARRING (11 11, 11 12, 12 11, 11 11)')
-      tester['POINT (11 11)', geom, 0]
-      tester['POINT (11 12)', geom, 1]
-      tester['POINT (12 11)', geom, 2]
-      tester['POINT (11 11)', geom, 3]
-
-      assert_raise(NoMethodError) do
-        tester[nil, read('POINT (0 0)'), 0]
       end
     end
   end
@@ -1572,78 +1452,6 @@ class GeometryTests < Test::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:select)
-    def test_line_string_enumerable
-      writer.trim = true
-      geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2)')
-
-      assert_equal(2, geom.select { |point| point == read('POINT(2 2)') }.length)
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:detect)
-    def test_geometry_collection_enumerable
-      writer.trim = true
-      geom = read('GEOMETRYCOLLECTION(
-        LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2),
-        POINT(10 20),
-        POLYGON((0 0, 0 5, 5 5, 5 0, 0 0)),
-        POINT(10 20)
-      )')
-
-      assert_equal(2, geom.select { |point| point == read('POINT(10 20)') }.length)
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:[])
-    def test_line_string_array
-      writer.trim = true
-      geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 4 4)')
-
-      assert_equal('POINT (0 0)', write(geom[0]))
-      assert_equal('POINT (4 4)', write(geom[-1]))
-
-      assert_equal([
-        'POINT (0 0)',
-        'POINT (1 1)'
-      ], geom[0, 2].collect { |g| write(g) })
-
-      assert_equal(nil, geom[0, -1])
-      assert_equal([], geom[-1, 0])
-      assert_equal([
-        'POINT (1 1)',
-        'POINT (2 2)'
-      ], geom[1..2].collect { |g| write(g) })
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:[])
-    def test_geometry_collection_array
-      writer.trim = true
-      geom = read('GEOMETRYCOLLECTION(
-        LINESTRING(0 0, 1 1, 2 2, 3 3),
-        POINT(10 20),
-        POLYGON((0 0, 0 5, 5 5, 5 0, 0 0)),
-        POINT(10 20)
-      )')
-
-      assert_equal('LINESTRING (0 0, 1 1, 2 2, 3 3)', write(geom[0]))
-      assert_equal('POINT (10 20)', write(geom[-1]))
-
-      assert_equal([
-        'LINESTRING (0 0, 1 1, 2 2, 3 3)',
-        'POINT (10 20)'
-      ], geom[0, 2].collect { |g| write(g) })
-
-      assert_equal(nil, geom[0, -1])
-      assert_equal([], geom[-1, 0])
-      assert_equal([
-        'POINT (10 20)',
-        'POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))'
-      ], geom[1..2].collect { |g| write(g) })
-    end
-  end
-
   def test_clone
     geom_a = read('POINT(0 0)')
     geom_b = geom_a.clone
@@ -1675,13 +1483,6 @@ class GeometryTests < Test::Unit::TestCase
     geom_b = geom_a.dup
     assert(geom_a.eql?(geom_b))
     assert_equal(srid, geom_b.srid)
-  end
-
-  def test_geometry_collection_enumerator
-    geom = read('GEOMETRYCOLLECTION(POINT(0 0))')
-    assert_kind_of(Enumerable, geom.each)
-    assert_kind_of(Enumerable, geom.to_enum)
-    assert_equal(geom, geom.each {})
   end
 
   def test_line_string_enumerator
