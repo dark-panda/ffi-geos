@@ -7,8 +7,12 @@ module Geos
           FFIGeos.GEOSGeomGetX_r(Geos.current_handle, self.ptr, ret)
         }.read_double
       end
-      alias :x :get_x
+    else
+      def get_x
+        self.coord_seq.get_x(0)
+      end
     end
+    alias :x :get_x
 
     if FFIGeos.respond_to?(:GEOSGeomGetY_r)
       def get_y
@@ -16,7 +20,11 @@ module Geos
           FFIGeos.GEOSGeomGetY_r(Geos.current_handle, self.ptr, ret)
         }.read_double
       end
-      alias :y :get_y
+    else
+      def get_y
+        self.coord_seq.get_y(0)
+      end
     end
+    alias :y :get_y
   end
 end

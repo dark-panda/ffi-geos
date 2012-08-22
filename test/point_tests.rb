@@ -28,4 +28,24 @@ class PointTests < Test::Unit::TestCase
     geom = read('POINT(1 2)')
     assert_equal(1, geom.num_geometries)
   end
+
+  def test_get_x
+    geom = read('POINT (1 2)')
+    assert_equal(1, geom.get_x)
+    assert_equal(1, geom.x)
+
+    assert_raise(NoMethodError) do
+      read('LINESTRING (0 0, 1 1)').get_x
+    end
+  end
+
+  def test_get_y
+    geom = read('POINT (1 2)')
+    assert_equal(2, geom.get_y)
+    assert_equal(2, geom.y)
+
+    assert_raise(NoMethodError) do
+      read('LINESTRING (0 0, 1 1)').get_x
+    end
+  end
 end
