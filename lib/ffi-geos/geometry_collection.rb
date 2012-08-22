@@ -57,7 +57,15 @@ module Geos
     end
 
     %w{
+      affine
+      rotate
+      rotate_x
+      rotate_y
+      rotate_z
+      scale
       snap_to_grid
+      trans_scale
+      translate
     }.each do |m|
       self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
         def #{m}!(*args)

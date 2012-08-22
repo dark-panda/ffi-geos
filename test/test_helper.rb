@@ -154,6 +154,21 @@ module TestHelper
 
     assert_equal(expected, result)
   end
+
+  def affine_tester(method, expected, wkt, *args)
+    writer.trim = true
+
+    geom = read(wkt)
+    geom.send("#{method}!", *args).snap_to_grid!(0.1)
+
+    assert_equal(expected, write(geom))
+
+    geom = read(wkt)
+    geom2 = geom.send(method, *args).snap_to_grid(0.1)
+
+    assert_equal(wkt, write(geom))
+    assert_equal(expected, write(geom2, :trim => true))
+  end
 end
 
 if RUBY_VERSION >= '1.9'
