@@ -27,7 +27,11 @@ module Geos
     alias :geometry_n :get_geometry_n
 
     def [](*args)
-      self.to_a[*args]
+      if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
+        self.get_geometry_n(args.first)
+      else
+        self.to_a[*args]
+      end
     end
     alias :slice :[]
     alias :at :[]

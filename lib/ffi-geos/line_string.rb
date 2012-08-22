@@ -35,7 +35,11 @@ module Geos
     end
 
     def [](*args)
-      self.to_a[*args]
+      if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
+        self.point_n(args.first)
+      else
+        self.to_a[*args]
+      end
     end
     alias :slice :[]
 
