@@ -48,4 +48,13 @@ class PointTests < Test::Unit::TestCase
       read('LINESTRING (0 0, 1 1)').get_x
     end
   end
+
+  def test_get_z
+    geom = read('POINT Z (1 2 3)')
+    assert_equal(3, geom.get_z)
+    assert_equal(3, geom.z)
+    assert_raise(NoMethodError) do
+      read('LINESTRING (0 0, 1 1)').get_z
+    end
+  end
 end

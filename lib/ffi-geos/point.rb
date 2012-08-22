@@ -26,5 +26,18 @@ module Geos
       end
     end
     alias :y :get_y
+
+    if FFIGeos.respond_to?(:GEOSGeomGetZ_r)
+      def get_z
+        FFI::MemoryPointer.new(:double).tap { |ret|
+          FFIGeos.GEOSGeomGetZ_r(Geos.current_handle, self.ptr, ret)
+        }.read_double
+      end
+    else
+      def get_z
+        self.coord_seq.get_z(0)
+      end
+    end
+    alias :z :get_z
   end
 end
