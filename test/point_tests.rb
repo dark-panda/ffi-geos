@@ -101,4 +101,40 @@ class PointTests < Minitest::Test
     assert_equal(geom.object_id, geom.normalize.object_id)
     assert_equal(geom.object_id, geom.normalize!.object_id)
   end
+
+  def test_x_max
+    geom = read('POINT (-10 -15)')
+    assert_equal(-10, geom.x_max)
+  end
+
+  def test_x_min
+    geom = read('POINT (-10 -15)')
+    assert_equal(-10, geom.x_min)
+  end
+
+  def test_y_max
+    geom = read('POINT (-10 -15)')
+    assert_equal(-15, geom.y_max)
+  end
+
+  def test_y_min
+    geom = read('POINT (-10 -15)')
+    assert_equal(-15, geom.y_min)
+  end
+
+  def test_z_max
+    geom = read('POINT (-10 -15)')
+    assert_equal(0, geom.z_max)
+
+    geom = read('POINT Z (-10 -15 -20)')
+    assert_equal(-20, geom.z_max)
+  end
+
+  def test_z_min
+    geom = read('POINT (-10 -15)')
+    assert_equal(0, geom.z_min)
+
+    geom = read('POINT Z (-10 -15 -20)')
+    assert_equal(-20, geom.z_min)
+  end
 end

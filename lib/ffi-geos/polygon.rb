@@ -42,5 +42,29 @@ module Geos
 
       cur_path.concat(points)
     end
+
+    %w{ max min }.each do |op|
+      %w{ x y }.each do |dimension|
+        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          def #{dimension}_#{op}
+            unless self.empty?
+              self.envelope.exterior_ring.#{dimension}_#{op}
+            end
+          end
+        EOF
+      end
+
+      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        def z_#{op}
+          unless self.empty?
+            if self.has_z?
+              self.exterior_ring.z_#{op}
+            else
+              0
+            end
+          end
+        end
+      EOF
+    end
   end
 end

@@ -81,5 +81,29 @@ module Geos
     def dump_points(cur_path = [])
       cur_path.push(self.dup)
     end
+
+    %w{ max min }.each do |op|
+      %w{ x y }.each do |dimension|
+        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          def #{dimension}_#{op}
+            unless self.empty?
+              self.#{dimension}
+            end
+          end
+        EOF
+      end
+
+      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        def z_#{op}
+          unless self.empty?
+            if self.has_z?
+              self.z
+            else
+              0
+            end
+          end
+        end
+      EOF
+    end
   end
 end

@@ -43,5 +43,17 @@ module Geos
       end
       cur_path
     end
+
+    %w{ x y z }.each do |dimension|
+      %w{ max min }.each do |op|
+        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          def #{dimension}_#{op}
+            unless self.empty?
+              self.collect(&:#{dimension}_#{op}).#{op}
+            end
+          end
+        EOF
+      end
+    end
   end
 end

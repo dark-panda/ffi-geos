@@ -257,6 +257,28 @@ module Geos
       }.join(', ')
     end
 
+    %w{ x y z }.each do |m|
+      class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        def #{m}_max
+          ret = nil
+          self.length.times do |i|
+            value = self.get_#{m}(i)
+            ret = value if !ret || value >= ret
+          end
+          ret
+        end
+
+        def #{m}_min
+          ret = nil
+          self.length.times do |i|
+            value = self.get_#{m}(i)
+            ret = value if !ret || value <= ret
+          end
+          ret
+        end
+      EOF
+    end
+
     protected
 
       def check_bounds(idx) #:nodoc:
