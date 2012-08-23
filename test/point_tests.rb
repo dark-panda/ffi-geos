@@ -57,4 +57,36 @@ class PointTests < MiniTest::Unit::TestCase
       read('LINESTRING (0 0, 1 1)').get_z
     end
   end
+
+  def test_simplify_clone_srid_correctly
+    geom = read('POINT (0 0)')
+    geom.srid = 4326
+
+    Geos.srid_copy_policy = :zero
+    assert_equal(0, geom.simplify(0.1).srid)
+
+    Geos.srid_copy_policy = :lenient
+    assert_equal(4326, geom.simplify(0.1).srid)
+
+    Geos.srid_copy_policy = :strict
+    assert_equal(4326, geom.simplify(0.1).srid)
+  ensure
+    Geos.srid_copy_policy = :default
+  end
+
+  def test_extract_unique_points_clone_srid_correctly
+    geom = read('POINT (0 0)')
+    geom.srid = 4326
+
+    Geos.srid_copy_policy = :zero
+    assert_equal(0, geom.extract_unique_points.srid)
+
+    Geos.srid_copy_policy = :lenient
+    assert_equal(4326, geom.extract_unique_points.srid)
+
+    Geos.srid_copy_policy = :strict
+    assert_equal(4326, geom.extract_unique_points.srid)
+  ensure
+    Geos.srid_copy_policy = :default
+  end
 end

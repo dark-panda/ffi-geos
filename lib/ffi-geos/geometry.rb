@@ -427,15 +427,23 @@ module Geos
     end
 
     def area
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSArea_r(Geos.current_handle, self.ptr, ret)
-      }.read_double
+      if self.empty?
+        0
+      else
+        FFI::MemoryPointer.new(:double).tap { |ret|
+          FFIGeos.GEOSArea_r(Geos.current_handle, self.ptr, ret)
+        }.read_double
+      end
     end
 
     def length
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSLength_r(Geos.current_handle, self.ptr, ret)
-      }.read_double
+      if self.empty?
+        0
+      else
+        FFI::MemoryPointer.new(:double).tap { |ret|
+          FFIGeos.GEOSLength_r(Geos.current_handle, self.ptr, ret)
+        }.read_double
+      end
     end
 
     def distance(geom)

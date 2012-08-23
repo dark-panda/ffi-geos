@@ -39,5 +39,42 @@ module Geos
       end
     end
     alias :z :get_z
+
+    def area
+      0
+    end
+
+    def length
+      0
+    end
+
+    def num_geometries
+      1
+    end
+
+    def num_coordinates
+      1
+    end
+
+    def normalize!
+      self
+    end
+    alias :normalize :normalize!
+
+    %w{
+      convex_hull
+      point_on_surface
+      centroid
+      envelope
+      topology_preserve_simplify
+    }.each do |method|
+      self.class_eval(<<-EOF)
+        def #{method}(*args)
+          self.dup.tap { |ret|
+            ret.srid = pick_srid_according_to_policy(ret.srid)
+          }
+        end
+      EOF
+    end
   end
 end
