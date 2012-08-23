@@ -100,6 +100,14 @@ module Geos
       end
     end
 
+    def extract_options!(args)
+      if args.last.is_a?(Hash)
+        args.pop
+      else
+        {}
+      end
+    end
+
     class << self
       include Geos::Tools
     end

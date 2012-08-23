@@ -28,11 +28,7 @@ module Geos
       end
 
       def create_point(*args)
-        options = if args.last.is_a?(Hash)
-          args.pop
-        else
-          {}
-        end
+        options = extract_options!(args)
 
         if args.length == 1
           cs = args.first
@@ -88,11 +84,7 @@ module Geos
       end
 
       def create_polygon(outer, *args)
-        options = if args.last.is_a?(Hash)
-          args.pop
-        else
-          {}
-        end
+        options = extract_options!(args)
 
         inner_dups = Array(args).flatten.collect { |i|
           force_to_linear_ring(i) or
@@ -174,11 +166,7 @@ module Geos
             Geos::Geometry
         end
 
-        options = if args.last.is_a?(Hash)
-          args.pop
-        else
-          {}
-        end
+        options = extract_options!(args)
 
         geoms = Array(args).flatten.tap { |i|
           if i.detect { |g| !g.is_a?(klass) }
