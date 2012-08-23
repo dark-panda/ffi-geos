@@ -55,5 +55,27 @@ module Geos
         EOF
       end
     end
+
+    %w{
+      snap_to_grid
+    }.each do |m|
+      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        def #{m}!(*args)
+          unless self.empty?
+            self.num_geometries.times do |i|
+              self[i].#{m}!(*args)
+            end
+          end
+
+          self
+        end
+
+        def #{m}(*args)
+          ret = self.dup.#{m}!(*args)
+          ret.srid = pick_srid_according_to_policy(self.srid)
+          ret
+        end
+      EOF
+    end
   end
 end

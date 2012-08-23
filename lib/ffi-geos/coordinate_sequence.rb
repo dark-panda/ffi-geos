@@ -279,6 +279,72 @@ module Geos
       EOF
     end
 
+    def snap_to_grid!(*args)
+      grid = {
+        :offset_x => 0, # 1
+        :offset_y => 0, # 2
+        :offset_z => 0, # -
+        :size_x => 0, # 3
+        :size_y => 0, # 4
+        :size_z => 0 # -
+      }
+
+      if args.length == 1 && args[0].is_a?(Numeric)
+        grid[:size_x] = grid[:size_y] = grid[:size_z] = args[0]
+      elsif args[0].is_a?(Hash)
+        grid.merge!(args[0])
+      end
+
+      if grid[:size]
+        grid[:size_x] = grid[:size_y] = grid[:size_z] = grid[:size]
+      end
+
+      if grid[:offset]
+        case grid[:offset]
+          when Geos::Geometry
+            point = grid[:offset].centroid
+
+            grid[:offset_x] = point.x
+            grid[:offset_y] = point.y
+            grid[:offset_z] = point.z
+          when Array
+            grid[:offset_x], grid[:offset_y], grid[:offset_z] = grid[:offset]
+          else
+            raise ArgumentError.new("Expected :offset option to be a Geos::Point")
+        end
+      end
+
+      self.length.times do |i|
+        if grid[:size_x] != 0
+          self.x[i] = ((self.x[i] - grid[:offset_x]) / grid[:size_x]).round * grid[:size_x] + grid[:offset_x]
+        end
+
+        if grid[:size_y] != 0
+          self.y[i] = ((self.y[i] - grid[:offset_y]) / grid[:size_y]).round * grid[:size_y] + grid[:offset_y]
+        end
+
+        if self.has_z? && grid[:size_z] != 0
+          self.z[i] = ((self.z[i] - grid[:offset_z]) / grid[:size_z]).round * grid[:size_z] + grid[:offset_z]
+        end
+      end
+
+      cs = self.remove_duplicate_coords
+      @ptr = cs.ptr
+
+      self
+    end
+
+    def snap_to_grid(*args)
+      self.dup.snap_to_grid!(*args)
+    end
+
+    def remove_duplicate_coords
+      Geos::CoordinateSequence.new(self.to_a.inject([]) { |memo, v|
+        memo << v unless memo.last == v
+        memo
+      })
+    end
+
     protected
 
       def check_bounds(idx) #:nodoc:

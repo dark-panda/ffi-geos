@@ -137,4 +137,24 @@ class PointTests < Minitest::Test
     geom = read('POINT Z (-10 -15 -20)')
     assert_equal(-20, geom.z_min)
   end
+
+  def test_snap_to_grid
+    wkt = 'POINT (10.12 10.12)'
+    expected = 'POINT (10 10)'
+
+    simple_bang_tester(:snap_to_grid, expected, wkt, 1)
+  end
+
+  def test_snap_to_grid_empty
+    assert(read('POINT EMPTY').snap_to_grid!.empty?, 'Expected an empty Point')
+  end
+
+  def test_snap_to_grid_with_srid
+    wkt = 'POINT (10.12 10.12)'
+    expected = 'POINT (10 10)'
+
+    srid_copy_tester(:snap_to_grid, expected, 0, :zero, wkt, 1)
+    srid_copy_tester(:snap_to_grid, expected, 4326, :lenient, wkt, 1)
+    srid_copy_tester(:snap_to_grid, expected, 4326, :strict, wkt, 1)
+  end
 end

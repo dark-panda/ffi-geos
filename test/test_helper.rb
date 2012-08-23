@@ -104,6 +104,13 @@ module TestHelper
     assert(geom.eql_exact?(result, tolerance), "Expected geom.eql_exact? to be within #{tolerance}")
   end
 
+  def snapped_tester(method, expected, geom, *args)
+    geom = geom_from_geom_or_wkt(geom)
+
+    result = geom.send(method, *args)
+    assert_equal(expected, write(result.snap_to_grid(1)))
+  end
+
   def simple_tester(method, expected, geom, *args)
     geom = geom_from_geom_or_wkt(geom)
     result = geom.send(method, *args)

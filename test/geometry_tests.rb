@@ -20,8 +20,6 @@ class GeometryTests < Minitest::Test
   end
 
   def test_buffer
-    writer.rounding_precision = 2
-
     simple_tester(
       :buffer,
       'POLYGON EMPTY',
@@ -29,92 +27,92 @@ class GeometryTests < Minitest::Test
       0
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((10 0, 9.8 -2, 9.2 -3.8, 8.3 -5.6, 7.1 -7.1, 5.6 -8.3, 3.8 -9.2, 2 -9.8, 1.6e-14 -10, -2 -9.8, -3.8 -9.2, -5.6 -8.3, -7.1 -7.1, -8.3 -5.6, -9.2 -3.8, -9.8 -2, -10 -3.2e-14, -9.8 2, -9.2 3.8, -8.3 5.6, -7.1 7.1, -5.6 8.3, -3.8 9.2, -2 9.8, -3.7e-14 10, 2 9.8, 3.8 9.2, 5.6 8.3, 7.1 7.1, 8.3 5.6, 9.2 3.8, 9.8 2, 10 0))',
+      'POLYGON ((10 0, 10 -2, 9 -4, 8 -6, 7 -7, 6 -8, 4 -9, 2 -10, 0 -10, -2 -10, -4 -9, -6 -8, -7 -7, -8 -6, -9 -4, -10 -2, -10 0, -10 2, -9 4, -8 6, -7 7, -6 8, -4 9, -2 10, 0 10, 2 10, 4 9, 6 8, 7 7, 8 6, 9 4, 10 2, 10 0))',
       'POINT(0 0)',
       10
     )
 
     # One segment per quadrant
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((10 0, 1.6e-14 -10, -10 -3.2e-14, -4.6e-14 10, 10 0))',
+      'POLYGON ((10 0, 0 -10, -10 0, 0 10, 10 0))',
       'POINT(0 0)',
       10,
       quad_segs: 1
     )
 
     # End cap styles
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((1e+02 10, 1.1e+02 0, 1e+02 -10, 0 -10, -10 1.2e-15, 0 10, 1e+02 10))',
+      'POLYGON ((100 10, 110 0, 100 -10, 0 -10, -10 0, 0 10, 100 10))',
       'LINESTRING(0 0, 100 0)',
       10,
       quad_segs: 1, endcap: :round
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((1e+02 10, 1e+02 -10, 0 -10, 0 10, 1e+02 10))',
+      'POLYGON ((100 10, 100 -10, 0 -10, 0 10, 100 10))',
       'LINESTRING(0 0, 100 0)',
       10,
       quad_segs: 1, endcap: :flat
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((1e+02 10, 1.1e+02 10, 1.1e+02 -10, 0 -10, -10 -10, -10 10, 1e+02 10))',
+      'POLYGON ((100 10, 110 10, 110 -10, 0 -10, -10 -10, -10 10, 100 10))',
       'LINESTRING(0 0, 100 0)',
       10,
       quad_segs: 1, endcap: :square
     )
 
     # Join styles
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 0, 1.1e+02 -7.1, 1e+02 -10, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
+      'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 0, 107 -7, 100 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
       quad_segs: 2, join: :round
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 0, 1e+02 -10, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
+      'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 0, 100 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
       quad_segs: 2, join: :bevel
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 -10, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
+      'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
       quad_segs: 2, join: :mitre
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 -5, 1e+02 -9.1, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
+      'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 109 -5, 105 -9, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
       quad_segs: 2, join: :mitre, mitre_limit: 1.0
     )
 
     # Single-sided buffering
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((1e+02 0, 0 0, 0 10, 1e+02 10, 1e+02 0))',
+      'POLYGON ((100 0, 0 0, 0 10, 100 10, 100 0))',
       'LINESTRING(0 0, 100 0)',
       10,
       single_sided: true
     )
 
-    simple_tester(
+    snapped_tester(
       :buffer,
-      'POLYGON ((0 0, 1e+02 0, 1e+02 -10, 0 -10, 0 0))',
+      'POLYGON ((0 0, 100 0, 100 -10, 0 -10, 0 0))',
       'LINESTRING(0 0, 100 0)',
       -10,
       single_sided: true
@@ -509,10 +507,7 @@ class GeometryTests < Minitest::Test
         'LINESTRING(0 0, 10 10)'
       )
 
-      writer.trim = true
-      writer.rounding_precision = 0
-
-      simple_tester(
+      snapped_tester(
         method,
         'POINT (5 4)',
         'POLYGON((0 0, 0 10, 5 5, 10 10, 10 0, 0 0))'
@@ -1243,11 +1238,11 @@ class GeometryTests < Minitest::Test
     assert_equal(2, polygonized.length)
     assert_equal(
       'POLYGON ((185 221, 88 275, 180 316, 292 281, 185 221))',
-      write(polygonized[0])
+      write(polygonized[0].snap_to_grid(0.1))
     )
     assert_equal(
       'POLYGON ((189 98, 83 187, 185 221, 325 168, 189 98))',
-      write(polygonized[1])
+      write(polygonized[1].snap_to_grid(0.1))
     )
   end
 

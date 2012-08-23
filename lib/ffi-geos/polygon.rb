@@ -43,6 +43,39 @@ module Geos
       cur_path.concat(points)
     end
 
+    def snap_to_grid!(*args)
+      if !self.empty?
+        exterior_ring = self.exterior_ring.coord_seq.snap_to_grid!(*args)
+
+        if exterior_ring.length == 0
+          @ptr = Geos.create_empty_polygon(:srid => self.srid).ptr
+        elsif exterior_ring.length < 4
+          raise Geos::InvalidGeometryError.new("snap_to_grid! produced an invalid number of points in exterior ring - found #{exterior_ring.length} - must be 0 or >= 4")
+        else
+          interior_rings = []
+
+          self.num_interior_rings.times { |i|
+            interior_ring = self.interior_ring_n(i).coord_seq.snap_to_grid!(*args)
+
+            interior_rings << interior_ring unless interior_ring.length < 4
+          }
+
+          interior_rings.compact!
+
+          polygon = Geos.create_polygon(exterior_ring, interior_rings, :srid => self.srid)
+          @ptr = polygon.ptr
+        end
+      end
+
+      self
+    end
+
+    def snap_to_grid(*args)
+      ret = self.dup.snap_to_grid!(*args)
+      ret.srid = pick_srid_according_to_policy(self.srid)
+      ret
+    end
+
     %w{ max min }.each do |op|
       %w{ x y }.each do |dimension|
         self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)

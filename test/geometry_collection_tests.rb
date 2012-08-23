@@ -171,4 +171,37 @@ class GeometryCollectionTests < Minitest::Test
     )')
     assert_equal(-10, geom.z_min)
   end
+
+  def test_snap_to_grid
+    wkt = 'GEOMETRYCOLLECTION (LINESTRING (-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0), POLYGON ((-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0)), POINT (10.12 10.12))'
+
+    expected = 'GEOMETRYCOLLECTION (LINESTRING (-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0), POLYGON ((-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0)), POINT (10 10))'
+
+    simple_bang_tester(:snap_to_grid, expected, wkt, 1)
+  end
+
+  def test_snap_to_grid_empty
+    assert(read('GEOMETRYCOLLECTION EMPTY').snap_to_grid!.empty?, 'Expected an empty GeometryCollection')
+  end
+
+  def test_snap_to_grid_with_srid
+    wkt = 'GEOMETRYCOLLECTION (
+      LINESTRING (-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0),
+      POLYGON ((-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0)),
+      POINT (10.12 10.12)
+    )'
+
+    expected = 'GEOMETRYCOLLECTION (LINESTRING (-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0), POLYGON ((-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0)), POINT (10 10))'
+
+    srid_copy_tester(:snap_to_grid, expected, 0, :zero, wkt, 1)
+    srid_copy_tester(:snap_to_grid, expected, 4326, :lenient, wkt, 1)
+    srid_copy_tester(:snap_to_grid, expected, 4326, :strict, wkt, 1)
+  end
+
+  def test_snap_to_grid_with_illegal_result
+    assert_raises(Geos::InvalidGeometryError) do
+      read('GEOMETRYCOLLECTION (POINT (0 2), LINESTRING (0 1, 0 11), POLYGON ((0 1, 0 1, 0 6, 0 6, 0 1)))').
+        snap_to_grid(1)
+    end
+  end
 end

@@ -339,6 +339,7 @@ class UtilsTests < Minitest::Test
     assert_kind_of(Geos::MultiLineString, Geos.create_collection(:multi_line_string))
   end
 
+
   def test_create_bad_geometry_collection
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
 

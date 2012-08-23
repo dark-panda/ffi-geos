@@ -78,6 +78,28 @@ module Geos
       cur_path.concat(to_a)
     end
 
+    def snap_to_grid!(*args)
+      if !self.empty?
+        cs = self.coord_seq.snap_to_grid!(*args)
+
+        if cs.length == 0
+          @ptr = Geos.create_empty_line_string(:srid => self.srid).ptr
+        elsif cs.length <= 1
+          raise Geos::InvalidGeometryError.new("snap_to_grid! produced an invalid number of points in for a LineString - found #{cs.length} - must be 0 or > 1")
+        else
+          @ptr = Geos.create_line_string(cs).ptr
+        end
+      end
+
+      self
+    end
+
+    def snap_to_grid(*args)
+      ret = self.dup.snap_to_grid!(*args)
+      ret.srid = pick_srid_according_to_policy(self.srid)
+      ret
+    end
+
     %w{ max min }.each do |op|
       %w{ x y }.each do |dimension|
         self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
