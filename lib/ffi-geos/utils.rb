@@ -49,12 +49,12 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: Point coordinate list must contain a single element")
         end
 
-        cs_clone = cs.clone
+        cs_dup = cs.dup
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_clone.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_dup.ptr), {
           :srid => options[:srid]
         }).tap {
-          cs_clone.ptr.autorelease = false
+          cs_dup.ptr.autorelease = false
         }
       end
 
@@ -65,12 +65,12 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
-        cs_clone = cs.clone
+        cs_dup = cs.dup
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_clone.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_dup.ptr), {
           :srid => options[:srid]
         }).tap {
-          cs_clone.ptr.autorelease = false
+          cs_dup.ptr.autorelease = false
         }
       end
 
@@ -81,12 +81,12 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
-        cs_clone = cs.clone
+        cs_dup = cs.dup
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs_clone.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs_dup.ptr), {
           :srid => options[:srid]
         }).tap {
-          cs_clone.ptr.autorelease = false
+          cs_dup.ptr.autorelease = false
         }
       end
 
@@ -97,22 +97,22 @@ module Geos
           {}
         end
 
-        inner_clones = Array(args).flatten.collect { |i|
+        inner_dups = Array(args).flatten.collect { |i|
           force_to_linear_ring(i) or
             raise TypeError.new("Expected inner Array to contain Geos::LinearRing or Geos::CoordinateSequence objects")
         }
 
-        outer_clone = force_to_linear_ring(outer) or
+        outer_dup = force_to_linear_ring(outer) or
           raise TypeError.new("Expected outer shell to be a Geos::LinearRing or Geos::CoordinateSequence")
 
-        ary = FFI::MemoryPointer.new(:pointer, inner_clones.length)
-        ary.write_array_of_pointer(inner_clones.map(&:ptr))
+        ary = FFI::MemoryPointer.new(:pointer, inner_dups.length)
+        ary.write_array_of_pointer(inner_dups.map(&:ptr))
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_clone.ptr, ary, inner_clones.length), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_dup.ptr, ary, inner_dups.length), {
           :srid => options[:srid]
         }).tap {
-          outer_clone.ptr.autorelease = false
-          inner_clones.each { |i| i.ptr.autorelease = false }
+          outer_dup.ptr.autorelease = false
+          inner_dups.each { |i| i.ptr.autorelease = false }
         }
       end
 
@@ -187,15 +187,15 @@ module Geos
           end
         }
 
-        geoms_clones = geoms.map(&:clone)
+        geoms_dups = geoms.map(&:dup)
 
         ary = FFI::MemoryPointer.new(:pointer, geoms.length)
-        ary.write_array_of_pointer(geoms_clones.map(&:ptr))
+        ary.write_array_of_pointer(geoms_dups.map(&:ptr))
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_clones.length), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_dups.length), {
           :srid => options[:srid]
         }).tap {
-          geoms_clones.each { |i|
+          geoms_dups.each { |i|
             i.ptr.autorelease = false
           }
         }
