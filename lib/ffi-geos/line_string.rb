@@ -100,6 +100,49 @@ module Geos
       ret
     end
 
+    def line_interpolate_point(fraction)
+      if !fraction.between?(0, 1)
+        raise ArgumentError.new("fraction must be between 0 and 1")
+      end
+
+      case fraction
+        when 0
+          self.start_point
+        when 1
+          self.end_point
+        else
+          length = self.length
+          total_length = 0
+          segs = self.num_points - 1
+
+          segs.times do |i|
+            p1 = self[i]
+            p2 = self[i + 1]
+
+            seg_length = p1.distance(p2) / length
+
+            if fraction < total_length + seg_length
+              dseg = (fraction - total_length) / seg_length;
+
+              args = []
+              args << p1.x + ((p2.x - p1.x) * dseg)
+              args << p1.y + ((p2.y - p1.y) * dseg)
+              args << p1.z + ((p2.z - p1.z) * dseg) if self.has_z?
+
+              args << { :srid => pick_srid_according_to_policy(self.srid) } unless self.srid == 0
+
+              return Geos.create_point(*args)
+            end
+
+            total_length += seg_length
+          end
+
+          # if all else fails...
+          self.end_point
+      end
+    end
+    alias_method :interpolate_point, :line_interpolate_point
+
     %w{ max min }.each do |op|
       %w{ x y }.each do |dimension|
         self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
