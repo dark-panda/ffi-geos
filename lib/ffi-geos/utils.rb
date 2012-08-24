@@ -50,12 +50,11 @@ module Geos
         end
 
         cs_dup = cs.dup
+        cs_dup.ptr.autorelease = false
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_dup.ptr), {
           :srid => options[:srid]
-        }).tap {
-          cs_dup.ptr.autorelease = false
-        }
+        })
       end
 
       def create_line_string(cs, options = {})
@@ -66,12 +65,11 @@ module Geos
         end
 
         cs_dup = cs.dup
+        cs_dup.ptr.autorelease = false
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_dup.ptr), {
           :srid => options[:srid]
-        }).tap {
-          cs_dup.ptr.autorelease = false
-        }
+        })
       end
 
       def create_linear_ring(cs, options = {})
@@ -81,13 +79,11 @@ module Geos
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
-        cs_dup = cs.dup
+        cs.ptr.autorelease = false
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs_dup.ptr), {
+        ret = cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs.ptr), {
           :srid => options[:srid]
-        }).tap {
-          cs_dup.ptr.autorelease = false
-        }
+        })
       end
 
       def create_polygon(outer, *args)
@@ -108,12 +104,14 @@ module Geos
         ary = FFI::MemoryPointer.new(:pointer, inner_dups.length)
         ary.write_array_of_pointer(inner_dups.map(&:ptr))
 
+        outer_dup.ptr.autorelease = false
+        inner_dups.each { |i|
+          i.ptr.autorelease = false
+        }
+
         cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_dup.ptr, ary, inner_dups.length), {
           :srid => options[:srid]
-        }).tap {
-          outer_dup.ptr.autorelease = false
-          inner_dups.each { |i| i.ptr.autorelease = false }
-        }
+        })
       end
 
       def create_empty_point(options = {})
@@ -188,17 +186,16 @@ module Geos
         }
 
         geoms_dups = geoms.map(&:dup)
+        geoms_dups.each { |i|
+          i.ptr.autorelease = false
+        }
 
         ary = FFI::MemoryPointer.new(:pointer, geoms.length)
         ary.write_array_of_pointer(geoms_dups.map(&:ptr))
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_dups.length), {
           :srid => options[:srid]
-        }).tap {
-          geoms_dups.each { |i|
-            i.ptr.autorelease = false
-          }
-        }
+        })
       end
 
       def create_multi_point(*args)

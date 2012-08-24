@@ -392,4 +392,40 @@ class UtilsTests < Test::Unit::TestCase
       assert_equal('LINEARRING EMPTY', write(Geos.create_empty_linear_ring))
     end
   end
+
+  def test_create_geometry_segfault
+    # This used to segfault before moving the autorelease code to before
+    # the initialization. It didn't occur 100% of the time. The cause was
+    # GEOS taking ownership of CoordinateSequences and deleting them out from
+    # under us and GC blowing up.
+
+    assert_raise(RuntimeError) do
+      cs = Geos::CoordinateSequence.new(0, 2)
+      Geos.create_point(cs)
+      GC.start
+    end
+
+    assert_raise(RuntimeError) do
+      cs = Geos::CoordinateSequence.new(1, 2)
+      Geos.create_line_string(cs)
+      GC.start
+    end
+
+    assert_raise(RuntimeError) do
+      cs = Geos::CoordinateSequence.new(1, 2)
+      Geos.create_linear_ring(cs)
+      GC.start
+    end
+
+    assert_raise(RuntimeError) do
+      cs = Geos::CoordinateSequence.new([
+        [0, 0],
+        [0, 5],
+        [5, 5],
+        [0, 5]
+      ])
+      Geos.create_linear_ring(cs)
+      GC.start
+    end
+  end
 end
