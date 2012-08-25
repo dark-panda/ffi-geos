@@ -10,12 +10,10 @@ module Geos
     def initialize(ptr, auto_free = true)
       @ptr = FFI::AutoPointer.new(
         ptr,
-        auto_free ? self.class.method(:release) : self.class.method(:no_release)
+        self.class.method(:release)
       )
 
-      if !auto_free
-        @ptr.autorelease = false
-      end
+      @ptr.autorelease = auto_free
     end
 
     def initialize_copy(source)
@@ -26,9 +24,6 @@ module Geos
 
       # Copy over SRID since GEOS does not
       self.srid = source.srid
-    end
-
-    def self.no_release(ptr) #:nodoc:
     end
 
     def self.release(ptr) #:nodoc:

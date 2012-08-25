@@ -95,12 +95,10 @@ module Geos
 
       @ptr = FFI::AutoPointer.new(
         ptr,
-        auto_free ? self.class.method(:release) : self.class.method(:no_release)
+        self.class.method(:release)
       )
 
-      if !auto_free
-        @ptr.autorelease = false
-      end
+      @ptr.autorelease = auto_free
 
       @x = CoordinateAccessor.new(self, 0)
       @y = CoordinateAccessor.new(self, 1)
@@ -124,9 +122,6 @@ module Geos
       @x = CoordinateAccessor.new(self, 0)
       @y = CoordinateAccessor.new(self, 1)
       @z = CoordinateAccessor.new(self, 2)
-    end
-
-    def self.no_release(ptr) #:nodoc:
     end
 
     def self.release(ptr) #:nodoc:
