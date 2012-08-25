@@ -51,6 +51,8 @@ module Geos
       end
 
       def create_line_string(cs)
+        cs = cs_from_cs_or_geom(cs)
+
         if cs.length <= 1 && cs.length != 0
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
@@ -63,6 +65,8 @@ module Geos
       end
 
       def create_linear_ring(cs)
+        cs = cs_from_cs_or_geom(cs)
+
         if cs.length <= 1 && cs.length != 0
           raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
@@ -178,12 +182,21 @@ module Geos
       end
 
       private
-        def force_to_linear_ring(geom)
-          case geom
+        def cs_from_cs_or_geom(geom_or_cs)
+          case geom_or_cs
+            when Array
+              Geos::CoordinateSequence.new(geom_or_cs)
             when Geos::CoordinateSequence
-              geom.to_linear_ring
+              geom_or_cs.dup
+          end
+        end
+
+        def force_to_linear_ring(geom_or_cs)
+          case geom_or_cs
+            when Geos::CoordinateSequence
+              geom_or_cs.to_linear_ring
             when Geos::LinearRing
-              geom.clone
+              geom_or_cs.dup
           end
         end
     end

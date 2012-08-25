@@ -92,6 +92,25 @@ class UtilsTests < Test::Unit::TestCase
     end
   end
 
+  def test_create_line_string_with_array
+    writer.output_dimensions = 3
+
+    create_method_tester(
+      'LINESTRING Z (10 20 30, 30 20 10)',
+      :create_line_string,
+      [[ 10, 20, 30 ], [ 30, 20, 10 ]],
+      Geos::GEOS_LINESTRING,
+      Geos::LineString
+    ) do |geom|
+      assert(!geom.empty?)
+      assert(geom.valid?)
+      assert(geom.simple?)
+      assert(!geom.ring?)
+      assert(geom.has_z?)
+      assert_equal(1, geom.num_geometries)
+    end
+  end
+
   def test_create_bad_line_string
     cs = Geos::CoordinateSequence.new(1, 0)
     assert_raise(RuntimeError) do
@@ -118,6 +137,25 @@ class UtilsTests < Test::Unit::TestCase
       'LINEARRING (7 8 9, 3 3 3, 11 15.2 2, 7 8 9)',
       :create_linear_ring,
       cs,
+      Geos::GEOS_LINEARRING,
+      Geos::LinearRing
+    ) do |geom|
+      assert(!geom.empty?)
+      assert(geom.valid?)
+      assert(geom.simple?)
+      assert(geom.ring?)
+      assert(geom.has_z?)
+      assert_equal(1, geom.num_geometries)
+    end
+  end
+
+  def test_create_linear_ring_with_array
+    writer.output_dimensions = 3
+
+    create_method_tester(
+      'LINEARRING Z (7 8 9, 3 3 3, 11 15.2 2, 7 8 9)',
+      :create_linear_ring,
+      [[ 7, 8, 9 ], [ 3, 3, 3 ], [ 11, 15.2, 2 ], [ 7, 8, 9 ]],
       Geos::GEOS_LINEARRING,
       Geos::LinearRing
     ) do |geom|
