@@ -272,6 +272,38 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal(cs, cs.each {})
   end
 
+  def test_array_like_access
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 1 ],
+      [ 2, 3 ]
+    ])
+
+    assert_equal(0, cs[0][0])
+    assert_equal(1, cs[0][1])
+    assert_equal(2, cs[1][0])
+    assert_equal(3, cs[1][1])
+
+    cs = Geos::CoordinateSequence.new([
+      [ 4, 5, 6 ]
+    ])
+
+    assert_equal(4, cs[0][0])
+    assert_equal(5, cs[0][1])
+    assert_equal(6, cs[0][2])
+  end
+
+  def test_slice
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 1 ],
+      [ 2, 3 ],
+      [ 4, 5 ]
+    ])
+
+    assert_equal([[0, 1], [2, 3]], cs.slice(0..1))
+    assert_equal([4, 5], cs.slice(-1))
+    assert_equal([[0, 1], [2, 3]], cs.slice(0, 2))
+  end
+
   def test_proxy_clone
     cs = Geos::CoordinateSequence.new([ 10, 20 ])
     cs2 = cs.clone

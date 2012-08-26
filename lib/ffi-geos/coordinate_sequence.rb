@@ -143,6 +143,18 @@ module Geos
       end
     end
 
+    def [](*args)
+      if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
+        i = args.first
+        ary = [ self.get_x(i), self.get_y(i) ]
+        ary << self.get_z(i) if self.has_z?
+        ary
+      else
+        self.to_a[*args]
+      end
+    end
+    alias :slice :[]
+
     def has_z?
       self.dimensions == 3
     end
