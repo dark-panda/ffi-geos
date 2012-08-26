@@ -27,6 +27,12 @@ module Geos
       end
 
       def create_point(*args)
+        options = if args.last.is_a?(Hash)
+          args.pop
+        else
+          {}
+        end
+
         if args.length == 1
           cs = args.first
         elsif args.length == 2
@@ -45,12 +51,14 @@ module Geos
 
         cs_clone = cs.clone
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_clone.ptr)).tap {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_clone.ptr), {
+          :srid => options[:srid]
+        }).tap {
           cs_clone.ptr.autorelease = false
         }
       end
 
-      def create_line_string(cs)
+      def create_line_string(cs, options = {})
         cs = cs_from_cs_or_geom(cs)
 
         if cs.length <= 1 && cs.length != 0
@@ -59,12 +67,14 @@ module Geos
 
         cs_clone = cs.clone
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_clone.ptr)).tap {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_clone.ptr), {
+          :srid => options[:srid]
+        }).tap {
           cs_clone.ptr.autorelease = false
         }
       end
 
-      def create_linear_ring(cs)
+      def create_linear_ring(cs, options = {})
         cs = cs_from_cs_or_geom(cs)
 
         if cs.length <= 1 && cs.length != 0
@@ -73,13 +83,21 @@ module Geos
 
         cs_clone = cs.clone
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs_clone.ptr)).tap {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs_clone.ptr), {
+          :srid => options[:srid]
+        }).tap {
           cs_clone.ptr.autorelease = false
         }
       end
 
-      def create_polygon(outer, *inner)
-        inner_clones = Array(inner).flatten.collect { |i|
+      def create_polygon(outer, *args)
+        options = if args.last.is_a?(Hash)
+          args.pop
+        else
+          {}
+        end
+
+        inner_clones = Array(args).flatten.collect { |i|
           force_to_linear_ring(i) or
             raise TypeError.new("Expected inner Array to contain Geos::LinearRing or Geos::CoordinateSequence objects")
         }
@@ -90,50 +108,60 @@ module Geos
         ary = FFI::MemoryPointer.new(:pointer, inner_clones.length)
         ary.write_array_of_pointer(inner_clones.map(&:ptr))
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_clone.ptr, ary, inner_clones.length)).tap {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_clone.ptr, ary, inner_clones.length), {
+          :srid => options[:srid]
+        }).tap {
           outer_clone.ptr.autorelease = false
           inner_clones.each { |i| i.ptr.autorelease = false }
         }
       end
 
-      def create_empty_point
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPoint_r(Geos.current_handle))
+      def create_empty_point(options = {})
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPoint_r(Geos.current_handle), {
+          :srid => options[:srid]
+        })
       end
 
-      def create_empty_line_string
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyLineString_r(Geos.current_handle))
+      def create_empty_line_string(options = {})
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyLineString_r(Geos.current_handle), {
+          :srid => options[:srid]
+        })
       end
 
-      def create_empty_polygon
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPolygon_r(Geos.current_handle))
+      def create_empty_polygon(options = {})
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPolygon_r(Geos.current_handle), {
+          :srid => options[:srid]
+        })
       end
 
-      def create_empty_collection(t)
+      def create_empty_collection(t, options = {})
         check_enum_value(Geos::GeometryTypes, t)
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyCollection_r(Geos.current_handle, t))
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyCollection_r(Geos.current_handle, t), {
+          :srid => options[:srid]
+        })
       end
 
-      def create_empty_multi_point
-        create_empty_collection(:multi_point)
+      def create_empty_multi_point(options = {})
+        create_empty_collection(:multi_point, options)
       end
 
-      def create_empty_multi_line_string
-        create_empty_collection(:multi_line_string)
+      def create_empty_multi_line_string(options = {})
+        create_empty_collection(:multi_line_string, options)
       end
 
-      def create_empty_multi_polygon
-        create_empty_collection(:multi_polygon)
+      def create_empty_multi_polygon(options = {})
+        create_empty_collection(:multi_polygon, options)
       end
 
-      def create_empty_geometry_collection
-        create_empty_collection(:geometry_collection)
+      def create_empty_geometry_collection(options = {})
+        create_empty_collection(:geometry_collection, options)
       end
 
-      def create_empty_linear_ring
-        Geos::WktReader.new.read('LINEARRING EMPTY')
+      def create_empty_linear_ring(options = {})
+        Geos::WktReader.new.read('LINEARRING EMPTY', options)
       end
 
-      def create_collection(t, *geoms)
+      def create_collection(t, *args)
         check_enum_value(Geos::GeometryTypes, t)
 
         klass = case t
@@ -147,7 +175,13 @@ module Geos
             Geos::Geometry
         end
 
-        geoms = Array(geoms).flatten.tap { |i|
+        options = if args.last.is_a?(Hash)
+          args.pop
+        else
+          {}
+        end
+
+        geoms = Array(args).flatten.tap { |i|
           if i.detect { |g| !g.is_a?(klass) }
             raise TypeError.new("Expected geoms Array to contain #{klass} objects")
           end
@@ -158,27 +192,29 @@ module Geos
         ary = FFI::MemoryPointer.new(:pointer, geoms.length)
         ary.write_array_of_pointer(geoms_clones.map(&:ptr))
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_clones.length)).tap {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_clones.length), {
+          :srid => options[:srid]
+        }).tap {
           geoms_clones.each { |i|
             i.ptr.autorelease = false
           }
         }
       end
 
-      def create_multi_point(*geoms)
-        create_collection(:multi_point, *geoms)
+      def create_multi_point(*args)
+        create_collection(:multi_point, *args)
       end
 
-      def create_multi_line_string(*geoms)
-        create_collection(:multi_line_string, *geoms)
+      def create_multi_line_string(*args)
+        create_collection(:multi_line_string, *args)
       end
 
-      def create_multi_polygon(*geoms)
-        create_collection(:multi_polygon, *geoms)
+      def create_multi_polygon(*args)
+        create_collection(:multi_polygon, *args)
       end
 
-      def create_geometry_collection(*geoms)
-        create_collection(:geometry_collection, *geoms)
+      def create_geometry_collection(*args)
+        create_collection(:geometry_collection, *args)
       end
 
       private

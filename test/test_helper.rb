@@ -45,4 +45,18 @@ module TestHelper
   def write(*args)
     writer.write(*args)
   end
+
+  def srid_copy_tester(method, expected, expected_srid, srid_policy, wkt, *args)
+    geom = read(wkt)
+    geom.srid = 4326
+
+    Geos.srid_copy_policy = srid_policy
+    geom_b = geom.send(method, *args)
+
+    assert_equal(4326, geom.srid)
+    assert_equal(expected_srid, geom_b.srid)
+    assert_equal(expected, write(geom_b))
+  ensure
+    Geos.srid_copy_policy = :default
+  end
 end

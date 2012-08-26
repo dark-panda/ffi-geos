@@ -80,7 +80,9 @@ module Geos
 
     def intersection(geom)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle, self.ptr, geom.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle, self.ptr, geom.ptr), {
+        :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
+      })
     end
 
     if FFIGeos.respond_to?(:GEOSBufferWithParams_r)
@@ -110,7 +112,7 @@ module Geos
             raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
         end
 
-        cast_geometry_ptr(FFIGeos.GEOSBufferWithParams_r(Geos.current_handle, self.ptr, params.ptr, width))
+        cast_geometry_ptr(FFIGeos.GEOSBufferWithParams_r(Geos.current_handle, self.ptr, params.ptr, width), :srid_copy => self.srid)
       end
     else
       def buffer(width, options = nil)
@@ -126,27 +128,31 @@ module Geos
             raise ArgumentError.new("Expected Geos::BufferParams, a Hash or a Numeric")
         end
 
-        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs))
+        cast_geometry_ptr(FFIGeos.GEOSBuffer_r(Geos.current_handle, self.ptr, width, quad_segs), :srid_copy => self.srid)
       end
     end
 
     def convex_hull
-      cast_geometry_ptr(FFIGeos.GEOSConvexHull_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSConvexHull_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
 
     def difference(geom)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSDifference_r(Geos.current_handle, self.ptr, geom.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSDifference_r(Geos.current_handle, self.ptr, geom.ptr), {
+        :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
+      })
     end
 
     def sym_difference(geom)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSSymDifference_r(Geos.current_handle, self.ptr, geom.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSSymDifference_r(Geos.current_handle, self.ptr, geom.ptr), {
+        :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
+      })
     end
     alias :symmetric_difference :sym_difference
 
     def boundary
-      cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
 
     # Calling without a geom argument is equivalent to calling unary_union when
@@ -155,7 +161,9 @@ module Geos
     def union(geom = nil)
       if geom
         check_geometry(geom)
-        cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle, self.ptr, geom.ptr))
+        cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle, self.ptr, geom.ptr), {
+          :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
+        })
       else
         if self.respond_to?(:unary_union)
           self.unary_union
@@ -166,28 +174,32 @@ module Geos
     end
 
     def union_cascaded
-      cast_geometry_ptr(FFIGeos.GEOSUnionCascaded_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSUnionCascaded_r(Geos.current_handle, self.ptr), {
+        :srid_copy => self.srid
+      })
     end
 
     if FFIGeos.respond_to?(:GEOSUnaryUnion_r)
       # Available in GEOS 3.3+
       def unary_union
-        cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle, self.ptr))
+        cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle, self.ptr), {
+          :srid_copy => self.srid
+        })
       end
     end
 
     def point_on_surface
-      cast_geometry_ptr(FFIGeos.GEOSPointOnSurface_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSPointOnSurface_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
     alias :representative_point :point_on_surface
 
     def centroid
-      cast_geometry_ptr(FFIGeos.GEOSGetCentroid_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSGetCentroid_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
     alias :center :centroid
 
     def envelope
-      cast_geometry_ptr(FFIGeos.GEOSEnvelope_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSEnvelope_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
 
     # Returns the Dimensionally Extended Nine-Intersection Model (DE-9IM)
@@ -213,19 +225,19 @@ module Geos
     end
 
     def line_merge
-      cast_geometry_ptr(FFIGeos.GEOSLineMerge_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSLineMerge_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
 
     def simplify(tolerance)
-      cast_geometry_ptr(FFIGeos.GEOSSimplify_r(Geos.current_handle, self.ptr, tolerance))
+      cast_geometry_ptr(FFIGeos.GEOSSimplify_r(Geos.current_handle, self.ptr, tolerance), :srid_copy => self.srid)
     end
 
     def topology_preserve_simplify(tolerance)
-      cast_geometry_ptr(FFIGeos.GEOSTopologyPreserveSimplify_r(Geos.current_handle, self.ptr, tolerance))
+      cast_geometry_ptr(FFIGeos.GEOSTopologyPreserveSimplify_r(Geos.current_handle, self.ptr, tolerance), :srid_copy => self.srid)
     end
 
     def extract_unique_points
-      cast_geometry_ptr(FFIGeos.GEOSGeom_extractUniquePoints_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSGeom_extractUniquePoints_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
     alias :unique_points :extract_unique_points
 
@@ -360,7 +372,9 @@ module Geos
       if !valid
         {
           :detail => detail.read_pointer.read_string,
-          :location => cast_geometry_ptr(location.read_pointer)
+          :location => cast_geometry_ptr(location.read_pointer, {
+            :srid_copy => self.srid
+          })
         }
       end
     end
@@ -402,7 +416,7 @@ module Geos
         FFIGeos.GEOSInterpolate_r(Geos.current_handle, self.ptr, d)
       end
 
-      cast_geometry_ptr(ret)
+      cast_geometry_ptr(ret, :srid_copy => self.srid)
     end
 
     def interpolate_normalized(d)
@@ -410,11 +424,11 @@ module Geos
     end
 
     def start_point
-      cast_geometry_ptr(FFIGeos.GEOSGeomGetStartPoint_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSGeomGetStartPoint_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
 
     def end_point
-      cast_geometry_ptr(FFIGeos.GEOSGeomGetEndPoint_r(Geos.current_handle, self.ptr))
+      cast_geometry_ptr(FFIGeos.GEOSGeomGetEndPoint_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
 
     def area
@@ -449,13 +463,17 @@ module Geos
 
     def snap(geom, tolerance)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSSnap_r(Geos.current_handle, self.ptr, geom.ptr, tolerance))
+      cast_geometry_ptr(FFIGeos.GEOSSnap_r(Geos.current_handle, self.ptr, geom.ptr, tolerance), {
+        :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
+      })
     end
     alias :snap_to :snap
 
     def shared_paths(geom)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSSharedPaths_r(Geos.current_handle, self.ptr, geom.ptr)).to_a
+      cast_geometry_ptr(FFIGeos.GEOSSharedPaths_r(Geos.current_handle, self.ptr, geom.ptr), {
+        :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
+      }).to_a
     end
 
     # Returns a Hash with the following structure:
@@ -472,12 +490,14 @@ module Geos
       invalid_rings = FFI::MemoryPointer.new(:pointer)
 
       rings = cast_geometry_ptr(
-        FFIGeos.GEOSPolygonize_full_r(Geos.current_handle, self.ptr, cuts, dangles, invalid_rings)
+        FFIGeos.GEOSPolygonize_full_r(Geos.current_handle, self.ptr, cuts, dangles, invalid_rings), {
+          :srid_copy => self.srid
+        }
       )
 
-      cuts = cast_geometry_ptr(cuts.read_pointer)
-      dangles = cast_geometry_ptr(dangles.read_pointer)
-      invalid_rings = cast_geometry_ptr(invalid_rings.read_pointer)
+      cuts = cast_geometry_ptr(cuts.read_pointer, :srid_copy => self.srid)
+      dangles = cast_geometry_ptr(dangles.read_pointer, :srid_copy => self.srid)
+      invalid_rings = cast_geometry_ptr(invalid_rings.read_pointer, :srid_copy => self.srid)
 
       {
         :rings => rings.to_a,
@@ -491,14 +511,14 @@ module Geos
       ary = FFI::MemoryPointer.new(:pointer)
       ary.write_array_of_pointer([ self.ptr ])
 
-      cast_geometry_ptr(FFIGeos.GEOSPolygonize_r(Geos.current_handle, ary, 1)).to_a
+      cast_geometry_ptr(FFIGeos.GEOSPolygonize_r(Geos.current_handle, ary, 1), :srid_copy => self.srid).to_a
     end
 
     def polygonize_cut_edges
       ary = FFI::MemoryPointer.new(:pointer)
       ary.write_array_of_pointer([ self.ptr ])
 
-      cast_geometry_ptr(FFIGeos.GEOSPolygonizer_getCutEdges_r(Geos.current_handle, ary, 1)).to_a
+      cast_geometry_ptr(FFIGeos.GEOSPolygonizer_getCutEdges_r(Geos.current_handle, ary, 1), :srid_copy => self.srid).to_a
     end
 
     def to_prepared

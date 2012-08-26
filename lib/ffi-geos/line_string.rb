@@ -30,7 +30,11 @@ module Geos
       if n < 0 || n >= self.num_points
         raise RuntimeError.new("Index out of bounds")
       else
-        cast_geometry_ptr(FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle, self.ptr, n))
+        cast_geometry_ptr(
+          FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle, self.ptr, n), {
+            :srid_copy => self.srid
+          }
+        )
       end
     end
 
@@ -53,7 +57,9 @@ module Geos
           options[:quad_segs],
           options[:join],
           options[:mitre_limit]
-      ))
+      ), {
+        :srid_copy => self.srid
+      })
     end
 
     if FFIGeos.respond_to?(:GEOSisClosed_r)

@@ -1554,4 +1554,52 @@ class GeometryTests < Test::Unit::TestCase
       assert(!geom_a.send(method, geom_b, 1))
     end
   end
+
+  def test_srid_copy_policy
+    geom = read('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))')
+    geom.srid = 4326
+
+    Geos.srid_copy_policy = :zero
+    cloned = geom.clone
+    assert_equal(4326, cloned.srid)
+
+    Geos.srid_copy_policy = :lenient
+    cloned = geom.clone
+    assert_equal(4326, cloned.srid)
+
+    Geos.srid_copy_policy = :strict
+    cloned = geom.clone
+    assert_equal(4326, cloned.srid)
+
+    Geos.srid_copy_policy = :zero
+    geom_b = geom.convex_hull
+    assert_equal(0, geom_b.srid)
+
+    Geos.srid_copy_policy = :lenient
+    geom_b = geom.convex_hull
+    assert_equal(4326, geom_b.srid)
+
+    Geos.srid_copy_policy = :strict
+    geom_b = geom.convex_hull
+    assert_equal(4326, geom_b.srid)
+
+    geom_b = read('POLYGON ((3 3, 3 8, 8 8, 8 3, 3 3))')
+    geom_b.srid = 3875
+
+    Geos.srid_copy_policy = :zero
+    geom_c = geom.intersection(geom_b)
+    assert_equal(0, geom_c.srid)
+
+    Geos.srid_copy_policy = :lenient
+    geom_c = geom.intersection(geom_b)
+    assert_equal(4326, geom_c.srid)
+
+    assert_raise(Geos::MixedSRIDsError) do
+      Geos.srid_copy_policy = :strict
+      geom_c = geom.intersection(geom_b)
+      assert_equal(231231, geom_c.srid)
+    end
+  ensure
+    Geos.srid_copy_policy = :default
+  end
 end

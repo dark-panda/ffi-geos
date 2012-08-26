@@ -18,8 +18,10 @@ module Geos
       )
     end
 
-    def read(wkt)
-      cast_geometry_ptr(FFIGeos.GEOSWKTReader_read_r(Geos.current_handle, self.ptr, wkt))
+    def read(wkt, options = {})
+      cast_geometry_ptr(FFIGeos.GEOSWKTReader_read_r(Geos.current_handle, self.ptr, wkt), {
+        :srid => options[:srid]
+      })
     end
 
     def self.release(ptr) #:nodoc:

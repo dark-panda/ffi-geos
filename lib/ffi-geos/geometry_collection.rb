@@ -21,7 +21,7 @@ module Geos
       if n < 0 || n >= self.num_geometries
         nil
       else
-        cast_geometry_ptr(FFIGeos.GEOSGetGeometryN_r(Geos.current_handle, self.ptr, n), false)
+        cast_geometry_ptr(FFIGeos.GEOSGetGeometryN_r(Geos.current_handle, self.ptr, n), :auto_free => false)
       end
     end
     alias :geometry_n :get_geometry_n

@@ -18,12 +18,16 @@ module Geos
       )
     end
 
-    def read(wkb)
-      cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize))
+    def read(wkb, options = {})
+      cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize), {
+        :srid => options[:srid]
+      })
     end
 
-    def read_hex(wkb)
-      cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize))
+    def read_hex(wkb, options = {})
+      cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize), {
+        :srid => options[:srid]
+      })
     end
 
     def self.release(ptr) #:nodoc:

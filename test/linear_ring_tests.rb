@@ -10,4 +10,15 @@ class LinearRingTests < Test::Unit::TestCase
 
     assert_equal(write(geom), write(ring.to_polygon))
   end
+
+  def test_to_polygon_with_srid
+    writer.trim = true
+
+    wkt = 'LINEARRING (0 0, 5 0, 5 5, 0 5, 0 0)'
+    expected = 'POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))'
+
+    srid_copy_tester(:to_polygon, expected, 0, :zero, wkt)
+    srid_copy_tester(:to_polygon, expected, 4326, :lenient, wkt)
+    srid_copy_tester(:to_polygon,  expected, 4326, :strict, wkt)
+  end
 end

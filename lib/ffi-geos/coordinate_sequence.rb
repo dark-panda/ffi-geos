@@ -223,20 +223,20 @@ module Geos
       }.read_int
     end
 
-    def to_point
-      Geos.create_point(self)
+    def to_point(options = {})
+      Geos.create_point(self, :srid => options[:srid])
     end
 
-    def to_linear_ring
-      Geos.create_linear_ring(self)
+    def to_linear_ring(options = {})
+      Geos.create_linear_ring(self, :srid => options[:srid])
     end
 
-    def to_line_string
-      Geos.create_line_string(self)
+    def to_line_string(options = {})
+      Geos.create_line_string(self, :srid => options[:srid])
     end
 
-    def to_polygon
-      Geos.create_polygon(self)
+    def to_polygon(options = {})
+      Geos.create_polygon(self, :srid => options[:srid])
     end
 
     def to_s

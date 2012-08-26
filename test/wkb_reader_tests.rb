@@ -185,4 +185,24 @@ class WkbReaderTests < Test::Unit::TestCase
       false
     )
   end
+
+  def test_read_with_srid
+    assert_equal(43,
+      @wkb_reader.read("\x01\x01\x00\x00\x20\x2B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40").srid)
+
+    assert_equal(4326,
+      @wkb_reader.read("\x01\x01\x00\x00\x20\x2B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40", {
+        :srid => 4326
+      }).srid)
+  end
+
+  def test_read_hex_srid
+    assert_equal(43,
+      @wkb_reader.read_hex('01010000202B00000000000000000018400000000000001C40').srid)
+
+    assert_equal(4326,
+      @wkb_reader.read_hex('01010000202B00000000000000000018400000000000001C40', {
+        :srid => 4326
+      }).srid)
+  end
 end

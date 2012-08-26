@@ -994,6 +994,34 @@ module Geos
       Thread.current[:ffi_geos_handle].ptr
     end
 
+    def srid_copy_policy
+      Thread.current[:ffi_geos_srid_copy_policy] ||= srid_copy_policy_default
+    end
+
+    def srid_copy_policy=(policy)
+      if policy == :default
+        Thread.current[:ffi_geos_srid_copy_policy] = srid_copy_policy_default
+      elsif Geos::Constants::SRID_COPY_POLICIES.include?(policy)
+        Thread.current[:ffi_geos_srid_copy_policy] = policy
+      else
+        raise ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
+      end
+    end
+
+    def srid_copy_policy_default
+      @srid_copy_policy_default ||= :zero
+    end
+
+    def srid_copy_policy_default=(policy)
+      if policy == :default
+        @srid_copy_policy_default = :zero
+      elsif Geos::Constants::SRID_COPY_POLICIES.include?(policy)
+        @srid_copy_policy_default = policy
+      else
+        raise ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
+      end
+    end
+
     %w{
       create_point
       create_line_string
@@ -1075,6 +1103,18 @@ module Geos
       :join => :round,
       :mitre_limit => 5.0
     }.freeze
+
+    SRID_COPY_POLICIES = [
+      :zero,
+      :lenient,
+      :strict
+    ].freeze
+  end
+
+  class MixedSRIDsError < RuntimeError
+    def initialize(srid_a, srid_b)
+      super("Operation on mixed SRIDs (#{srid_a} vs. #{srid_b})")
+    end
   end
 
   include GeomTypes
