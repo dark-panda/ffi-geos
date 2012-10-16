@@ -149,3 +149,8 @@ Ruby bindings along with the following enhancements and additions:
 
 * Charlie Savage for the original SWIG-based GEOS bindings implementation and
   some fixes for MinGW.
+
+== License
+
+This gem is licensed under an MIT-style license. See the +MIT-LICENSE+ file for
+details.
