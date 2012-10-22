@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class LineStringTests < Test::Unit::TestCase
+class LineStringTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def test_default_srid
@@ -129,7 +129,7 @@ class LineStringTests < Test::Unit::TestCase
     def test_num_points
       assert_equal(4, read('LINESTRING (0 0, 1 0, 1 1, 0 1)').num_points)
 
-      assert_raise(NoMethodError) do
+      assert_raises(NoMethodError) do
         read('POINT (0 0)').num_points
       end
     end
@@ -149,7 +149,7 @@ class LineStringTests < Test::Unit::TestCase
       tester['POINT (14 14)', geom, 2]
       tester['POINT (14 10)', geom, 3]
 
-      assert_raise(RuntimeError) do
+      assert_raises(RuntimeError) do
         tester['POINT (0 0)', geom, 4]
       end
 
@@ -159,7 +159,7 @@ class LineStringTests < Test::Unit::TestCase
       tester['POINT (12 11)', geom, 2]
       tester['POINT (11 11)', geom, 3]
 
-      assert_raise(NoMethodError) do
+      assert_raises(NoMethodError) do
         tester[nil, read('POINT (0 0)'), 0]
       end
     end

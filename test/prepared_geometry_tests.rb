@@ -3,7 +3,7 @@ $: << File.dirname(__FILE__)
 require 'test_helper'
 
 if defined?(Geos::PreparedGeometry)
-  class PreparedGeometryTests < Test::Unit::TestCase
+  class PreparedGeometryTests < MiniTest::Unit::TestCase
     include TestHelper
 
     POINT_A = 'POINT(0 0)'
@@ -72,19 +72,19 @@ if defined?(Geos::PreparedGeometry)
     end
 
     def test_cant_clone
-      assert_raise(NoMethodError) do
+      assert_raises(NoMethodError) do
         read(POINT_A).to_prepared.clone
       end
     end
 
     def test_cant_dup
-      assert_raise(NoMethodError) do
+      assert_raises(NoMethodError) do
         read(POINT_A).to_prepared.dup
       end
     end
 
     def test_initializer_type_exception
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         Geos::PreparedGeometry.new('hello world')
       end
     end

@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class GeometryCollectionTests < Test::Unit::TestCase
+class GeometryCollectionTests < MiniTest::Unit::TestCase
   include TestHelper
 
   if ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:[])

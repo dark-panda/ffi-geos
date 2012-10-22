@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class GeometryTests < Test::Unit::TestCase
+class GeometryTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def comparison_tester(method_with_args, geom_a, geom_b, expected)
@@ -624,7 +624,7 @@ class GeometryTests < Test::Unit::TestCase
       ret = geom_a.relate_boundary_node_rule(geom_b, :endpoint)
       assert_equal('FF10FFFF2', ret)
 
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         geom_a.relate_boundary_node_rule(geom_b, :gibberish)
       end
     end
@@ -941,7 +941,7 @@ class GeometryTests < Test::Unit::TestCase
       (13 11, 13 12, 13.5 12, 13.5 11, 13 11))'
     ]
 
-    assert_raise(NoMethodError) do
+    assert_raises(NoMethodError) do
       tester[0, 'POINT (0 0)']
     end
   end
@@ -987,7 +987,7 @@ class GeometryTests < Test::Unit::TestCase
       1
     ]
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       tester[
         nil,
         'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))',
@@ -995,7 +995,7 @@ class GeometryTests < Test::Unit::TestCase
       ]
     end
 
-    assert_raise(NoMethodError) do
+    assert_raises(NoMethodError) do
       tester[
         nil,
         'POINT (0 0)',
@@ -1024,7 +1024,7 @@ class GeometryTests < Test::Unit::TestCase
       )'
     ]
 
-    assert_raise(NoMethodError) do
+    assert_raises(NoMethodError) do
       tester[
         nil,
         'POINT (0 0)'
@@ -1163,7 +1163,7 @@ class GeometryTests < Test::Unit::TestCase
       geom_b = read('POINT(3 4)')
 
       # The method only accept lineal geometries
-      assert_raise(RuntimeError) do
+      assert_raises(RuntimeError) do
         geom_a.project(geom_b)
       end
 
@@ -1209,7 +1209,7 @@ class GeometryTests < Test::Unit::TestCase
       tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 20, false]
       tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 2, true]
 
-      assert_raise(RuntimeError) do
+      assert_raises(RuntimeError) do
         read('POINT(1 2)').interpolate(0)
       end
     end
@@ -1424,7 +1424,7 @@ class GeometryTests < Test::Unit::TestCase
     end
 
     def test_polygonize_with_bad_arguments
-      assert_raise(ArgumentError) do
+      assert_raises(ArgumentError) do
         geom = read('POINT(0 0)')
 
         geom.polygonize(geom, 'gibberish')
@@ -1594,7 +1594,7 @@ class GeometryTests < Test::Unit::TestCase
     geom_c = geom.intersection(geom_b)
     assert_equal(4326, geom_c.srid)
 
-    assert_raise(Geos::MixedSRIDsError) do
+    assert_raises(Geos::MixedSRIDsError) do
       Geos.srid_copy_policy = :strict
       geom_c = geom.intersection(geom_b)
       assert_equal(231231, geom_c.srid)

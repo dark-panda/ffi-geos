@@ -1,6 +1,7 @@
 
 require 'rubygems'
-require 'test/unit'
+require 'minitest/autorun'
+require 'turn/autorun'
 
 if ENV['USE_BINARY_GEOS']
   require 'geos'
@@ -60,3 +61,12 @@ module TestHelper
     Geos.srid_copy_policy = :default
   end
 end
+
+if ENV['autotest']
+  module Turn::Colorize
+    def self.color_supported?
+      true
+    end
+  end
+end
+

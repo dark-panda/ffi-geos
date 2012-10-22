@@ -1,7 +1,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class LinearRingTests < Test::Unit::TestCase
+class LinearRingTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def test_to_polygon

@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class WktReaderTests < Test::Unit::TestCase
+class WktReaderTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def wkt_tester(type_id, geom_type, klass, *geoms)
@@ -113,7 +113,7 @@ class WktReaderTests < Test::Unit::TestCase
   end
 
   def test_read_exception
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       read('gibberish')
     end
   end

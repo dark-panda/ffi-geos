@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class WktWriterTests < Test::Unit::TestCase
+class WktWriterTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def test_write_point
@@ -91,12 +91,12 @@ class WktWriterTests < Test::Unit::TestCase
       assert_equal('POINT (3 2)', write(geom_2d))
 
       # 1 is invalid
-      assert_raise(RuntimeError) do
+      assert_raises(RuntimeError) do
         writer.output_dimensions = 1
       end
 
       # 4 is invalid
-      assert_raise(RuntimeError) do
+      assert_raises(RuntimeError) do
         writer.output_dimensions = 4
       end
     end

@@ -3,7 +3,7 @@ $: << File.dirname(__FILE__)
 require 'test_helper'
 
 if defined?(Geos::STRtree)
-  class STRtreeTests < Test::Unit::TestCase
+  class STRtreeTests < MiniTest::Unit::TestCase
     include TestHelper
 
     def setup_tree
@@ -26,7 +26,7 @@ if defined?(Geos::STRtree)
 
       @tree.query(read('POINT(5 5)'))
 
-      assert_raise(RuntimeError) do
+      assert_raises(RuntimeError) do
         @tree.insert(read('POINT(0 0)'), 'test')
       end
     end
@@ -155,13 +155,13 @@ if defined?(Geos::STRtree)
     end
 
     def test_cant_clone
-      assert_raise(NoMethodError) do
+      assert_raises(NoMethodError) do
         Geos::STRtree.new(3).clone
       end
     end
 
     def test_cant_dup
-      assert_raise(NoMethodError) do
+      assert_raises(NoMethodError) do
         Geos::STRtree.new(3).dup
       end
     end
@@ -187,13 +187,13 @@ if defined?(Geos::STRtree)
     end
 
     def test_capacity
-      assert_raise(ArgumentError) do
+      assert_raises(ArgumentError) do
         Geos::STRtree.new(0)
       end
     end
 
     def test_geometries
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         Geos::STRtree.new([])
       end
     end

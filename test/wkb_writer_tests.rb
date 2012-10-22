@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class WkbWriterTests < Test::Unit::TestCase
+class WkbWriterTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def setup
@@ -198,7 +198,7 @@ class WkbWriterTests < Test::Unit::TestCase
   end
 
   def test_try_bad_byte_order_value
-    assert_raise(TypeError) do
+    assert_raises(TypeError) do
       wkb_tester(
         '010100008000000000000018400000000000001C400000000000002040',
         'POINT(6 7 8)',
@@ -209,7 +209,7 @@ class WkbWriterTests < Test::Unit::TestCase
       )
     end
 
-    assert_raise(TypeError) do
+    assert_raises(TypeError) do
       wkb_tester(
         '010100008000000000000018400000000000001C400000000000002040',
         'POINT(6 7 8)',
@@ -394,7 +394,7 @@ class WkbWriterTests < Test::Unit::TestCase
   end
 
   def test_try_bad_byte_order_value_binary
-    assert_raise(TypeError) do
+    assert_raises(TypeError) do
       wkb_tester(
         "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
         'POINT(6 7 8)',
@@ -406,7 +406,7 @@ class WkbWriterTests < Test::Unit::TestCase
       )
     end
 
-    assert_raise(TypeError) do
+    assert_raises(TypeError) do
       wkb_tester(
         "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
         'POINT(6 7 8)',

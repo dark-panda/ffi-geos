@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class CoordinateSequenceTests < Test::Unit::TestCase
+class CoordinateSequenceTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def setup
@@ -44,29 +44,29 @@ class CoordinateSequenceTests < Test::Unit::TestCase
   end
 
   def test_check_bounds
-    assert_raise(RuntimeError) { @cs.set_x(10, 0.1) }
-    assert_raise(RuntimeError) { @cs.set_x(-1, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_x(10, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_x(-1, 0.1) }
 
-    assert_raise(RuntimeError) { @cs.set_y(10, 0.1) }
-    assert_raise(RuntimeError) { @cs.set_y(-1, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_y(10, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_y(-1, 0.1) }
 
-    assert_raise(RuntimeError) { @cs.set_z(10, 0.1) }
-    assert_raise(RuntimeError) { @cs.set_z(-1, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_z(10, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_z(-1, 0.1) }
 
-    assert_raise(RuntimeError) { @cs.set_ordinate(10, 0, 0.1) }
-    assert_raise(RuntimeError) { @cs.set_ordinate(-1, 0, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_ordinate(10, 0, 0.1) }
+    assert_raises(RuntimeError) { @cs.set_ordinate(-1, 0, 0.1) }
 
-    assert_raise(RuntimeError) { @cs.get_x(10) }
-    assert_raise(RuntimeError) { @cs.get_x(-1) }
+    assert_raises(RuntimeError) { @cs.get_x(10) }
+    assert_raises(RuntimeError) { @cs.get_x(-1) }
 
-    assert_raise(RuntimeError) { @cs.get_y(10) }
-    assert_raise(RuntimeError) { @cs.get_y(-1) }
+    assert_raises(RuntimeError) { @cs.get_y(10) }
+    assert_raises(RuntimeError) { @cs.get_y(-1) }
 
-    assert_raise(RuntimeError) { @cs.get_z(10) }
-    assert_raise(RuntimeError) { @cs.get_z(-1) }
+    assert_raises(RuntimeError) { @cs.get_z(10) }
+    assert_raises(RuntimeError) { @cs.get_z(-1) }
 
-    assert_raise(RuntimeError) { @cs.get_ordinate(10, 0) }
-    assert_raise(RuntimeError) { @cs.get_ordinate(-1, 0) }
+    assert_raises(RuntimeError) { @cs.get_ordinate(10, 0) }
+    assert_raises(RuntimeError) { @cs.get_ordinate(-1, 0) }
   end
 
   def test_clone
@@ -109,14 +109,14 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal(2, cs.dimensions)
     assert_equal(5, cs.length)
 
-    assert_raise(Geos::CoordinateSequence::ParseError) do
+    assert_raises(Geos::CoordinateSequence::ParseError) do
       cs = Geos::CoordinateSequence.new([
         [ 1, 2 ],
         [ 1, 2, 3 ]
       ])
     end
 
-    assert_raise(Geos::CoordinateSequence::ParseError) do
+    assert_raises(Geos::CoordinateSequence::ParseError) do
       cs = Geos::CoordinateSequence.new([
         [ 1, 2, 3, 4 ]
       ])
@@ -209,15 +209,15 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal('NaN', cs.z[0].to_s)
     assert_equal('NaN', cs.z[1].to_s)
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs.x[100]
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs.y[100]
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs.z[100]
     end
   end
@@ -236,15 +236,15 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal(2, cs.get_y(0))
     assert_equal(11, cs.get_y(1))
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs.x[100] = 10
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs.y[100] = 10
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs.z[100] = 10
     end
   end
@@ -313,8 +313,8 @@ class CoordinateSequenceTests < Test::Unit::TestCase
     assert_equal(100, cs.x[0])
     assert_equal(10, cs2.x[0])
 
-    assert_not_equal(cs.x, cs2.x)
-    assert_not_equal(cs.y, cs2.y)
+    refute_equal(cs.x, cs2.x)
+    refute_equal(cs.y, cs2.y)
   end
 
   def test_has_z

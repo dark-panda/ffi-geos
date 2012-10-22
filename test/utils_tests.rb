@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class UtilsTests < Test::Unit::TestCase
+class UtilsTests < MiniTest::Unit::TestCase
   include TestHelper
 
   if defined?(Geos::Utils)
@@ -62,7 +62,7 @@ class UtilsTests < Test::Unit::TestCase
 
   def test_bad_create_point
     cs = Geos::CoordinateSequence.new(0, 0)
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       Geos.create_point(cs)
     end
   end
@@ -113,7 +113,7 @@ class UtilsTests < Test::Unit::TestCase
 
   def test_create_bad_line_string
     cs = Geos::CoordinateSequence.new(1, 0)
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       Geos::create_line_string(cs)
     end
   end
@@ -171,7 +171,7 @@ class UtilsTests < Test::Unit::TestCase
   def test_bad_create_linear_ring
     cs = Geos::CoordinateSequence.new(1, 0)
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       Geos::create_linear_ring(cs)
     end
   end
@@ -268,7 +268,7 @@ class UtilsTests < Test::Unit::TestCase
     end
 
     def test_create_bad_multi_point
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         Geos.create_multi_point(
           read('POINT(0 0)'),
           read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
@@ -288,7 +288,7 @@ class UtilsTests < Test::Unit::TestCase
     end
 
     def test_create_bad_multi_line_string
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         Geos.create_multi_point(
           read('POINT(0 0)'),
           read('LINESTRING(0 0, 10 0)')
@@ -308,7 +308,7 @@ class UtilsTests < Test::Unit::TestCase
     end
 
     def test_create_bad_multi_polygon
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         Geos.create_multi_polygon(
           read('POINT(0 0)'),
           read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
@@ -335,7 +335,7 @@ class UtilsTests < Test::Unit::TestCase
     end
 
     def test_create_bad_geometry_collection
-      assert_raise(TypeError) do
+      assert_raises(TypeError) do
         Geos.create_geometry_collection(
           read('POINT(0 0)'),
           read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))'),
@@ -399,25 +399,25 @@ class UtilsTests < Test::Unit::TestCase
     # GEOS taking ownership of CoordinateSequences and deleting them out from
     # under us and GC blowing up.
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs = Geos::CoordinateSequence.new(0, 2)
       Geos.create_point(cs)
       GC.start
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs = Geos::CoordinateSequence.new(1, 2)
       Geos.create_line_string(cs)
       GC.start
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs = Geos::CoordinateSequence.new(1, 2)
       Geos.create_linear_ring(cs)
       GC.start
     end
 
-    assert_raise(RuntimeError) do
+    assert_raises(RuntimeError) do
       cs = Geos::CoordinateSequence.new([
         [0, 0],
         [0, 5],

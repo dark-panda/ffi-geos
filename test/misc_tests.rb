@@ -2,7 +2,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class MiscTests < Test::Unit::TestCase
+class MiscTests < MiniTest::Unit::TestCase
   include TestHelper
 
   def thread_tester(name, dims, byte_order, polygon, pause)
@@ -85,13 +85,13 @@ class MiscTests < Test::Unit::TestCase
   end
 
   def test_cant_clone_buffer_params
-    assert_raise(NoMethodError) do
+    assert_raises(NoMethodError) do
       Geos::BufferParams.new.clone
     end
   end
 
   def test_cant_dup_buffer_params
-    assert_raise(NoMethodError) do
+    assert_raises(NoMethodError) do
       Geos::BufferParams.new.dup
     end
   end
