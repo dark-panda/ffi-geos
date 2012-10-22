@@ -54,6 +54,13 @@ Ruby bindings along with the following enhancements and additions:
 
 == New Methods and Additions (not exhaustive)
 
+* SRIDs can be copied on many operations. GEOS doesn't usually copy SRIDs
+  around, but for the sake of convenience, we do. The default behaviour for
+  SRID copying can be set via the Geos.srid_copy_policy= method. The default
+  behaviour is to use 0 values as before, but you can optionally allow for
+  copying in either a lenient or a strict sort of manner. See the documentation
+  for Geos.srid_copy_policy= for details.
+
 === Geos
 
 * Geos.create_multi_point

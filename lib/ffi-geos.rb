@@ -998,6 +998,26 @@ module Geos
       Thread.current[:ffi_geos_srid_copy_policy] ||= srid_copy_policy_default
     end
 
+    # Sets the SRID copying behaviour. This value can be one of the values
+    # found in Geos::Constants::SRID_COPY_POLICIES and are local to the
+    # current thread. A special value of +:default+ can also be used, which
+    # will use a global default that can be set with srid_copy_policy_default=.
+    # Setting this value will cause all future threads to use this global
+    # default rather than the true default value which is set to +:zero+ for
+    # the sake of backwards compatibility with
+    #
+    # The available values for +policy+ are:
+    #
+    # * +:default+ - use the value set with srid_copy_policy_default=,
+    #   which itself is +:zero+.
+    # * +:zero+ - set all SRIDs to 0. The only exception to this is when
+    #   cloning a Geometry, in which the SRID is always copied as per the
+    #   previous behaviour.
+    # * +:lenient+ - when copying SRIDs, use the SRID of the object that the
+    #   operation is being performed on, even if operation involves multiple
+    #   Geometry objects that may have different SRIDs.
+    # * +:strict+ - when copying SRIDs, raise a Geos::MixedSRIDsError exception
+    #   if an operation is performed on mixed SRIDs. This setting
     def srid_copy_policy=(policy)
       if policy == :default
         Thread.current[:ffi_geos_srid_copy_policy] = srid_copy_policy_default
