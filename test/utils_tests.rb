@@ -24,10 +24,10 @@ class UtilsTests < MiniTest::Unit::TestCase
 
     if Geos::Utils.respond_to?(:relate_match)
       def test_relate_match
-        assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF2'))
-        assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF*'))
-        assert(Geos::Utils.relate_match('0FFFFFFF2', 'TFFFFFFF2'))
-        assert(!Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'))
+        assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF2'), "'0FFFFFFF2' and '0FFFFFFF2' patterns match")
+        assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF*'), "'0FFFFFFF2' and '0FFFFFFF*' patterns match")
+        assert(Geos::Utils.relate_match('0FFFFFFF2', 'TFFFFFFF2'), "'0FFFFFFF2' and 'TFFFFFFF2' patterns match")
+        assert(!Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'), "'0FFFFFFF2' and '0FFFFFFFF' patterns match")
       end
     end
   end
@@ -36,9 +36,9 @@ class UtilsTests < MiniTest::Unit::TestCase
     geom = Geos.send(method, cs)
     expected_geom = read(expected)
 
-    assert(expected_geom.eql_exact?(geom, TOLERANCE))
-    assert(geom.valid?)
-    assert_instance_of(klass, geom)
+    assert_geom_eql_exact(expected_geom, geom)
+    assert_geom_valid(geom)
+    assert_kind_of(klass, geom)
     assert_equal(type_id, geom.type_id)
 
     yield geom if block_given?
@@ -83,11 +83,11 @@ class UtilsTests < MiniTest::Unit::TestCase
       Geos::GEOS_LINESTRING,
       Geos::LineString
     ) do |geom|
-      assert(!geom.empty?)
-      assert(geom.valid?)
-      assert(geom.simple?)
-      assert(!geom.ring?)
-      assert(geom.has_z?)
+      refute_geom_empty(geom)
+      assert_geom_valid(geom)
+      assert_geom_simple(geom)
+      refute_geom_ring(geom)
+      assert_geom_has_z(geom)
       assert_equal(1, geom.num_geometries)
     end
   end
@@ -102,11 +102,11 @@ class UtilsTests < MiniTest::Unit::TestCase
       Geos::GEOS_LINESTRING,
       Geos::LineString
     ) do |geom|
-      assert(!geom.empty?)
-      assert(geom.valid?)
-      assert(geom.simple?)
-      assert(!geom.ring?)
-      assert(geom.has_z?)
+      refute_geom_empty(geom)
+      assert_geom_valid(geom)
+      assert_geom_simple(geom)
+      refute_geom_ring(geom)
+      assert_geom_has_z(geom)
       assert_equal(1, geom.num_geometries)
     end
   end
@@ -140,11 +140,11 @@ class UtilsTests < MiniTest::Unit::TestCase
       Geos::GEOS_LINEARRING,
       Geos::LinearRing
     ) do |geom|
-      assert(!geom.empty?)
-      assert(geom.valid?)
-      assert(geom.simple?)
-      assert(geom.ring?)
-      assert(geom.has_z?)
+      refute_geom_empty(geom)
+      assert_geom_valid(geom)
+      assert_geom_simple(geom)
+      assert_geom_ring(geom)
+      assert_geom_has_z(geom)
       assert_equal(1, geom.num_geometries)
     end
   end
@@ -159,11 +159,11 @@ class UtilsTests < MiniTest::Unit::TestCase
       Geos::GEOS_LINEARRING,
       Geos::LinearRing
     ) do |geom|
-      assert(!geom.empty?)
-      assert(geom.valid?)
-      assert(geom.simple?)
-      assert(geom.ring?)
-      assert(geom.has_z?)
+      refute_geom_empty(geom)
+      assert_geom_valid(geom)
+      assert_geom_simple(geom)
+      assert_geom_ring(geom)
+      assert_geom_has_z(geom)
       assert_equal(1, geom.num_geometries)
     end
   end
@@ -248,11 +248,11 @@ class UtilsTests < MiniTest::Unit::TestCase
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
 
-    assert(!geom.empty?)
-    assert(geom.valid?)
-    assert(geom.simple?)
-    assert(!geom.ring?)
-    assert(!geom.has_z?)
+    refute_geom_empty(geom)
+    assert_geom_valid(geom)
+    assert_geom_simple(geom)
+    refute_geom_ring(geom)
+    refute_geom_has_z(geom)
 
     assert_equal(1, geom.num_geometries)
   end

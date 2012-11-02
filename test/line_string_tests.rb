@@ -119,9 +119,9 @@ class LineStringTests < MiniTest::Unit::TestCase
 
   if ENV['FORCE_TESTS'] || Geos::LineString.method_defined?(:closed?)
     def test_closed
-      assert(read('LINESTRING(0 0, 1 1, 2 2, 0 0)').closed?)
-      assert(!read('LINESTRING(0 0, 1 1, 2 2)').closed?)
-      assert(read('LINEARRING(0 0, 1 1, 2 2, 0 0)').closed?)
+      assert_geom_closed(read('LINESTRING(0 0, 1 1, 2 2, 0 0)'))
+      refute_geom_closed(read('LINESTRING(0 0, 1 1, 2 2)'))
+      assert_geom_closed(read('LINEARRING(0 0, 1 1, 2 2, 0 0)'))
     end
   end
 

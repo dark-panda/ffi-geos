@@ -13,14 +13,14 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_1 = read(geom_a)
     geom_b = read(geom_b)
     result = geom_1.send(method, geom_b, *args)
-    assert(read(expected).eql_exact?(result, TOLERANCE))
+    assert_geom_eql_exact(read(expected), result)
   end
 
   def self_tester(method_with_args, g, expected)
     method_with_args = Array(method_with_args)
     geom = read(g)
     result = geom.send(*method_with_args)
-    assert(read(expected).eql_exact?(result, TOLERANCE))
+    assert_geom_eql_exact(read(expected), result)
   end
 
   def test_intersection
@@ -125,13 +125,13 @@ class GeometryTests < MiniTest::Unit::TestCase
 
   def test_convex_hull
     geom = read('POINT(0 0)')
-    assert(read('POINT(0 0)').eql_exact?(geom.convex_hull, TOLERANCE))
+    assert_geom_eql_exact(read('POINT(0 0)'), geom.convex_hull)
 
     geom = read('LINESTRING(0 0, 10 10)')
-    assert(read('LINESTRING(0 0, 10 10)').eql_exact?(geom.convex_hull, TOLERANCE))
+    assert_geom_eql_exact(read('LINESTRING(0 0, 10 10)'), geom.convex_hull)
 
     geom = read('POLYGON((0 0, 0 10, 5 5, 10 10, 10 0, 0 0))')
-    assert(read('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))').eql_exact?(geom.convex_hull, TOLERANCE))
+    assert_geom_eql_exact(read('POLYGON((0 0, 0 10, 10 10, 10 0, 0 0))'), geom.convex_hull)
   end
 
   def test_difference
@@ -810,20 +810,20 @@ class GeometryTests < MiniTest::Unit::TestCase
   end
 
   def test_empty
-    assert(!read('POINT(0 0)').empty?)
-    assert(read('POINT EMPTY').empty?)
-    assert(!read('LINESTRING(0 0, 10 0)').empty?)
-    assert(read('LINESTRING EMPTY').empty?)
-    assert(!read('POLYGON((0 0, 10 0, 10 10, 0 0))').empty?)
-    assert(read('POLYGON EMPTY').empty?)
-    assert(!read('GEOMETRYCOLLECTION(POINT(0 0))').empty?)
-    assert(read('GEOMETRYCOLLECTION EMPTY').empty?)
+    refute_geom_empty(read('POINT(0 0)'))
+    assert_geom_empty(read('POINT EMPTY'))
+    refute_geom_empty(read('LINESTRING(0 0, 10 0)'))
+    assert_geom_empty(read('LINESTRING EMPTY'))
+    refute_geom_empty(read('POLYGON((0 0, 10 0, 10 10, 0 0))'))
+    assert_geom_empty(read('POLYGON EMPTY'))
+    refute_geom_empty(read('GEOMETRYCOLLECTION(POINT(0 0))'))
+    assert_geom_empty(read('GEOMETRYCOLLECTION EMPTY'))
   end
 
   def test_valid
-    assert(read('POINT(0 0)').valid?)
-    assert(!read('POINT(0 NaN)').valid?)
-    assert(!read('POINT(0 nan)').valid?)
+    assert_geom_valid(read('POINT(0 0)'))
+    refute_geom_valid(read('POINT(0 NaN)'))
+    refute_geom_valid(read('POINT(0 nan)'))
   end
 
   if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_reason)
@@ -858,20 +858,20 @@ class GeometryTests < MiniTest::Unit::TestCase
   end
 
   def test_simple
-    assert(read('POINT(0 0)').simple?)
-    assert(read('LINESTRING(0 0, 10 0)').simple?)
-    assert(!read('LINESTRING(0 0, 10 0, 5 5, 5 -5)').simple?)
+    assert_geom_simple(read('POINT(0 0)'))
+    assert_geom_simple(read('LINESTRING(0 0, 10 0)'))
+    refute_geom_simple(read('LINESTRING(0 0, 10 0, 5 5, 5 -5)'))
   end
 
   def test_ring
-    assert(!read('POINT(0 0)').ring?)
-    assert(!read('LINESTRING(0 0, 10 0, 5 5, 5 -5)').ring?)
-    assert(read('LINESTRING(0 0, 10 0, 5 5, 0 0)').ring?)
+    refute_geom_ring(read('POINT(0 0)'))
+    refute_geom_ring(read('LINESTRING(0 0, 10 0, 5 5, 5 -5)'))
+    assert_geom_ring(read('LINESTRING(0 0, 10 0, 5 5, 0 0)'))
   end
 
   def test_has_z
-    assert(!read('POINT(0 0)').has_z?)
-    assert(read('POINT(0 0 0)').has_z?)
+    refute_geom_has_z(read('POINT(0 0)'))
+    assert_geom_has_z(read('POINT(0 0 0)'))
   end
 
   def test_num_geometries
@@ -914,7 +914,7 @@ class GeometryTests < MiniTest::Unit::TestCase
         if expected.nil?
           assert_nil(result)
         else
-          assert(result.eql_exact?(read(expected), TOLERANCE))
+          assert_geom_eql_exact(result, read(expected))
         end
       }
 
@@ -954,7 +954,7 @@ class GeometryTests < MiniTest::Unit::TestCase
       if expected.nil?
         assert_nil(result)
       else
-        assert(result.eql_exact?(read(expected), TOLERANCE))
+        assert_geom_eql_exact(result, read(expected))
       end
     }
 
@@ -1012,7 +1012,7 @@ class GeometryTests < MiniTest::Unit::TestCase
       if expected.nil?
         assert_nil(result)
       else
-        assert(result.eql_exact?(read(expected), TOLERANCE))
+        assert_geom_eql_exact(result, read(expected))
       end
     }
 
@@ -1301,7 +1301,7 @@ class GeometryTests < MiniTest::Unit::TestCase
       tester = lambda { |expected, g1, g2, tolerance|
         geom_a = read(g1)
         geom_b = read(g2)
-        assert(read(expected).eql_exact?(geom_a.snap(geom_b, tolerance), TOLERANCE))
+        assert_geom_eql_exact(read(expected), geom_a.snap(geom_b, tolerance))
       }
 
       writer.trim = true
@@ -1376,10 +1376,10 @@ class GeometryTests < MiniTest::Unit::TestCase
 
       polygonized = geom_a.polygonize_full
 
-      assert(polygonized[:rings].is_a?(Array))
-      assert(polygonized[:cuts].is_a?(Array))
-      assert(polygonized[:dangles].is_a?(Array))
-      assert(polygonized[:invalid_rings].is_a?(Array))
+      assert_kind_of(Array, polygonized[:rings])
+      assert_kind_of(Array, polygonized[:cuts])
+      assert_kind_of(Array, polygonized[:dangles])
+      assert_kind_of(Array, polygonized[:invalid_rings])
 
       assert_equal(2, polygonized[:rings].length)
       assert_equal(0, polygonized[:cuts].length)
@@ -1456,7 +1456,7 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_a = read('POINT(0 0)')
     geom_b = geom_a.clone
 
-    assert(geom_a.eql?(geom_b))
+    assert_equal(geom_a, geom_b)
   end
 
   def test_clone_srid
@@ -1465,7 +1465,7 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_a.srid = srid
     geom_b = geom_a.clone
 
-    assert(geom_a.eql?(geom_b))
+    assert_equal(geom_a, geom_b)
     assert_equal(srid, geom_b.srid)
   end
 
@@ -1473,7 +1473,7 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_a = read('POINT(0 0)')
     geom_b = geom_a.dup
 
-    assert(geom_a.eql?(geom_b))
+    assert_equal(geom_a, geom_b)
   end
 
   def test_dup_srid
@@ -1481,7 +1481,7 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_a = read('POINT(0 0)')
     geom_a.srid = srid
     geom_b = geom_a.dup
-    assert(geom_a.eql?(geom_b))
+    assert_equal(geom_a, geom_b)
     assert_equal(srid, geom_b.srid)
   end
 
@@ -1519,7 +1519,7 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_b = read('POINT(2.0 2.0)')
 
     %w{ eql? equals? == }.each do |method|
-      assert(!geom_a.send(method, geom_b))
+      refute(geom_a.send(method, geom_b), "Expected geoms to not be equal using #{method}")
     end
   end
 
@@ -1528,7 +1528,7 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_b = read('POINT(2.0 2.0)')
 
     %w{ eql_exact? equals_exact? exactly_equals? }.each do |method|
-      assert(!geom_a.send(method, geom_b, 0.001))
+      refute(geom_a.send(method, geom_b, 0.001), "Expected geoms to not be equal using #{method}")
     end
   end
 
@@ -1538,8 +1538,8 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_b = read('POINT (1.000001 1.000001)')
 
     %w{ eql_almost? equals_almost? almost_equals? }.each do |method|
-      assert(geom.send(method, geom_a))
-      assert(!geom.send(method, geom_b))
+      assert(geom.send(method, geom_a), "Expected geoms to be equal using #{method}")
+      refute(geom.send(method, geom_b), "Expected geoms to not be equal using #{method}")
     end
   end
 
@@ -1547,11 +1547,11 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_a = read('POINT(1.0 1.0)')
     geom_b = read('POINT(1.1 1.1)')
 
-    assert(!geom_a.eql?(geom_b))
+    refute_equal(geom_a, geom_b)
 
     %w{ eql_almost? equals_almost? almost_equals? }.each do |method|
-      assert(geom_a.send(method, geom_b, 0))
-      assert(!geom_a.send(method, geom_b, 1))
+      assert(geom_a.send(method, geom_b, 0), "Expected geoms to be equal using #{method}")
+      refute(geom_a.send(method, geom_b, 1), "Expected geoms to not be equal using #{method}")
     end
   end
 

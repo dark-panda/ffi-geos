@@ -142,10 +142,10 @@ class CoordinateSequenceTests < MiniTest::Unit::TestCase
 
   def test_empty
     cs = Geos::CoordinateSequence.new
-    assert(cs.empty?)
+    assert_geom_empty(cs)
 
     cs = Geos::CoordinateSequence.new([4,1])
-    assert(!cs.empty?)
+    refute_geom_empty(cs)
   end
 
   def test_to_empty_linear_ring
@@ -318,11 +318,11 @@ class CoordinateSequenceTests < MiniTest::Unit::TestCase
   end
 
   def test_has_z
-    assert(Geos::CoordinateSequence.new([ 0, 1, 2 ]).has_z?)
-    assert(!Geos::CoordinateSequence.new([ 0, 1 ]).has_z?)
-    assert(!Geos::CoordinateSequence.new(1, 2).has_z?)
-    assert(Geos::CoordinateSequence.new(1, 3).has_z?)
-    assert(read('POINT (0 0 0)').coord_seq.has_z?)
-    assert(!read('POINT (0 0)').coord_seq.has_z?)
+    assert_geom_has_z(Geos::CoordinateSequence.new([ 0, 1, 2 ]))
+    refute_geom_has_z(Geos::CoordinateSequence.new([ 0, 1 ]))
+    refute_geom_has_z(Geos::CoordinateSequence.new(1, 2))
+    assert_geom_has_z(Geos::CoordinateSequence.new(1, 3))
+    assert_geom_has_z(read('POINT (0 0 0)').coord_seq)
+    refute_geom_has_z(read('POINT (0 0)').coord_seq)
   end
 end

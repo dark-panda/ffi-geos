@@ -60,6 +60,29 @@ module TestHelper
   ensure
     Geos.srid_copy_policy = :default
   end
+
+  {
+    :empty => 'to be empty',
+    :valid => 'to be valid',
+    :simple => 'to be simple',
+    :ring => 'to be ring',
+    :closed => 'to be closed',
+    :has_z => 'to have z dimension'
+  }.each do |t, m|
+    self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      def assert_geom_#{t}(geom)
+        assert(geom.#{t}?, "Expected geom #{m}")
+      end
+
+      def refute_geom_#{t}(geom)
+        assert(!geom.#{t}?, "Did not expect geom #{m}")
+      end
+    EOF
+  end
+
+  def assert_geom_eql_exact(geom, result, tolerance = TOLERANCE)
+    assert(geom.eql_exact?(result, tolerance), "Expected geom.eql_exact? to be within #{tolerance}")
+  end
 end
 
 if ENV['autotest']

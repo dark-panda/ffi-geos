@@ -17,11 +17,11 @@ class WkbReaderTests < MiniTest::Unit::TestCase
     else
       @wkb_reader.read(g)
     end
-    assert(geom)
+    refute_nil(geom)
     assert_equal(type_id, geom.type_id)
     assert_equal(geom_type, geom.geom_type)
-    assert(geom.is_a?(klass))
-    assert(read(expected).eql_exact?(geom, TOLERANCE))
+    assert_kind_of(klass, geom)
+    assert_geom_eql_exact(read(expected), geom)
     assert_equal(srid, geom.srid)
   end
 

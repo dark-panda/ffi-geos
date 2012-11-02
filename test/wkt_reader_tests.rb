@@ -8,10 +8,10 @@ class WktReaderTests < MiniTest::Unit::TestCase
   def wkt_tester(type_id, geom_type, klass, *geoms)
     geoms.each do |g|
       geom = read(g)
-      assert(geom)
+      refute_nil(geom)
       assert_equal(type_id, geom.type_id)
       assert_equal(geom_type, geom.geom_type)
-      assert(geom.is_a?(klass))
+      assert_kind_of(klass, geom)
     end
   end
 
@@ -109,7 +109,7 @@ class WktReaderTests < MiniTest::Unit::TestCase
     geom = read('LINEARRING(0 0, 1 1, 2 2, 3 3, 0 0)')
     assert_equal(Geos::GEOS_LINEARRING, geom.type_id)
     assert_equal('LinearRing', geom.geom_type)
-    assert(geom.is_a?(Geos::LinearRing))
+    assert_kind_of(Geos::LinearRing, geom)
   end
 
   def test_read_exception
