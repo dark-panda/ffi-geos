@@ -67,7 +67,7 @@ module Geos
     def self.geos_library_path
       @geos_library_path ||= begin
         # On MingW the libraries have version numbers
-        find_lib('libgeos_c{,-?}')
+        find_lib('{lib,}geos_c{,-?}')
       end
     end
 
