@@ -59,9 +59,13 @@ module Geos
     end
 
     def self.find_lib(lib)
-      Dir.glob(search_paths.map { |path|
-        File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
-      }).first
+      if ENV['GEOS_LIBRARY_PATH'] && File.file?(ENV['GEOS_LIBRARY_PATH'])
+        ENV['GEOS_LIBRARY_PATH']
+      else
+        Dir.glob(search_paths.map { |path|
+          File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
+        }).first
+      end
     end
 
     def self.geos_library_path
