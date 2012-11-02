@@ -9,14 +9,20 @@
 
 Ruby versions known to work:
 
-* Ruby MRI 1.8.7 and 1.9.2, x86_64, OSX 10.6.5+
+* Ruby MRI 1.8.7, 1.9.2 and 1.9.3 x86_64, OSX 10.6.5+
 * Ruby MRI 1.8.7 and 1.9.2, i386, linux
-* Ruby MRI 1.8.7, x86_64, linux
-* JRuby 1.6.3, x86_64 OSX 10.6.5+
+* Ruby MRI 1.8.7, 1.9.2 and 1.9.3, x86_64, linux
+* JRuby 1.6, x86_64 OSX 10.6.5+
+
+=== JRuby Notes
 
 Note that versions of JRuby prior to version 1.6.3 have problems in their ffi
 implementation when dealing with AutoPointers that can lead to segfaults during
 garbage collection.
+
+JRuby 1.7.0 is exhibiting some strange and sporadic memory problems that are
+difficult to lock down. Unit tests show that the errors do not occur 100% of
+the time, so it has been difficult to trace the root cause of the errors.
 
 == Features
 
