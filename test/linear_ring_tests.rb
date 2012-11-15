@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
