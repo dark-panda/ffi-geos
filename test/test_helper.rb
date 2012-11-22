@@ -1,8 +1,8 @@
-# encoding: UTF-8
+# encoding: BINARY
 
 require 'rubygems'
 require 'minitest/autorun'
-require 'turn/autorun'
+require 'minitest/reporters'
 
 if ENV['USE_BINARY_GEOS']
   require 'geos'
@@ -86,11 +86,5 @@ module TestHelper
   end
 end
 
-if ENV['autotest']
-  module Turn::Colorize
-    def self.color_supported?
-      true
-    end
-  end
-end
+MiniTest::Reporters.use!(MiniTest::Reporters::SpecReporter.new)
 

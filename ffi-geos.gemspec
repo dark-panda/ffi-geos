@@ -21,9 +21,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency("ffi", [">= 1.0.0"])
-  s.add_development_dependency("rdoc")
-  s.add_development_dependency("rake", ["~> 0.9"])
-  s.add_development_dependency("minitest")
-  s.add_development_dependency("turn")
 end
 
