@@ -26,6 +26,10 @@ class WkbWriterTests < MiniTest::Unit::TestCase
       @wkb_writer.write(geom)
     end
 
+    if ''.respond_to?(:force_encoding)
+      expected.force_encoding('BINARY')
+    end
+
     assert_equal(expected, result)
   end
 
