@@ -2,23 +2,12 @@
 # -*- ruby -*-
 
 require 'rubygems'
-
-gem 'rdoc', '~> 3.12'
-
 require 'rubygems/package_task'
 require 'rake/testtask'
 require 'rdoc/task'
 require 'bundler/gem_tasks'
 
-if RUBY_VERSION >= '1.9'
-  begin
-    gem 'psych'
-  rescue Exception => e
-    # it's okay, fall back on the bundled psych
-  end
-end
-
-$:.push 'lib'
+$:.push File.expand_path(File.dirname(__FILE__), 'lib')
 
 version = Geos::VERSION
 
