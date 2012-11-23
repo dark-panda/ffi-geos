@@ -13,3 +13,7 @@ if RbConfig::CONFIG['host_os'] =~ /^darwin/
   gem "growl"
 end
 
+if File.exists?('Gemfile.local')
+  instance_eval File.read('Gemfile.local')
+end
+
