@@ -52,6 +52,8 @@ module Geos
     end
 
     def pick_srid_from_geoms(srid_a, srid_b, policy = Geos.srid_copy_policy)
+      policy = Geos.srid_copy_policy_default if policy == :default
+
       case policy
         when :zero
           0
@@ -59,12 +61,16 @@ module Geos
           srid_a
         when :strict
           raise Geos::MixedSRIDsError.new(srid_a, srid_b)
+        else
+          raise ArgumentError.new("Unexpected policy value: #{policy}")
       end
     end
 
     def pick_srid_according_to_policy(srid, policy = Geos.srid_copy_policy)
-      if srid != 0 && Geos.srid_copy_policy != :zero
-        self.srid
+      policy = Geos.srid_copy_policy_default if policy == :default
+
+      if srid != 0 && policy != :zero
+        srid
       else
         0
       end
