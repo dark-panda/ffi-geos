@@ -1,11 +1,18 @@
 # encoding: BINARY
 
+if RUBY_VERSION >= '1.9'
+  require 'simplecov'
+
+  SimpleCov.command_name('Unit Tests')
+  SimpleCov.merge_timeout(3600)
+  SimpleCov.start do
+    add_filter '/test/'
+  end
+end
+
 require 'rubygems'
 require 'minitest/autorun'
-
-if RUBY_VERSION >= '1.9'
-  require 'minitest/reporters'
-end
+require 'minitest/reporters' if RUBY_VERSION >= '1.9'
 
 if ENV['USE_BINARY_GEOS']
   require 'geos'
