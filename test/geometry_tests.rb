@@ -1603,4 +1603,39 @@ class GeometryTests < MiniTest::Unit::TestCase
   ensure
     Geos.srid_copy_policy = :default
   end
+
+  def test_bad_srid_copy_policy
+    assert_raises(ArgumentError) do
+      Geos.srid_copy_policy = :blart
+    end
+  end
+
+  def test_srid_copy_policy_default
+    Geos.srid_copy_policy_default = :default
+    assert_equal(:zero, Geos.srid_copy_policy_default)
+
+    Geos.srid_copy_policy_default = :lenient
+    assert_equal(:lenient, Geos.srid_copy_policy_default)
+
+    Geos.srid_copy_policy_default = :strict
+    assert_equal(:strict, Geos.srid_copy_policy_default)
+
+    assert_raises(ArgumentError) do
+      Geos.srid_copy_policy_default = :blart
+    end
+  ensure
+    Geos.srid_copy_policy_default = :default
+  end
+
+  def test_empty_geometry_has_0_area
+    assert_equal(0, read('POLYGON EMPTY').area)
+  end
+
+  def test_empty_geometry_has_0_length
+    assert_equal(0, read('POLYGON EMPTY').length)
+  end
+
+  def test_to_s
+    assert_match(/^\#<Geos::Point: .+>$/, read('POINT(0 0)').to_s)
+  end
 end

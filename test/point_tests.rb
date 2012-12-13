@@ -90,4 +90,11 @@ class PointTests < MiniTest::Unit::TestCase
   ensure
     Geos.srid_copy_policy = :default
   end
+
+  def test_normalize
+    geom = read('POINT(10 10)')
+
+    assert_equal(geom.object_id, geom.normalize.object_id)
+    assert_equal(geom.object_id, geom.normalize!.object_id)
+  end
 end

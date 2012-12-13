@@ -98,6 +98,12 @@ class CoordinateSequenceTests < MiniTest::Unit::TestCase
     assert_equal(3, cs.dimensions)
   end
 
+  def test_with_all_sorts_of_arguments
+    assert_raises(ArgumentError) do
+      Geos::CoordinateSequence.new(0, 1, 2, 3, 4, 5)
+    end
+  end
+
   def test_read_from_array
     cs = Geos::CoordinateSequence.new([
       [ 0, 0 ],

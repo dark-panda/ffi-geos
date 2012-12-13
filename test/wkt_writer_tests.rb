@@ -68,6 +68,12 @@ class WktWriterTests < MiniTest::Unit::TestCase
       tester['POINT (6.1 7.1)', 1]
       tester['POINT (6 7)', 0]
     end
+
+    def test_rounding_precision_too_high
+      assert_raises(RuntimeError) do
+        @writer.rounding_precision = 1000
+      end
+    end
   end
 
   if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions)

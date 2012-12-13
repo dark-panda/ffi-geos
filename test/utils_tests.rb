@@ -61,6 +61,12 @@ class UtilsTests < MiniTest::Unit::TestCase
     assert_equal('POINT Z (10 20 30)', write(Geos.create_point(10, 20, 30), :trim => true, :output_dimensions => 3))
   end
 
+  def test_create_point_with_too_many_arguments
+    assert_raises(ArgumentError) do
+      Geos.create_point(10, 20, 30, 40, 50)
+    end
+  end
+
   def test_bad_create_point
     cs = Geos::CoordinateSequence.new(0, 0)
     assert_raises(RuntimeError) do
@@ -343,6 +349,13 @@ class UtilsTests < MiniTest::Unit::TestCase
           'gibberish'
         )
       end
+    end
+
+    def test_create_geometry_collection_with_options
+      geom = Geos.create_collection(:multi_line_string, :srid => 4326)
+
+      assert_kind_of(Geos::MultiLineString, geom)
+      assert_equal(4326, geom.srid)
     end
   end
 

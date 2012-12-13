@@ -30,6 +30,8 @@ class WkbWriterTests < MiniTest::Unit::TestCase
       expected.force_encoding('BINARY')
     end
 
+    assert_equal(Geos::Tools.symbol_for_enum(Geos::ByteOrders, byte_order), @wkb_writer.byte_order)
+    assert_equal(dimensions, @wkb_writer.output_dimensions)
     assert_equal(expected, result)
   end
 
@@ -435,6 +437,16 @@ class WkbWriterTests < MiniTest::Unit::TestCase
       }))
 
       assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
+    end
+  end
+
+  def test_illegal_output_dimensions
+    assert_raises(RuntimeError) do
+      @wkb_writer.output_dimensions = 10
+    end
+
+    assert_raises(RuntimeError) do
+      @wkb_writer.output_dimensions = 0
     end
   end
 end
