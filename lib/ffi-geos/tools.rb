@@ -92,5 +92,9 @@ module Geos
         enum[value]
       end
     end
+
+    class << self
+      include Geos::Tools
+    end
   end
 end
