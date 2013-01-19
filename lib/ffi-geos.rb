@@ -1152,4 +1152,6 @@ module Geos
 
   include GeomTypes
   include VersionConstants
+
+  require File.join(GEOS_BASE, 'yaml')
 end
