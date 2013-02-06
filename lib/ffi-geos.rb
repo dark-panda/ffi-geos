@@ -979,9 +979,6 @@ module Geos
         @error_handler = self.method(:error_handler)
       )
 
-      @srid_copy_policy = srid_copy_policy
-      @current_handle = Geos::Handle.new
-
       Kernel.at_exit {
         FFIGeos.finishGEOS_r(@ptr)
       }
@@ -1008,6 +1005,7 @@ module Geos
     def current_handle
       # Thread.current[:ffi_geos_handle] ||= Geos::Handle.new
       # Thread.current[:ffi_geos_handle].ptr
+      @current_handle ||= Geos::Handle.new
       @current_handle.ptr
     end
 
