@@ -1003,20 +1003,17 @@ module Geos
     end
 
     def current_handle
-      # Thread.current[:ffi_geos_handle] ||= Geos::Handle.new
-      # Thread.current[:ffi_geos_handle].ptr
       @current_handle ||= Geos::Handle.new
       @current_handle.ptr
     end
 
     def srid_copy_policy
-      # Thread.current[:ffi_geos_srid_copy_policy] ||= srid_copy_policy_default
       @srid_copy_policy ||= srid_copy_policy_default
     end
 
     # Sets the SRID copying behaviour. This value can be one of the values
-    # found in Geos::Constants::SRID_COPY_POLICIES and are local to the
-    # current thread. A special value of +:default+ can also be used, which
+    # found in Geos::Constants::SRID_COPY_POLICIES and are encapsulated in
+    # the object. A special value of +:default+ can also be used, which
     # will use a global default that can be set with srid_copy_policy_default=.
     # Setting this value will cause all future threads to use this global
     # default rather than the true default value which is set to +:zero+ for
@@ -1036,10 +1033,8 @@ module Geos
     #   if an operation is performed on mixed SRIDs. This setting
     def srid_copy_policy=(policy)
       if policy == :default
-        #Thread.current[:ffi_geos_srid_copy_policy]
         @srid_copy_policy = srid_copy_policy_default
       elsif Geos::Constants::SRID_COPY_POLICIES.include?(policy)
-        #Thread.current[:ffi_geos_srid_copy_policy]
         @srid_copy_policy = policy
       else
         raise ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
