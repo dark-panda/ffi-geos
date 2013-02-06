@@ -979,6 +979,9 @@ module Geos
         @error_handler = self.method(:error_handler)
       )
 
+      @srid_copy_policy = srid_copy_policy
+      @current_handle = Geos::Handle.new
+
       Kernel.at_exit {
         FFIGeos.finishGEOS_r(@ptr)
       }
@@ -1003,12 +1006,14 @@ module Geos
     end
 
     def current_handle
-      Thread.current[:ffi_geos_handle] ||= Geos::Handle.new
-      Thread.current[:ffi_geos_handle].ptr
+      # Thread.current[:ffi_geos_handle] ||= Geos::Handle.new
+      # Thread.current[:ffi_geos_handle].ptr
+      @current_handle.ptr
     end
 
     def srid_copy_policy
-      Thread.current[:ffi_geos_srid_copy_policy] ||= srid_copy_policy_default
+      # Thread.current[:ffi_geos_srid_copy_policy] ||= srid_copy_policy_default
+      @srid_copy_policy ||= srid_copy_policy_default
     end
 
     # Sets the SRID copying behaviour. This value can be one of the values
@@ -1033,9 +1038,11 @@ module Geos
     #   if an operation is performed on mixed SRIDs. This setting
     def srid_copy_policy=(policy)
       if policy == :default
-        Thread.current[:ffi_geos_srid_copy_policy] = srid_copy_policy_default
+        #Thread.current[:ffi_geos_srid_copy_policy]
+        @srid_copy_policy = srid_copy_policy_default
       elsif Geos::Constants::SRID_COPY_POLICIES.include?(policy)
-        Thread.current[:ffi_geos_srid_copy_policy] = policy
+        #Thread.current[:ffi_geos_srid_copy_policy]
+        @srid_copy_policy = policy
       else
         raise ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
       end
