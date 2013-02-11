@@ -55,6 +55,7 @@ module Geos
           ENV['PATH'].split(File::PATH_SEPARATOR)
         else
           [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}' ]
+          [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu' ]
         end
       end
     end
