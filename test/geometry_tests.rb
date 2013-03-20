@@ -443,42 +443,42 @@ class GeometryTests < MiniTest::Unit::TestCase
     )
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:union_cascaded)
-    def test_union_cascaded
-      self_tester(
-        :union_cascaded,
-        'MULTIPOLYGON(
-          ((0 0, 1 0, 1 1, 0 1, 0 0)),
-          ((10 10, 10 14, 14 14, 14 10, 10 10),
-          (11 11, 11 12, 12 12, 12 11, 11 11)),
-          ((0 0, 11 0, 11 11, 0 11, 0 0))
-        ))',
-        'POLYGON ((
-          1 0, 0 0, 0 1, 0 11, 10 11,
-          10 14, 14 14, 14 10, 11 10,
-          11 0, 1 0
-        ), (11 11, 12 11, 12 12, 11 12, 11 11))'
-      )
-    end
+  def test_union_cascaded
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:union_cascaded)
+
+    self_tester(
+      :union_cascaded,
+      'MULTIPOLYGON(
+        ((0 0, 1 0, 1 1, 0 1, 0 0)),
+        ((10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11)),
+        ((0 0, 11 0, 11 11, 0 11, 0 0))
+      ))',
+      'POLYGON ((
+        1 0, 0 0, 0 1, 0 11, 10 11,
+        10 14, 14 14, 14 10, 11 10,
+        11 0, 1 0
+      ), (11 11, 12 11, 12 12, 11 12, 11 11))'
+    )
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:unary_union)
-    def test_unary_union
-      self_tester(
-        :unary_union,
-        'MULTIPOLYGON(
-          ((0 0, 1 0, 1 1, 0 1, 0 0)),
-          ((10 10, 10 14, 14 14, 14 10, 10 10),
-          (11 11, 11 12, 12 12, 12 11, 11 11)),
-          ((0 0, 11 0, 11 11, 0 11, 0 0))
-        ))',
-        'POLYGON ((
-          1 0, 0 0, 0 1, 0 11, 10 11,
-          10 14, 14 14, 14 10, 11 10,
-          11 0, 1 0
-        ), (11 11, 12 11, 12 12, 11 12, 11 11))'
-      )
-    end
+  def test_unary_union
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:unary_union)
+
+    self_tester(
+      :unary_union,
+      'MULTIPOLYGON(
+        ((0 0, 1 0, 1 1, 0 1, 0 0)),
+        ((10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11)),
+        ((0 0, 11 0, 11 11, 0 11, 0 0))
+      ))',
+      'POLYGON ((
+        1 0, 0 0, 0 1, 0 11, 10 11,
+        10 14, 14 14, 14 10, 11 10,
+        11 0, 1 0
+      ), (11 11, 12 11, 12 12, 11 12, 11 11))'
+    )
   end
 
   def test_union_without_arguments
@@ -614,20 +614,20 @@ class GeometryTests < MiniTest::Unit::TestCase
     tester['T*******2', geom_a, geom_b, false]
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:relate_boundary_node_rule)
-    def test_relate_boundary_node_rule
-      geom_a = read('LINESTRING(0 0, 2 4, 5 5, 0 0)')
-      geom_b = read('POINT(0 0)')
+  def test_relate_boundary_node_rule
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:relate_boundary_node_rule)
 
-      ret = geom_a.relate_boundary_node_rule(geom_b, :ogc)
-      assert_equal('0F1FFFFF2', ret)
+    geom_a = read('LINESTRING(0 0, 2 4, 5 5, 0 0)')
+    geom_b = read('POINT(0 0)')
 
-      ret = geom_a.relate_boundary_node_rule(geom_b, :endpoint)
-      assert_equal('FF10FFFF2', ret)
+    ret = geom_a.relate_boundary_node_rule(geom_b, :ogc)
+    assert_equal('0F1FFFFF2', ret)
 
-      assert_raises(TypeError) do
-        geom_a.relate_boundary_node_rule(geom_b, :gibberish)
-      end
+    ret = geom_a.relate_boundary_node_rule(geom_b, :endpoint)
+    assert_equal('FF10FFFF2', ret)
+
+    assert_raises(TypeError) do
+      geom_a.relate_boundary_node_rule(geom_b, :gibberish)
     end
   end
 
@@ -660,30 +660,30 @@ class GeometryTests < MiniTest::Unit::TestCase
     )
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:extract_unique_points)
-    def test_extract_unique_points
-      writer.rounding_precision = 0
+  def test_extract_unique_points
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:extract_unique_points)
 
-      geom = read('GEOMETRYCOLLECTION (
-        MULTIPOLYGON (
-          ((0 0, 1 0, 1 1, 0 1, 0 0)),
-          ((10 10, 10 14, 14 14, 14 10, 10 10),
-          (11 11, 11 12, 12 12, 12 11, 11 11))
-        ),
-        POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
-        MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
-        LINESTRING (0 0, 2 3),
-        MULTIPOINT (0 0, 2 3),
-        POINT (9 0),
-        POINT(1 0)),
-        LINESTRING EMPTY
-      ')
+    writer.rounding_precision = 0
 
-      assert_equal(
-        'MULTIPOINT (0 0, 1 0, 1 1, 0 1, 10 10, 10 14, 14 14, 14 10, 11 11, 11 12, 12 12, 12 11, 2 3, 3 4, 9 0)',
-        write(geom.extract_unique_points)
-      )
-    end
+    geom = read('GEOMETRYCOLLECTION (
+      MULTIPOLYGON (
+        ((0 0, 1 0, 1 1, 0 1, 0 0)),
+        ((10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11))
+      ),
+      POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
+      MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
+      LINESTRING (0 0, 2 3),
+      MULTIPOINT (0 0, 2 3),
+      POINT (9 0),
+      POINT(1 0)),
+      LINESTRING EMPTY
+    ')
+
+    assert_equal(
+      'MULTIPOINT (0 0, 1 0, 1 1, 0 1, 10 10, 10 14, 14 14, 14 10, 11 11, 11 12, 12 12, 12 11, 2 3, 3 4, 9 0)',
+      write(geom.extract_unique_points)
+    )
   end
 
   def test_relationships
@@ -827,35 +827,35 @@ class GeometryTests < MiniTest::Unit::TestCase
     refute_geom_valid(read('POINT(0 nan)'))
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_reason)
-    def test_valid_reason
-      assert_equal("Valid Geometry", read('POINT(0 0)').valid_reason)
-      assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 NaN)').valid_reason)
-      assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 nan)').valid_reason)
-      assert_equal("Self-intersection[2.5 5]", read('POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))').valid_reason)
-    end
+  def test_valid_reason
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_reason)
+
+    assert_equal("Valid Geometry", read('POINT(0 0)').valid_reason)
+    assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 NaN)').valid_reason)
+    assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 nan)').valid_reason)
+    assert_equal("Self-intersection[2.5 5]", read('POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))').valid_reason)
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_detail)
-    def test_valid_detail
-      tester = lambda { |detail, location, geom, flags|
-        ret = read(geom).valid_detail(flags)
-        assert_equal(detail, ret[:detail])
-        assert_equal(location, write(ret[:location]))
-      }
+  def test_valid_detail
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_detail)
 
-      writer.rounding_precision = 0
+    tester = lambda { |detail, location, geom, flags|
+      ret = read(geom).valid_detail(flags)
+      assert_equal(detail, ret[:detail])
+      assert_equal(location, write(ret[:location]))
+    }
 
-      assert_nil(read('POINT(0 0)').valid_detail)
-      tester["Invalid Coordinate", 'POINT (0 nan)', 'POINT(0 NaN)', 0]
-      tester["Self-intersection", 'POINT (2 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
+    writer.rounding_precision = 0
 
-      tester["Ring Self-intersection", 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
+    assert_nil(read('POINT(0 0)').valid_detail)
+    tester["Invalid Coordinate", 'POINT (0 nan)', 'POINT(0 NaN)', 0]
+    tester["Self-intersection", 'POINT (2 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
 
-      assert_nil(read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))').valid_detail(
-        :allow_selftouching_ring_forming_hole
-      ))
-    end
+    tester["Ring Self-intersection", 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
+
+    assert_nil(read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))').valid_detail(
+      :allow_selftouching_ring_forming_hole
+    ))
   end
 
   def test_simple
@@ -906,23 +906,23 @@ class GeometryTests < MiniTest::Unit::TestCase
   end
 
   # get_geometry_n is segfaulting in the binary GEOS build
-  if defined?(Geos::FFIGeos)
-    def test_get_geometry_n
-      tester = lambda { |expected, g, n|
-        geom = read(g)
-        result = geom.get_geometry_n(n)
+  def test_get_geometry_n
+    skip unless defined?(Geos::FFIGeos)
 
-        if expected.nil?
-          assert_nil(result)
-        else
-          assert_geom_eql_exact(result, read(expected))
-        end
-      }
+    tester = lambda { |expected, g, n|
+      geom = read(g)
+      result = geom.get_geometry_n(n)
 
-      tester['POINT(0 1)', 'MULTIPOINT (0 1, 2 3)', 0]
-      tester['POINT(2 3)', 'MULTIPOINT (0 1, 2 3)', 1]
-      tester[nil, 'MULTIPOINT (0 1, 2 3)', 2]
-    end
+      if expected.nil?
+        assert_nil(result)
+      else
+        assert_geom_eql_exact(result, read(expected))
+      end
+    }
+
+    tester['POINT(0 1)', 'MULTIPOINT (0 1, 2 3)', 0]
+    tester['POINT(2 3)', 'MULTIPOINT (0 1, 2 3)', 1]
+    tester[nil, 'MULTIPOINT (0 1, 2 3)', 2]
   end
 
   def test_num_interior_rings
@@ -1068,38 +1068,38 @@ class GeometryTests < MiniTest::Unit::TestCase
     ]
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:num_coordinates)
-    def test_num_coordinates
-      tester = lambda { |expected, g|
-        geom = read(g)
-        result = geom.num_coordinates
+  def test_num_coordinates
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:num_coordinates)
 
-        assert_equal(expected, result)
-      }
+    tester = lambda { |expected, g|
+      geom = read(g)
+      result = geom.num_coordinates
 
-      tester[1, 'POINT(0 0)']
-      tester[2, 'MULTIPOINT (0 1, 2 3)']
-      tester[2, 'LINESTRING (0 0, 2 3)']
-      tester[4, 'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))']
-      tester[5, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
-      tester[15, 'MULTIPOLYGON (
+      assert_equal(expected, result)
+    }
+
+    tester[1, 'POINT(0 0)']
+    tester[2, 'MULTIPOINT (0 1, 2 3)']
+    tester[2, 'LINESTRING (0 0, 2 3)']
+    tester[4, 'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))']
+    tester[5, 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))']
+    tester[15, 'MULTIPOLYGON (
+      ((0 0, 1 0, 1 1, 0 1, 0 0)),
+      ((10 10, 10 14, 14 14, 14 10, 10 10),
+      (11 11, 11 12, 12 12, 12 11, 11 11))
+    )']
+    tester[29, 'GEOMETRYCOLLECTION (
+      MULTIPOLYGON (
         ((0 0, 1 0, 1 1, 0 1, 0 0)),
         ((10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11))
-      )']
-      tester[29, 'GEOMETRYCOLLECTION (
-        MULTIPOLYGON (
-          ((0 0, 1 0, 1 1, 0 1, 0 0)),
-          ((10 10, 10 14, 14 14, 14 10, 10 10),
-          (11 11, 11 12, 12 12, 12 11, 11 11))
-        ),
-        POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
-        MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
-        LINESTRING (0 0, 2 3),
-        MULTIPOINT ((0 0), (2 3)),
-        POINT (9 0)
-      )']
-    end
+      ),
+      POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)),
+      MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)),
+      LINESTRING (0 0, 2 3),
+      MULTIPOINT ((0 0), (2 3)),
+      POINT (9 0)
+    )']
   end
 
   def test_coord_seq
@@ -1158,80 +1158,80 @@ class GeometryTests < MiniTest::Unit::TestCase
     )']
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:project)
-    def test_project_and_project_normalized
-      geom_a = read('POINT(1 2)')
-      geom_b = read('POINT(3 4)')
+  def test_project_and_project_normalized
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:project)
 
-      # The method only accept lineal geometries
-      assert_raises(RuntimeError) do
-        geom_a.project(geom_b)
-      end
+    geom_a = read('POINT(1 2)')
+    geom_b = read('POINT(3 4)')
 
-      geom_a = read('LINESTRING(0 0, 10 0)')
-      geom_b = read('POINT(0 0)')
-      assert_equal(0, geom_a.project(geom_b))
-      assert_equal(0, geom_a.project(geom_b, true))
+    # The method only accept lineal geometries
+    assert_raises(RuntimeError) do
+      geom_a.project(geom_b)
+    end
 
-      geom_b = read('POINT(10 0)')
-      assert_equal(10, geom_a.project(geom_b))
-      assert_equal(1, geom_a.project(geom_b, true))
+    geom_a = read('LINESTRING(0 0, 10 0)')
+    geom_b = read('POINT(0 0)')
+    assert_equal(0, geom_a.project(geom_b))
+    assert_equal(0, geom_a.project(geom_b, true))
 
-      geom_b = read('POINT(5 0)')
-      assert_equal(5, geom_a.project(geom_b))
-      assert_equal(0.5, geom_a.project(geom_b, true))
+    geom_b = read('POINT(10 0)')
+    assert_equal(10, geom_a.project(geom_b))
+    assert_equal(1, geom_a.project(geom_b, true))
 
-      geom_a = read('MULTILINESTRING((0 0, 10 0),(20 10, 20 20))')
-      geom_b = read('POINT(20 0)')
-      assert_equal(10, geom_a.project(geom_b))
-      assert_equal(0.5, geom_a.project(geom_b, true))
+    geom_b = read('POINT(5 0)')
+    assert_equal(5, geom_a.project(geom_b))
+    assert_equal(0.5, geom_a.project(geom_b, true))
 
-      geom_b = read('POINT(20 5)')
-      assert_equal(10, geom_a.project(geom_b))
-      assert_equal(0.5, geom_a.project(geom_b, true))
+    geom_a = read('MULTILINESTRING((0 0, 10 0),(20 10, 20 20))')
+    geom_b = read('POINT(20 0)')
+    assert_equal(10, geom_a.project(geom_b))
+    assert_equal(0.5, geom_a.project(geom_b, true))
+
+    geom_b = read('POINT(20 5)')
+    assert_equal(10, geom_a.project(geom_b))
+    assert_equal(0.5, geom_a.project(geom_b, true))
+  end
+
+  def test_interpolate
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:interpolate)
+
+    tester = lambda { |expected, g, d, normalize|
+      geom = read(g)
+      assert_equal(expected, write(geom.interpolate(d, normalize)))
+    }
+
+    writer.trim = true
+
+    tester['POINT (0 0)', 'LINESTRING(0 0, 10 0)', 0, false]
+    tester['POINT (0 0)', 'LINESTRING(0 0, 10 0)', 0, true]
+
+    tester['POINT (5 0)', 'LINESTRING(0 0, 10 0)', 5, false]
+    tester['POINT (5 0)', 'LINESTRING(0 0, 10 0)', 0.5, true]
+
+    tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 20, false]
+    tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 2, true]
+
+    assert_raises(RuntimeError) do
+      read('POINT(1 2)').interpolate(0)
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:interpolate)
-    def test_interpolate
-      tester = lambda { |expected, g, d, normalize|
-        geom = read(g)
-        assert_equal(expected, write(geom.interpolate(d, normalize)))
-      }
+  def test_start_and_end_points
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:start_point)
 
-      writer.trim = true
+    writer.rounding_precision = 0
 
-      tester['POINT (0 0)', 'LINESTRING(0 0, 10 0)', 0, false]
-      tester['POINT (0 0)', 'LINESTRING(0 0, 10 0)', 0, true]
+    tester = lambda { |expected, method, geom|
+      assert_equal(expected, write(geom.send(method)))
+    }
 
-      tester['POINT (5 0)', 'LINESTRING(0 0, 10 0)', 5, false]
-      tester['POINT (5 0)', 'LINESTRING(0 0, 10 0)', 0.5, true]
+    geom = read('LINESTRING (10 10, 10 14, 14 14, 14 10)')
+    tester['POINT (10 10)', :start_point, geom]
+    tester['POINT (14 10)', :end_point, geom]
 
-      tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 20, false]
-      tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 2, true]
-
-      assert_raises(RuntimeError) do
-        read('POINT(1 2)').interpolate(0)
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:start_point)
-    def test_start_and_end_points
-      writer.rounding_precision = 0
-
-      tester = lambda { |expected, method, geom|
-        assert_equal(expected, write(geom.send(method)))
-      }
-
-      geom = read('LINESTRING (10 10, 10 14, 14 14, 14 10)')
-      tester['POINT (10 10)', :start_point, geom]
-      tester['POINT (14 10)', :end_point, geom]
-
-      geom = read('LINEARRING (11 11, 11 12, 12 11, 11 11)')
-      tester['POINT (11 11)', :start_point, geom]
-      tester['POINT (11 11)', :end_point, geom]
-    end
+    geom = read('LINEARRING (11 11, 11 12, 12 11, 11 11)')
+    tester['POINT (11 11)', :start_point, geom]
+    tester['POINT (11 11)', :end_point, geom]
   end
 
   def test_area
@@ -1267,190 +1267,194 @@ class GeometryTests < MiniTest::Unit::TestCase
     tester[2.0, g, 'LINESTRING (3 0 , 10 0)']
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
-    def test_hausdorff_distance
-      tester = lambda { |expected, g1, g2|
-        geom_1 = read(g1)
-        geom_2 = read(g2)
-        assert_in_delta(expected, geom_1.hausdorff_distance(geom_2), TOLERANCE)
-      }
+  def test_hausdorff_distance
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
 
-      geom_a = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
+    tester = lambda { |expected, g1, g2|
+      geom_1 = read(g1)
+      geom_2 = read(g2)
+      assert_in_delta(expected, geom_1.hausdorff_distance(geom_2), TOLERANCE)
+    }
 
-      tester[10.0498756211209, geom_a, 'POINT(0 10)']
-      tester[2.23606797749979, geom_a, 'POINT(-1 0)']
-      tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
-    end
+    geom_a = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
 
-    def test_hausdorff_distance_with_densify_fract
-      tester = lambda { |expected, g1, g2|
-        geom_1 = read(g1)
-        geom_2 = read(g2)
-        assert_in_delta(expected, geom_1.hausdorff_distance(geom_2, 0.001), TOLERANCE)
-      }
+    tester[10.0498756211209, geom_a, 'POINT(0 10)']
+    tester[2.23606797749979, geom_a, 'POINT(-1 0)']
+    tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
+  end
 
-      geom_a = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
+  def test_hausdorff_distance_with_densify_fract
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
 
-      tester[10.0498756211209, geom_a, 'POINT(0 10)']
-      tester[2.23606797749979, geom_a, 'POINT(-1 0)']
-      tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
+    tester = lambda { |expected, g1, g2|
+      geom_1 = read(g1)
+      geom_2 = read(g2)
+      assert_in_delta(expected, geom_1.hausdorff_distance(geom_2, 0.001), TOLERANCE)
+    }
+
+    geom_a = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
+
+    tester[10.0498756211209, geom_a, 'POINT(0 10)']
+    tester[2.23606797749979, geom_a, 'POINT(-1 0)']
+    tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
+  end
+
+  def test_snap
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:snap)
+
+    tester = lambda { |expected, g1, g2, tolerance|
+      geom_a = read(g1)
+      geom_b = read(g2)
+      assert_geom_eql_exact(read(expected), geom_a.snap(geom_b, tolerance))
+    }
+
+    writer.trim = true
+
+    geom = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
+    tester['POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))', geom, 'POINT(0.1 0)', 0]
+    tester['POLYGON ((0.1 0, 1 0, 1 1, 0 1, 0.1 0))', geom, 'POINT(0.1 0)', 0.5]
+  end
+
+  def test_polygonize
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize)
+
+    writer.rounding_precision = 0
+
+    geom_a = read(
+      'GEOMETRYCOLLECTION(
+        LINESTRING(0 0, 10 10),
+        LINESTRING(185 221, 100 100),
+        LINESTRING(185 221, 88 275, 180 316),
+        LINESTRING(185 221, 292 281, 180 316),
+        LINESTRING(189 98, 83 187, 185 221),
+        LINESTRING(189 98, 325 168, 185 221)
+      )'
+    )
+
+    polygonized = geom_a.polygonize
+    assert_equal(2, polygonized.length)
+    assert_equal(
+      'POLYGON ((185 221, 88 275, 180 316, 292 281, 185 221))',
+      write(polygonized[0])
+    )
+    assert_equal(
+      'POLYGON ((189 98, 83 187, 185 221, 325 168, 189 98))',
+      write(polygonized[1])
+    )
+  end
+
+  def test_polygonize_cut_edges
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_cut_edges)
+
+    writer.rounding_precision = 0
+
+    geom_a = read(
+      'GEOMETRYCOLLECTION(
+        LINESTRING(0 0, 10 10),
+        LINESTRING(185 221, 100 100),
+        LINESTRING(185 221, 88 275, 180 316),
+        LINESTRING(185 221, 292 281, 180 316),
+        LINESTRING(189 98, 83 187, 185 221),
+        LINESTRING(189 98, 325 168, 185 221)
+      )'
+    )
+
+    cut_edges = geom_a.polygonize_cut_edges
+    assert_equal(0, cut_edges.length)
+  end
+
+  def test_polygonize_full
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_full)
+
+    writer.rounding_precision = 0
+
+    geom_a = read(
+      'GEOMETRYCOLLECTION(
+        LINESTRING(0 0, 10 10),
+        LINESTRING(185 221, 100 100),
+        LINESTRING(185 221, 88 275, 180 316),
+        LINESTRING(185 221, 292 281, 180 316),
+        LINESTRING(189 98, 83 187, 185 221),
+        LINESTRING(189 98, 325 168, 185 221)
+      )')
+
+    polygonized = geom_a.polygonize_full
+
+    assert_kind_of(Array, polygonized[:rings])
+    assert_kind_of(Array, polygonized[:cuts])
+    assert_kind_of(Array, polygonized[:dangles])
+    assert_kind_of(Array, polygonized[:invalid_rings])
+
+    assert_equal(2, polygonized[:rings].length)
+    assert_equal(0, polygonized[:cuts].length)
+    assert_equal(2, polygonized[:dangles].length)
+    assert_equal(0, polygonized[:invalid_rings].length)
+
+    assert_equal(
+      'POLYGON ((185 221, 88 275, 180 316, 292 281, 185 221))',
+      write(polygonized[:rings][0])
+    )
+
+    assert_equal(
+      'POLYGON ((189 98, 83 187, 185 221, 325 168, 189 98))',
+      write(polygonized[:rings][1])
+    )
+
+    assert_equal(
+      'LINESTRING (185 221, 100 100)',
+      write(polygonized[:dangles][0])
+    )
+
+    assert_equal(
+      'LINESTRING (0 0, 10 10)',
+      write(polygonized[:dangles][1])
+    )
+
+    geom_b = geom_a.union(read('POINT(0 0)'))
+    polygonized = geom_b.polygonize_full
+
+    assert_equal(2, polygonized[:dangles].length)
+    assert_equal(0, polygonized[:invalid_rings].length)
+
+    assert_equal(
+      'LINESTRING (132 146, 100 100)',
+      write(polygonized[:dangles][0])
+    )
+
+    assert_equal(
+      'LINESTRING (0 0, 10 10)',
+      write(polygonized[:dangles][1])
+    )
+  end
+
+  def test_polygonize_with_bad_arguments
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_full)
+
+    assert_raises(ArgumentError) do
+      geom = read('POINT(0 0)')
+
+      geom.polygonize(geom, 'gibberish')
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:snap)
-    def test_snap
-      tester = lambda { |expected, g1, g2, tolerance|
-        geom_a = read(g1)
-        geom_b = read(g2)
-        assert_geom_eql_exact(read(expected), geom_a.snap(geom_b, tolerance))
-      }
+  def test_shared_paths
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:shared_paths)
 
-      writer.trim = true
+    writer.rounding_precision = 0
 
-      geom = 'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))'
-      tester['POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))', geom, 'POINT(0.1 0)', 0]
-      tester['POLYGON ((0.1 0, 1 0, 1 1, 0 1, 0.1 0))', geom, 'POINT(0.1 0)', 0.5]
-    end
-  end
+    geom_a = read('LINESTRING(0 0, 50 0)')
+    geom_b = read('MULTILINESTRING((5 0, 15 0),(40 0, 30 0))')
 
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize)
-    def test_polygonize
-      writer.rounding_precision = 0
-
-      geom_a = read(
-        'GEOMETRYCOLLECTION(
-          LINESTRING(0 0, 10 10),
-          LINESTRING(185 221, 100 100),
-          LINESTRING(185 221, 88 275, 180 316),
-          LINESTRING(185 221, 292 281, 180 316),
-          LINESTRING(189 98, 83 187, 185 221),
-          LINESTRING(189 98, 325 168, 185 221)
-        )'
-      )
-
-      polygonized = geom_a.polygonize
-      assert_equal(2, polygonized.length)
-      assert_equal(
-        'POLYGON ((185 221, 88 275, 180 316, 292 281, 185 221))',
-        write(polygonized[0])
-      )
-      assert_equal(
-        'POLYGON ((189 98, 83 187, 185 221, 325 168, 189 98))',
-        write(polygonized[1])
-      )
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_cut_edges)
-    def test_polygonize_cut_edges
-      writer.rounding_precision = 0
-
-      geom_a = read(
-        'GEOMETRYCOLLECTION(
-          LINESTRING(0 0, 10 10),
-          LINESTRING(185 221, 100 100),
-          LINESTRING(185 221, 88 275, 180 316),
-          LINESTRING(185 221, 292 281, 180 316),
-          LINESTRING(189 98, 83 187, 185 221),
-          LINESTRING(189 98, 325 168, 185 221)
-        )'
-      )
-
-      cut_edges = geom_a.polygonize_cut_edges
-      assert_equal(0, cut_edges.length)
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_full)
-    def test_polygonize_full
-      writer.rounding_precision = 0
-
-      geom_a = read(
-        'GEOMETRYCOLLECTION(
-          LINESTRING(0 0, 10 10),
-          LINESTRING(185 221, 100 100),
-          LINESTRING(185 221, 88 275, 180 316),
-          LINESTRING(185 221, 292 281, 180 316),
-          LINESTRING(189 98, 83 187, 185 221),
-          LINESTRING(189 98, 325 168, 185 221)
-        )')
-
-      polygonized = geom_a.polygonize_full
-
-      assert_kind_of(Array, polygonized[:rings])
-      assert_kind_of(Array, polygonized[:cuts])
-      assert_kind_of(Array, polygonized[:dangles])
-      assert_kind_of(Array, polygonized[:invalid_rings])
-
-      assert_equal(2, polygonized[:rings].length)
-      assert_equal(0, polygonized[:cuts].length)
-      assert_equal(2, polygonized[:dangles].length)
-      assert_equal(0, polygonized[:invalid_rings].length)
-
-      assert_equal(
-        'POLYGON ((185 221, 88 275, 180 316, 292 281, 185 221))',
-        write(polygonized[:rings][0])
-      )
-
-      assert_equal(
-        'POLYGON ((189 98, 83 187, 185 221, 325 168, 189 98))',
-        write(polygonized[:rings][1])
-      )
-
-      assert_equal(
-        'LINESTRING (185 221, 100 100)',
-        write(polygonized[:dangles][0])
-      )
-
-      assert_equal(
-        'LINESTRING (0 0, 10 10)',
-        write(polygonized[:dangles][1])
-      )
-
-      geom_b = geom_a.union(read('POINT(0 0)'))
-      polygonized = geom_b.polygonize_full
-
-      assert_equal(2, polygonized[:dangles].length)
-      assert_equal(0, polygonized[:invalid_rings].length)
-
-      assert_equal(
-        'LINESTRING (132 146, 100 100)',
-        write(polygonized[:dangles][0])
-      )
-
-      assert_equal(
-        'LINESTRING (0 0, 10 10)',
-        write(polygonized[:dangles][1])
-      )
-    end
-
-    def test_polygonize_with_bad_arguments
-      assert_raises(ArgumentError) do
-        geom = read('POINT(0 0)')
-
-        geom.polygonize(geom, 'gibberish')
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:shared_paths)
-    def test_shared_paths
-      writer.rounding_precision = 0
-
-      geom_a = read('LINESTRING(0 0, 50 0)')
-      geom_b = read('MULTILINESTRING((5 0, 15 0),(40 0, 30 0))')
-
-      paths = geom_a.shared_paths(geom_b)
-      assert_equal(2, paths.length)
-      assert_equal(
-        'MULTILINESTRING ((5 0, 15 0))',
-        write(paths[0])
-      )
-      assert_equal(
-        'MULTILINESTRING ((30 0, 40 0))',
-        write(paths[1])
-      )
-    end
+    paths = geom_a.shared_paths(geom_b)
+    assert_equal(2, paths.length)
+    assert_equal(
+      'MULTILINESTRING ((5 0, 15 0))',
+      write(paths[0])
+    )
+    assert_equal(
+      'MULTILINESTRING ((30 0, 40 0))',
+      write(paths[1])
+    )
   end
 
   def test_clone

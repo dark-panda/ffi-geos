@@ -18,139 +18,143 @@ class WktWriterTests < MiniTest::Unit::TestCase
     assert_in_delta(98.7654321, y, TOLERANCE)
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:trim=)
-    def test_trim
-      geom = read('POINT(6 7)')
+  def test_trim
+    skip unless ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:trim=)
 
-      writer.trim = true
-      assert_equal('POINT (6 7)', write(geom))
+    geom = read('POINT(6 7)')
 
-      writer.trim = false
-      assert_equal('POINT (6.0000000000000000 7.0000000000000000)', write(geom))
-    end
+    writer.trim = true
+    assert_equal('POINT (6 7)', write(geom))
 
-    def test_round_trip
-      writer.trim = true
+    writer.trim = false
+    assert_equal('POINT (6.0000000000000000 7.0000000000000000)', write(geom))
+  end
 
-      [
-        'POINT (0 0)',
-        'POINT EMPTY',
-        'MULTIPOINT (0 1, 2 3)',
-        'MULTIPOINT EMPTY',
-        'LINESTRING (0 0, 2 3)',
-        'LINESTRING EMPTY',
-        'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))',
-        'MULTILINESTRING EMPTY',
-        'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))',
-        'POLYGON EMPTY',
-        'MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11)))',
-        'MULTIPOLYGON EMPTY',
-        'GEOMETRYCOLLECTION (MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11))), POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)), MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)), LINESTRING (0 0, 2 3), MULTIPOINT (0 0, 2 3), POINT (9 0))',
-        'GEOMETRYCOLLECTION EMPTY'
-      ].each do |g|
-        assert_equal(g, write(read(g)))
-      end
+  def test_round_trip
+    skip unless ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:trim=)
+
+    writer.trim = true
+
+    [
+      'POINT (0 0)',
+      'POINT EMPTY',
+      'MULTIPOINT (0 1, 2 3)',
+      'MULTIPOINT EMPTY',
+      'LINESTRING (0 0, 2 3)',
+      'LINESTRING EMPTY',
+      'MULTILINESTRING ((0 1, 2 3), (10 10, 3 4))',
+      'MULTILINESTRING EMPTY',
+      'POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))',
+      'POLYGON EMPTY',
+      'MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11)))',
+      'MULTIPOLYGON EMPTY',
+      'GEOMETRYCOLLECTION (MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11))), POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)), MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)), LINESTRING (0 0, 2 3), MULTIPOINT (0 0, 2 3), POINT (9 0))',
+      'GEOMETRYCOLLECTION EMPTY'
+    ].each do |g|
+      assert_equal(g, write(read(g)))
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:rounding_precision=)
-    def test_rounding_precision
-      geom = read('POINT(6.123456 7.123456)')
+  def test_rounding_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:rounding_precision=)
 
-      tester = lambda { |expected, precision|
-        writer.rounding_precision = precision if precision
-        assert_equal(expected, write(geom))
-      }
+    geom = read('POINT(6.123456 7.123456)')
 
-      tester['POINT (6.1234560000000000 7.1234560000000000)', nil]
-      tester['POINT (6.12 7.12)', 2]
-      tester['POINT (6.12346 7.12346)', 5]
-      tester['POINT (6.1 7.1)', 1]
-      tester['POINT (6 7)', 0]
-    end
+    tester = lambda { |expected, precision|
+      writer.rounding_precision = precision if precision
+      assert_equal(expected, write(geom))
+    }
 
-    def test_rounding_precision_too_high
-      assert_raises(RuntimeError) do
-        @writer.rounding_precision = 1000
-      end
+    tester['POINT (6.1234560000000000 7.1234560000000000)', nil]
+    tester['POINT (6.12 7.12)', 2]
+    tester['POINT (6.12346 7.12346)', 5]
+    tester['POINT (6.1 7.1)', 1]
+    tester['POINT (6 7)', 0]
+  end
+
+  def test_rounding_precision_too_high
+    assert_raises(RuntimeError) do
+      @writer.rounding_precision = 1000
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions)
-    def test_output_dimensions
-      assert_equal(2, writer.output_dimensions)
+  def test_output_dimensions
+    skip unless ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions)
+
+    assert_equal(2, writer.output_dimensions)
+  end
+
+  def test_output_dimensions_set
+    skip unless ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions=)
+
+    geom_3d = read('POINT(1 2 3)')
+    geom_2d = read('POINT(3 2)')
+
+    writer.trim = true
+
+    # Only 2d by default
+    assert_equal('POINT (1 2)', write(geom_3d))
+
+    # 3d if requested _and_ available
+    writer.output_dimensions = 3
+    assert_equal('POINT Z (1 2 3)', write(geom_3d))
+    assert_equal('POINT (3 2)', write(geom_2d))
+
+    # 1 is invalid
+    assert_raises(RuntimeError) do
+      writer.output_dimensions = 1
+    end
+
+    # 4 is invalid
+    assert_raises(RuntimeError) do
+      writer.output_dimensions = 4
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:output_dimensions=)
-    def test_output_dimensions_set
-      geom_3d = read('POINT(1 2 3)')
-      geom_2d = read('POINT(3 2)')
+  def test_write_with_options
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::FFIGeos)
 
-      writer.trim = true
+    @writer.rounding_precision = 2
 
-      # Only 2d by default
-      assert_equal('POINT (1 2)', write(geom_3d))
+    geom = read('POINT(1 2 3)')
+    assert_equal('POINT (1 2)', write(geom, {
+      :trim => true
+    }))
 
-      # 3d if requested _and_ available
-      writer.output_dimensions = 3
-      assert_equal('POINT Z (1 2 3)', write(geom_3d))
-      assert_equal('POINT (3 2)', write(geom_2d))
+    assert_equal('POINT (1.0000 2.0000)', write(geom, {
+      :rounding_precision => 4
+    }))
 
-      # 1 is invalid
-      assert_raises(RuntimeError) do
-        writer.output_dimensions = 1
-      end
+    assert_equal('POINT Z (1 2 3)', write(geom, {
+      :output_dimensions => 3,
+      :trim => true
+    }))
 
-      # 4 is invalid
-      assert_raises(RuntimeError) do
-        writer.output_dimensions = 4
-      end
-    end
-
-    def test_write_with_options
-      @writer.rounding_precision = 2
-
-      geom = read('POINT(1 2 3)')
-      assert_equal('POINT (1 2)', write(geom, {
-        :trim => true
-      }))
-
-      assert_equal('POINT (1.0000 2.0000)', write(geom, {
-        :rounding_precision => 4
-      }))
-
-      assert_equal('POINT Z (1 2 3)', write(geom, {
-        :output_dimensions => 3,
-        :trim => true
-      }))
-
-      assert_equal('POINT (1.00 2.00)', write(geom))
-    end
+    assert_equal('POINT (1.00 2.00)', write(geom))
   end
 
-  if ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:old_3d=)
-    def test_old_3d_set
-      geom_3d = read('POINT(1 2 3)')
-      writer.trim = true
+  def test_old_3d_set
+    skip unless ENV['FORCE_TESTS'] || Geos::WktWriter.method_defined?(:old_3d=)
 
-      # New 3d WKT by default
-      writer.output_dimensions = 3
-      assert_equal('POINT Z (1 2 3)', write(geom_3d))
+    geom_3d = read('POINT(1 2 3)')
+    writer.trim = true
 
-      # Switch to old
-      writer.old_3d = true
-      assert_equal('POINT (1 2 3)', write(geom_3d))
+    # New 3d WKT by default
+    writer.output_dimensions = 3
+    assert_equal('POINT Z (1 2 3)', write(geom_3d))
 
-      # Old3d flag is not reset when changing dimensions
-      writer.output_dimensions = 2
-      assert_equal('POINT (1 2)', write(geom_3d))
-      writer.output_dimensions = 3
-      assert_equal('POINT (1 2 3)', write(geom_3d))
+    # Switch to old
+    writer.old_3d = true
+    assert_equal('POINT (1 2 3)', write(geom_3d))
 
-      # Likewise, dimensions spec is not reset when changing old3d flag
-      writer.old_3d = false
-      assert_equal('POINT Z (1 2 3)', write(geom_3d))
-    end
+    # Old3d flag is not reset when changing dimensions
+    writer.output_dimensions = 2
+    assert_equal('POINT (1 2)', write(geom_3d))
+    writer.output_dimensions = 3
+    assert_equal('POINT (1 2 3)', write(geom_3d))
+
+    # Likewise, dimensions spec is not reset when changing old3d flag
+    writer.old_3d = false
+    assert_equal('POINT Z (1 2 3)', write(geom_3d))
   end
 end

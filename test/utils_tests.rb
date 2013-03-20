@@ -6,31 +6,29 @@ require 'test_helper'
 class UtilsTests < MiniTest::Unit::TestCase
   include TestHelper
 
-  if defined?(Geos::Utils)
-    if Geos::Utils.respond_to?(:orientation_index)
-      def test_orientation_index
-        assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 5, 0))
-        assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 10, 0))
-        assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 0, 0))
-        assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, -5, 0))
-        assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 20, 0))
-        assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 6))
-        assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 20))
-        assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 3))
-        assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, -2))
-        assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000, 1000001))
-        assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000,  999999))
-      end
-    end
+  def test_orientation_index
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::Utils) && Geos::Utils.respond_to?(:orientation_index))
 
-    if Geos::Utils.respond_to?(:relate_match)
-      def test_relate_match
-        assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF2'), "'0FFFFFFF2' and '0FFFFFFF2' patterns match")
-        assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF*'), "'0FFFFFFF2' and '0FFFFFFF*' patterns match")
-        assert(Geos::Utils.relate_match('0FFFFFFF2', 'TFFFFFFF2'), "'0FFFFFFF2' and 'TFFFFFFF2' patterns match")
-        assert(!Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'), "'0FFFFFFF2' and '0FFFFFFFF' patterns match")
-      end
-    end
+    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 5, 0))
+    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 10, 0))
+    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 0, 0))
+    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, -5, 0))
+    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 20, 0))
+    assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 6))
+    assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 20))
+    assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 3))
+    assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, -2))
+    assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000, 1000001))
+    assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000,  999999))
+  end
+
+  def test_relate_match
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::Utils) && Geos::Utils.respond_to?(:relate_match))
+
+    assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF2'), "'0FFFFFFF2' and '0FFFFFFF2' patterns match")
+    assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF*'), "'0FFFFFFF2' and '0FFFFFFF*' patterns match")
+    assert(Geos::Utils.relate_match('0FFFFFFF2', 'TFFFFFFF2'), "'0FFFFFFF2' and 'TFFFFFFF2' patterns match")
+    assert(!Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'), "'0FFFFFFF2' and '0FFFFFFFF' patterns match")
   end
 
   def create_method_tester(expected, method, cs, type_id, klass)
@@ -264,147 +262,159 @@ class UtilsTests < MiniTest::Unit::TestCase
     assert_equal(1, geom.num_geometries)
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
-    def test_create_multi_point
-      writer.rounding_precision = 0
-      assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
-      assert_equal('MULTIPOINT (0 0, 10 10)', write(Geos.create_multi_point(
+  def test_create_multi_point
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
+
+    writer.rounding_precision = 0
+    assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
+    assert_equal('MULTIPOINT (0 0, 10 10)', write(Geos.create_multi_point(
+      read('POINT(0 0)'),
+      read('POINT(10 10)')
+    )))
+  end
+
+  def test_create_bad_multi_point
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
+
+    assert_raises(TypeError) do
+      Geos.create_multi_point(
         read('POINT(0 0)'),
-        read('POINT(10 10)')
-      )))
-    end
-
-    def test_create_bad_multi_point
-      assert_raises(TypeError) do
-        Geos.create_multi_point(
-          read('POINT(0 0)'),
-          read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
-        )
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_line_string)
-    def test_create_multi_line_string
-      writer.rounding_precision = 0
-      assert_equal('MULTILINESTRING EMPTY', write(Geos.create_multi_line_string))
-      assert_equal('MULTILINESTRING ((0 0, 10 10), (10 10, 20 20))', write(Geos.create_multi_line_string(
-        read('LINESTRING(0 0, 10 10)'),
-        read('LINESTRING(10 10, 20 20)')
-      )))
-    end
-
-    def test_create_bad_multi_line_string
-      assert_raises(TypeError) do
-        Geos.create_multi_point(
-          read('POINT(0 0)'),
-          read('LINESTRING(0 0, 10 0)')
-        )
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_polygon)
-    def test_create_multi_polygon
-      writer.rounding_precision = 0
-      assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_multi_polygon))
-      assert_equal('MULTIPOLYGON (((0 0, 0 5, 5 5, 5 0, 0 0)), ((10 10, 10 15, 15 15, 15 10, 10 10)))', write(Geos.create_multi_polygon(
-        read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
         read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
-      )))
-    end
-
-    def test_create_bad_multi_polygon
-      assert_raises(TypeError) do
-        Geos.create_multi_polygon(
-          read('POINT(0 0)'),
-          read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
-        )
-      end
-    end
-  end
-
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
-    def test_create_geometry_collection
-      writer.rounding_precision = 0
-      assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_geometry_collection))
-      assert_equal('GEOMETRYCOLLECTION (POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0)), POLYGON ((10 10, 10 15, 15 15, 15 10, 10 10)))',
-        write(Geos.create_geometry_collection(
-          read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
-          read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
-        ))
       )
     end
+  end
 
-    def test_create_geometry_collection_with_constants_and_symbols
-      assert_kind_of(Geos::MultiLineString, Geos.create_collection(Geos::GeomTypes::GEOS_MULTILINESTRING))
-      assert_kind_of(Geos::MultiLineString, Geos.create_collection(:multi_line_string))
-    end
+  def test_create_multi_line_string
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_line_string)
 
-    def test_create_bad_geometry_collection
-      assert_raises(TypeError) do
-        Geos.create_geometry_collection(
-          read('POINT(0 0)'),
-          read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))'),
-          'gibberish'
-        )
-      end
-    end
+    writer.rounding_precision = 0
+    assert_equal('MULTILINESTRING EMPTY', write(Geos.create_multi_line_string))
+    assert_equal('MULTILINESTRING ((0 0, 10 10), (10 10, 20 20))', write(Geos.create_multi_line_string(
+      read('LINESTRING(0 0, 10 10)'),
+      read('LINESTRING(10 10, 20 20)')
+    )))
+  end
 
-    def test_create_geometry_collection_with_options
-      geom = Geos.create_collection(:multi_line_string, :srid => 4326)
+  def test_create_bad_multi_line_string
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_line_string)
 
-      assert_kind_of(Geos::MultiLineString, geom)
-      assert_equal(4326, geom.srid)
+    assert_raises(TypeError) do
+      Geos.create_multi_point(
+        read('POINT(0 0)'),
+        read('LINESTRING(0 0, 10 0)')
+      )
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_point)
-    def test_create_empty_point
-      assert_equal('POINT EMPTY', write(Geos.create_empty_point))
+  def test_create_multi_polygon
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_polygon)
+
+    writer.rounding_precision = 0
+    assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_multi_polygon))
+    assert_equal('MULTIPOLYGON (((0 0, 0 5, 5 5, 5 0, 0 0)), ((10 10, 10 15, 15 15, 15 10, 10 10)))', write(Geos.create_multi_polygon(
+      read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
+      read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+    )))
+  end
+
+  def test_create_bad_multi_polygon
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_polygon)
+
+    assert_raises(TypeError) do
+      Geos.create_multi_polygon(
+        read('POINT(0 0)'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+      )
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_line_string)
-    def test_create_empty_line_string
-      assert_equal('LINESTRING EMPTY', write(Geos.create_empty_line_string))
+  def test_create_geometry_collection
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
+
+    writer.rounding_precision = 0
+    assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_geometry_collection))
+    assert_equal('GEOMETRYCOLLECTION (POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0)), POLYGON ((10 10, 10 15, 15 15, 15 10, 10 10)))',
+      write(Geos.create_geometry_collection(
+        read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))')
+      ))
+    )
+  end
+
+  def test_create_geometry_collection_with_constants_and_symbols
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
+
+    assert_kind_of(Geos::MultiLineString, Geos.create_collection(Geos::GeomTypes::GEOS_MULTILINESTRING))
+    assert_kind_of(Geos::MultiLineString, Geos.create_collection(:multi_line_string))
+  end
+
+  def test_create_bad_geometry_collection
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
+
+    assert_raises(TypeError) do
+      Geos.create_geometry_collection(
+        read('POINT(0 0)'),
+        read('POLYGON((10 10, 10 15, 15 15, 15 10, 10 10))'),
+        'gibberish'
+      )
     end
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_polygon)
-    def test_create_empty_polygon
-      assert_equal('POLYGON EMPTY', write(Geos.create_empty_polygon))
-    end
+  def test_create_geometry_collection_with_options
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
+
+    geom = Geos.create_collection(:multi_line_string, :srid => 4326)
+
+    assert_kind_of(Geos::MultiLineString, geom)
+    assert_equal(4326, geom.srid)
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_point)
-    def test_create_empty_multi_point
-      assert_equal('MULTIPOINT EMPTY', write(Geos.create_empty_multi_point))
-    end
+  def test_create_empty_point
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_point)
+
+    assert_equal('POINT EMPTY', write(Geos.create_empty_point))
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_line_string)
-    def test_create_empty_multi_line_string
-      assert_equal('MULTILINESTRING EMPTY', write(Geos.create_empty_multi_line_string))
-    end
+  def test_create_empty_line_string
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_line_string)
+
+    assert_equal('LINESTRING EMPTY', write(Geos.create_empty_line_string))
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_polygon)
-    def test_create_empty_multi_polygon
-      assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_empty_multi_polygon))
-    end
+  def test_create_empty_polygon
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_polygon)
+
+    assert_equal('POLYGON EMPTY', write(Geos.create_empty_polygon))
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_geometry_collection)
-    def test_create_empty_geometry_collection
-      assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_empty_geometry_collection))
-    end
+  def test_create_empty_multi_point
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
+
+    assert_equal('MULTIPOINT EMPTY', write(Geos.create_empty_multi_point))
   end
 
-  if ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_linear_ring)
-    def test_create_empty_linear_ring
-      assert_equal('LINEARRING EMPTY', write(Geos.create_empty_linear_ring))
-    end
+  def test_create_empty_multi_line_string
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_line_string)
+
+    assert_equal('MULTILINESTRING EMPTY', write(Geos.create_empty_multi_line_string))
+  end
+
+  def test_create_empty_multi_polygon
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_multi_polygon)
+
+    assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_empty_multi_polygon))
+  end
+
+  def test_create_empty_geometry_collection
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_geometry_collection)
+
+    assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_empty_geometry_collection))
+  end
+
+  def test_create_empty_linear_ring
+    skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_empty_linear_ring)
+
+    assert_equal('LINEARRING EMPTY', write(Geos.create_empty_linear_ring))
   end
 
   def test_create_geometry_segfault

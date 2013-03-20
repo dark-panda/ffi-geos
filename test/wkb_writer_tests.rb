@@ -426,18 +426,17 @@ class WkbWriterTests < MiniTest::Unit::TestCase
     end
   end
 
-  if ENV['FORCE_TESTS'] || defined?(Geos::FFIGeos)
-    def test_write_with_options
-      geom = read('POINT(1 2 3)')
-      geom.srid = 4326
+  def test_write_with_options
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::FFIGeos)
 
+    geom = read('POINT(1 2 3)')
+    geom.srid = 4326
 
-      assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom, {
-        :include_srid => true
-      }))
+    assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom, {
+      :include_srid => true
+    }))
 
-      assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
-    end
+    assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
   end
 
   def test_illegal_output_dimensions
