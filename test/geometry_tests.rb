@@ -513,8 +513,8 @@ class GeometryTests < MiniTest::Unit::TestCase
 
     self_tester(
       :point_on_surface,
-      'POLYGON((0 0, 0 10, 5 5, 10 10, 10 0, 0 0))',
-      'POINT (2.5 5)'
+      'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
+      'POINT (5 5)'
     )
   end
 
@@ -527,14 +527,14 @@ class GeometryTests < MiniTest::Unit::TestCase
 
     self_tester(
       :representative_point,
-      'LINESTRING(0 0, 5 5, 10 10)',
-      'POINT (5 5)'
+      'LINESTRING(0 0, 5 0, 10 0)',
+      'POINT (5 0)'
     )
 
     self_tester(
       :representative_point,
-      'POLYGON((0 0, 0 10, 5 5, 10 10, 10 0, 0 0))',
-      'POINT (2.5 5)'
+      'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
+      'POINT (5 5)'
     )
   end
 
