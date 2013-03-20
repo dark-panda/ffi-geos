@@ -595,6 +595,11 @@ module Geos
         :int, :pointer, :pointer, :pointer, :double, :pointer
       ],
 
+      :GEOSNearestPoints_r => [
+        # (NULL on exception, pointer to CoordinateSequence otherwise), *handle, *geom, *geom
+        :pointer, :pointer, :pointer, :pointer
+      ],
+
       :GEOSGetGeometryN_r => [
         # *geom, *handle, *geom, n
         :pointer, :pointer, :pointer, :int

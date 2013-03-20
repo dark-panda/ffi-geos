@@ -473,6 +473,18 @@ module Geos
       double_ptr.read_double
     end
 
+    if FFIGeos.respond_to?(:GEOSNearestPoints_r)
+      # Available in GEOS 3.4+.
+      def nearest_points(geom)
+        check_geometry(geom)
+        ptr = FFIGeos.GEOSNearestPoints_r(Geos.current_handle, self.ptr, geom.ptr)
+
+        if !ptr.null?
+          CoordinateSequence.new(ptr)
+        end
+      end
+    end
+
     def snap(geom, tolerance)
       check_geometry(geom)
       cast_geometry_ptr(FFIGeos.GEOSSnap_r(Geos.current_handle, self.ptr, geom.ptr, tolerance), {

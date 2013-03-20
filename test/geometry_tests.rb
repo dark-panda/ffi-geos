@@ -1299,6 +1299,35 @@ class GeometryTests < MiniTest::Unit::TestCase
     tester[9.0, geom_a, 'LINESTRING (3 0 , 10 0)']
   end
 
+  def test_nearest_points
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:nearest_points)
+
+    tester = lambda { |expected, g1, g2|
+      geom_1 = read(g1)
+      geom_2 = read(g2)
+
+      cs = geom_1.nearest_points(geom_2)
+
+      result = if cs
+        cs.to_s
+      end
+
+      assert_equal(expected, result)
+    }
+
+    tester[
+      nil,
+      'POINT EMPTY',
+      'POINT EMPTY'
+    ]
+
+    tester[
+      '5.0 5.0 NaN, 8.0 8.0 NaN',
+      'POLYGON((1 1, 1 5, 5 5, 5 1, 1 1))',
+      'POLYGON((8 8, 9 9, 9 10, 8 8))'
+    ]
+  end
+
   def test_snap
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:snap)
 
