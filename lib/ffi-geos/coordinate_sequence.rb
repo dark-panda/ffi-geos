@@ -186,38 +186,38 @@ module Geos
     # Gets the x value of a coordinate. Can also be retrieved via #x[].
     def get_x(idx)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle, self.ptr, idx, ret)
-      }.read_double
+      double_ptr = FFI::MemoryPointer.new(:double)
+      FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle, self.ptr, idx, double_ptr)
+      double_ptr.read_double
     end
 
     # Gets the y value of a coordinate. Can also be retrieved via #y[].
     def get_y(idx)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle, self.ptr, idx, ret)
-      }.read_double
+      double_ptr = FFI::MemoryPointer.new(:double)
+      FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle, self.ptr, idx, double_ptr)
+      double_ptr.read_double
     end
 
     # Gets the z value of a coordinate. Can also be retrieved via #z[].
     def get_z(idx)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle, self.ptr, idx, ret)
-      }.read_double
+      double_ptr = FFI::MemoryPointer.new(:double)
+      FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle, self.ptr, idx, double_ptr)
+      double_ptr.read_double
     end
 
     def get_ordinate(idx, dim)
       self.check_bounds(idx)
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle, self.ptr, idx, dim, ret)
-      }.read_double
+      double_ptr = FFI::MemoryPointer.new(:double)
+      FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle, self.ptr, idx, dim, double_ptr)
+      double_ptr.read_double
     end
 
     def length
-      FFI::MemoryPointer.new(:int).tap { |ret|
-        FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle, self.ptr, ret)
-      }.read_int
+      int_ptr = FFI::MemoryPointer.new(:int)
+      FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle, self.ptr, int_ptr)
+      int_ptr.read_int
     end
     alias :size :length
 
@@ -226,9 +226,13 @@ module Geos
     end
 
     def dimensions
-      @dimensions ||= FFI::MemoryPointer.new(:int).tap { |ret|
-        FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, ret)
-      }.read_int
+      if defined?(@dimensions)
+        @dimensions
+      else
+        int_ptr = FFI::MemoryPointer.new(:int)
+        FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, int_ptr)
+        @dimensions = int_ptr.read_int
+      end
     end
 
     def to_point(options = {})

@@ -431,9 +431,9 @@ module Geos
       if self.empty?
         0
       else
-        FFI::MemoryPointer.new(:double).tap { |ret|
-          FFIGeos.GEOSArea_r(Geos.current_handle, self.ptr, ret)
-        }.read_double
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSArea_r(Geos.current_handle, self.ptr, double_ptr)
+        double_ptr.read_double
       end
     end
 
@@ -441,28 +441,31 @@ module Geos
       if self.empty?
         0
       else
-        FFI::MemoryPointer.new(:double).tap { |ret|
-          FFIGeos.GEOSLength_r(Geos.current_handle, self.ptr, ret)
-        }.read_double
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSLength_r(Geos.current_handle, self.ptr, double_ptr)
+        double_ptr.read_double
       end
     end
 
     def distance(geom)
       check_geometry(geom)
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        FFIGeos.GEOSDistance_r(Geos.current_handle, self.ptr, geom.ptr, ret)
-      }.read_double
+      double_ptr = FFI::MemoryPointer.new(:double)
+      FFIGeos.GEOSDistance_r(Geos.current_handle, self.ptr, geom.ptr, double_ptr)
+      double_ptr.read_double
     end
 
     def hausdorff_distance(geom, densify_frac = nil)
       check_geometry(geom)
-      FFI::MemoryPointer.new(:double).tap { |ret|
-        if densify_frac
-          FFIGeos.GEOSHausdorffDistanceDensify_r(Geos.current_handle, self.ptr, geom.ptr, densify_frac, ret)
-        else
-          FFIGeos.GEOSHausdorffDistance_r(Geos.current_handle, self.ptr, geom.ptr, ret)
-        end
-      }.read_double
+
+      double_ptr = FFI::MemoryPointer.new(:double)
+
+      if densify_frac
+        FFIGeos.GEOSHausdorffDistanceDensify_r(Geos.current_handle, self.ptr, geom.ptr, densify_frac, double_ptr)
+      else
+        FFIGeos.GEOSHausdorffDistance_r(Geos.current_handle, self.ptr, geom.ptr, double_ptr)
+      end
+
+      double_ptr.read_double
     end
 
     def snap(geom, tolerance)

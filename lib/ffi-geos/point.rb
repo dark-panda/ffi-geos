@@ -4,9 +4,9 @@ module Geos
   class Point < Geometry
     if FFIGeos.respond_to?(:GEOSGeomGetX_r)
       def get_x
-        FFI::MemoryPointer.new(:double).tap { |ret|
-          FFIGeos.GEOSGeomGetX_r(Geos.current_handle, self.ptr, ret)
-        }.read_double
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSGeomGetX_r(Geos.current_handle, self.ptr, double_ptr)
+        double_ptr.read_double
       end
     else
       def get_x
@@ -17,9 +17,9 @@ module Geos
 
     if FFIGeos.respond_to?(:GEOSGeomGetY_r)
       def get_y
-        FFI::MemoryPointer.new(:double).tap { |ret|
-          FFIGeos.GEOSGeomGetY_r(Geos.current_handle, self.ptr, ret)
-        }.read_double
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSGeomGetY_r(Geos.current_handle, self.ptr, double_ptr)
+        double_ptr.read_double
       end
     else
       def get_y
@@ -30,9 +30,9 @@ module Geos
 
     if FFIGeos.respond_to?(:GEOSGeomGetZ_r)
       def get_z
-        FFI::MemoryPointer.new(:double).tap { |ret|
-          FFIGeos.GEOSGeomGetZ_r(Geos.current_handle, self.ptr, ret)
-        }.read_double
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSGeomGetZ_r(Geos.current_handle, self.ptr, double_ptr)
+        double_ptr.read_double
       end
     else
       def get_z
