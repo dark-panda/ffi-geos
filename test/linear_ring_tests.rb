@@ -18,6 +18,13 @@ class LinearRingTests < MiniTest::Unit::TestCase
     assert_equal('POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))', write(ring.to_polygon))
   end
 
+  def test_to_line_string
+    geom = read('POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))')
+    ring = geom.exterior_ring
+
+    assert_equal('LINESTRING (0 0, 5 0, 5 5, 0 5, 0 0)', write(ring.to_line_string))
+  end
+
   def test_to_polygon_with_srid
     writer.trim = true
 
