@@ -13,7 +13,8 @@ module Geos
         cast_geometry_ptr(
           FFIGeos.GEOSGetInteriorRingN_r(Geos.current_handle, self.ptr, n), {
             :auto_free => false,
-            :srid_copy => self.srid
+            :srid_copy => self.srid,
+            :parent => self
           }
         )
       end
@@ -24,7 +25,8 @@ module Geos
       cast_geometry_ptr(
         FFIGeos.GEOSGetExteriorRing_r(Geos.current_handle, self.ptr), {
           :auto_free => false,
-          :srid_copy => self.srid
+          :srid_copy => self.srid,
+          :parent => self
         }
       )
     end

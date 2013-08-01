@@ -19,6 +19,7 @@ module Geos
       )
 
       @ptr.autorelease = !!options[:auto_free]
+      @parent = options[:parent] if options[:parent]
     end
 
     def initialize_copy(source)
