@@ -34,7 +34,7 @@ module Geos
           raise RuntimeError.new("Invalid geometry type")
       end
 
-      klass.new(geom_ptr, options[:auto_free]).tap { |ret|
+      klass.new(geom_ptr, options).tap { |ret|
         if options[:srid]
           ret.srid = options[:srid] || 0
         elsif options[:srid_copy]

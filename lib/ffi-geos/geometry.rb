@@ -8,13 +8,17 @@ module Geos
 
     # For internal use. Geometry objects should be created via WkbReader,
     # WktReader and the various Geos.create_* methods.
-    def initialize(ptr, auto_free = true)
+    def initialize(ptr, options = {})
+      options = {
+        :auto_free => true
+      }.merge(options)
+
       @ptr = FFI::AutoPointer.new(
         ptr,
         self.class.method(:release)
       )
 
-      @ptr.autorelease = auto_free
+      @ptr.autorelease = !!options[:auto_free]
     end
 
     def initialize_copy(source)

@@ -8,8 +8,12 @@ module Geos
 
     undef :clone, :dup
 
-    def initialize(geom, auto_free = true)
+    def initialize(geom, options = {})
       check_geometry(geom)
+
+      options = {
+        :auto_free => true
+      }.merge(options)
 
       @ptr = FFI::AutoPointer.new(
         FFIGeos.GEOSPrepare_r(Geos.current_handle, geom.ptr),
@@ -17,7 +21,7 @@ module Geos
       )
       @geometry = geom
 
-      @ptr.autorelease = auto_free
+      @ptr.autorelease = !!options[:auto_free]
     end
 
     def self.release(ptr) #:nodoc:
