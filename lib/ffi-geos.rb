@@ -975,14 +975,18 @@ module Geos
     attr_reader :ptr
 
     def initialize
-      @ptr = FFIGeos.initGEOS_r(
-        @notice_handler = self.method(:notice_handler),
-        @error_handler = self.method(:error_handler)
+      @ptr = FFI::AutoPointer.new(
+        FFIGeos.initGEOS_r(
+          @notice_handler = self.method(:notice_handler),
+          @error_handler = self.method(:error_handler)
+        ),
+        self.class.method(:release)
       )
+    end
 
-      Kernel.at_exit {
-        FFIGeos.finishGEOS_r(@ptr)
-      }
+    def self.release(ptr)
+      Geos.logger.debug("[Geos] Releasing Handle #{@ptr} #{caller.inspect}")
+      FFIGeos.finishGEOS_r(ptr)
     end
 
     def notice_handler(*args)
