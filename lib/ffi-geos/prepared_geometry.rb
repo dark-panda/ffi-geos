@@ -13,16 +13,11 @@ module Geos
 
       @ptr = FFI::AutoPointer.new(
         FFIGeos.GEOSPrepare_r(Geos.current_handle, geom.ptr),
-        auto_free ? self.class.method(:release) : self.class.method(:no_release)
+        self.class.method(:release)
       )
       @geometry = geom
 
-      if !auto_free
-        @ptr.autorelease = false
-      end
-    end
-
-    def self.no_release(ptr) #:nodoc:
+      @ptr.autorelease = auto_free
     end
 
     def self.release(ptr) #:nodoc:
