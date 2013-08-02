@@ -985,7 +985,6 @@ module Geos
     end
 
     def self.release(ptr)
-      Geos.logger.debug("[Geos] Releasing Handle #{@ptr} #{caller.inspect}")
       FFIGeos.finishGEOS_r(ptr)
     end
 
