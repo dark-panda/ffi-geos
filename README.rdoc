@@ -58,6 +58,10 @@ Ruby bindings along with the following enhancements and additions:
 * Geos::PreparedGeometry class and Geos::Geometry#to_prepared method to
   allow for prepared geometries and more efficient relationship testing.
 
+* Geos::Interrupt module that allows you to interrupt certain calls to the
+  GEOS library and perform other work or cancel GEOS calls outright. The
+  interruption API was added in GEOS 3.4.0.
+
 == New Methods and Additions (not exhaustive)
 
 * SRIDs can be copied on many operations. GEOS doesn't usually copy SRIDs
@@ -155,6 +159,14 @@ Ruby bindings along with the following enhancements and additions:
 
 * Geos::Utils.orientation_index
 * Geos::Utils.relate_match
+
+=== Geos::Interrupt
+
+* Geos::Interrupt.available?
+* Geos::Interrupt.register
+* Geos::Interrupt.request
+* Geos::Interrupt.cancel
+* Geos::Interrupt.clear
 
 == Thanks
 

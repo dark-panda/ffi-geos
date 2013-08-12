@@ -45,6 +45,8 @@ module Geos
     File.join(GEOS_BASE, 'tools')
   autoload :Utils,
     File.join(GEOS_BASE, 'utils')
+  autoload :Interrupt,
+    File.join(GEOS_BASE, 'interrupt')
 
   module FFIGeos
     def self.search_paths
@@ -149,6 +151,19 @@ module Geos
       :finishGEOS_r => [
         # void, *handle
         :void, :pointer
+      ],
+
+      :GEOS_interruptRegisterCallback => [
+        :pointer,
+        callback([], :void)
+      ],
+
+      :GEOS_interruptRequest => [
+        :void
+      ],
+
+      :GEOS_interruptCancel => [
+        :void
       ],
 
       :GEOSversion => [
