@@ -24,13 +24,6 @@ module Geos
       FFIGeos.GEOSWKBWriter_destroy_r(Geos.current_handle, ptr)
     end
 
-    def set_options(options = {}) #:nodoc:
-      [ :include_srid ].each do |k|
-        self.send("#{k}=", options[k]) if options.has_key?(k)
-      end
-    end
-    private :set_options
-
     # Options can be set temporarily for individual writes using an options
     # Hash. The only option currently available is :include_srid.
     def write(geom, options = nil)
@@ -92,5 +85,12 @@ module Geos
       check_enum_value(Geos::ByteOrders, val)
       FFIGeos.GEOSWKBWriter_setByteOrder_r(Geos.current_handle, self.ptr, val)
     end
+
+    private
+      def set_options(options) #:nodoc:
+        [ :include_srid ].each do |k|
+          self.send("#{k}=", options[k]) if options.has_key?(k)
+        end
+      end
   end
 end
