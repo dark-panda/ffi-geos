@@ -7,6 +7,7 @@ if RUBY_VERSION >= '1.9'
   SimpleCov.merge_timeout(3600)
   SimpleCov.start do
     add_filter '/test/'
+    add_filter '/.bundle/'
   end
 end
 
