@@ -1697,19 +1697,19 @@ class GeometryTests < MiniTest::Unit::TestCase
 
     # empty polygon
     tester['GEOMETRYCOLLECTION EMPTY', 'POLYGON EMPTY', 0]
-    tester['MULTILINESTRING EMPTY', 'POLYGON EMPTY', 0, :only_edges => true]
+    tester['MULTILINESTRING EMPTY', 'POLYGON EMPTY', 0, { :only_edges => true }]
 
     # single point
     tester['GEOMETRYCOLLECTION EMPTY', 'POINT (0 0)', 0]
-    tester['MULTILINESTRING EMPTY', 'POINT (0 0)', 0, :only_edges => true]
+    tester['MULTILINESTRING EMPTY', 'POINT (0 0)', 0, { :only_edges => true }]
 
     # three collinear points
     tester['GEOMETRYCOLLECTION EMPTY', 'MULTIPOINT(0 0, 5 0, 10 0)', 0]
-    tester['MULTILINESTRING ((5 0, 10 0), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 0)', 0, :only_edges => true]
+    tester['MULTILINESTRING ((5 0, 10 0), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 0)', 0, { :only_edges => true }]
 
     # three points
     tester['GEOMETRYCOLLECTION (POLYGON ((0 0, 10 10, 5 0, 0 0)))', 'MULTIPOINT(0 0, 5 0, 10 10)', 0]
-    tester['MULTILINESTRING ((5 0, 10 10), (0 0, 10 10), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 10)', 0, :only_edges => true]
+    tester['MULTILINESTRING ((5 0, 10 10), (0 0, 10 10), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 10)', 0, { :only_edges => true }]
 
     # polygon with a hole
     tester[
@@ -1727,6 +1727,6 @@ class GeometryTests < MiniTest::Unit::TestCase
     ]
 
     # four points with a tolerance making one collapse
-    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', 2.0, :only_edges => true]
+    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', 2.0, { :only_edges => true }]
   end
 end
