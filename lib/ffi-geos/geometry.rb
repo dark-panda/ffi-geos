@@ -76,7 +76,7 @@ module Geos
     end
 
     def coord_seq
-      CoordinateSequence.new(FFIGeos.GEOSGeom_getCoordSeq_r(Geos.current_handle, self.ptr), false)
+      CoordinateSequence.new(FFIGeos.GEOSGeom_getCoordSeq_r(Geos.current_handle, self.ptr), false, self)
     end
 
     def intersection(geom)

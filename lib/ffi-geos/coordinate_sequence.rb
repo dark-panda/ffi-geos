@@ -44,7 +44,7 @@ module Geos
     attr_reader :ptr, :x, :y, :z
 
     # :call-seq:
-    #   new(ptr, auto_free = true)
+    #   new(ptr, auto_free = true, parent = nil)
     #   new(size = 0, dimensions = 0)
     #   new(options)
     #   new(points)
@@ -58,8 +58,8 @@ module Geos
     def initialize(*args)
       points = nil # forward declaration we can use later
 
-      ptr, auto_free = if args.first.is_a?(FFI::Pointer)
-        [ args.first, args[1] ]
+      ptr, auto_free, parent = if args.first.is_a?(FFI::Pointer)
+        args.first(3)
       else
         size, dimensions = if args.first.is_a?(Array)
           points = if args.first.first.is_a?(Array)
@@ -100,6 +100,7 @@ module Geos
       )
 
       @ptr.autorelease = auto_free
+      @parent = parent if parent
 
       @x = CoordinateAccessor.new(self, 0)
       @y = CoordinateAccessor.new(self, 1)

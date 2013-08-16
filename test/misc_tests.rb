@@ -85,6 +85,15 @@ class MiscTests < MiniTest::Unit::TestCase
     assert_equal(collection_a[0], collection_b[0])
   end
 
+  def test_segfault_on_coord_seq_parents
+    geom = read('LINESTRING(0 0, 1 0)')
+    cs = geom.envelope.exterior_ring.coord_seq
+
+    GC.start
+
+    assert_equal('0.0 0.0, 1.0 0.0, 1.0 0.0, 0.0 0.0, 0.0 0.0', cs.inspect)
+  end
+
   def test_cant_clone_buffer_params
     assert_raises(NoMethodError) do
       Geos::BufferParams.new.clone
