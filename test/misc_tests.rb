@@ -91,7 +91,7 @@ class MiscTests < MiniTest::Unit::TestCase
 
     GC.start
 
-    assert_equal('0.0 0.0, 1.0 0.0, 1.0 0.0, 0.0 0.0, 0.0 0.0', cs.inspect)
+    assert_equal('0.0 0.0, 1.0 0.0, 1.0 0.0, 0.0 0.0, 0.0 0.0', cs.to_s)
   end
 
   def test_cant_clone_buffer_params
