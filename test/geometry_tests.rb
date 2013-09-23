@@ -1226,6 +1226,25 @@ class GeometryTests < MiniTest::Unit::TestCase
     end
   end
 
+  def test_interpolate_normalized
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:interpolate_normalized)
+
+    tester = lambda { |expected, g, d|
+      geom = read(g)
+      assert_equal(expected, write(geom.interpolate_normalized(d)))
+    }
+
+    writer.trim = true
+
+    tester['POINT (0 0)', 'LINESTRING(0 0, 10 0)', 0]
+    tester['POINT (5 0)', 'LINESTRING(0 0, 10 0)', 0.5]
+    tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 2]
+
+    assert_raises(RuntimeError) do
+      read('POINT(1 2)').interpolate_normalized(0)
+    end
+  end
+
   def test_start_and_end_points
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:start_point)
 
