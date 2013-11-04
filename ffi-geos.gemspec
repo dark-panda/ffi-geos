@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.description = "An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS)."
   s.summary = s.description
   s.email = "dark.panda@gmail.com"
+  s.license = "MIT"
   s.extra_rdoc_files = [
     "README.rdoc"
   ]
