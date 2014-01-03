@@ -332,8 +332,15 @@ module Geos
       check_geometry(geom)
       bool_result(FFIGeos.GEOSEquals_r(Geos.current_handle, self.ptr, geom.ptr))
     end
-    alias :== :eql?
     alias :equals? :eql?
+
+    def ==(geom)
+      if geom.is_a?(Geos::Geometry)
+        self.eql?(geom)
+      else
+        false
+      end
+    end
 
     def eql_exact?(geom, tolerance)
       check_geometry(geom)

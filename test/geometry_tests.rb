@@ -1581,9 +1581,19 @@ class GeometryTests < MiniTest::Unit::TestCase
     geom_a = read('POINT(1.0 1.0)')
     geom_b = read('POINT(2.0 2.0)')
 
-    %w{ eql? equals? == }.each do |method|
+    %w{ eql? equals? }.each do |method|
+      assert(geom_a.send(method, geom_a), "Expected geoms to be equal using #{method}")
       refute(geom_a.send(method, geom_b), "Expected geoms to not be equal using #{method}")
     end
+  end
+
+  def test_equals_operator
+    geom_a = read('POINT(1.0 1.0)')
+    geom_b = read('POINT(2.0 2.0)')
+
+    assert(geom_a == geom_a, "Expected geoms to be equal using ==")
+    refute(geom_a == geom_b, "Expected geoms to not be equal using ==")
+    refute(geom_a == "test", "Expected geoms to not be equal using ==")
   end
 
   def test_eql_exact
