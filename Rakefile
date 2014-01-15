@@ -18,10 +18,16 @@ Rake::TestTask.new(:test) do |t|
   t.warning = !!ENV['WARNINGS']
 end
 
-desc 'Build docs'
-Rake::RDocTask.new do |t|
-  t.title = "ffi-geos #{version}"
-  t.main = 'README.rdoc'
-  t.rdoc_dir = 'doc'
-  t.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'lib/**/*.rb')
+task :default => :test
+
+begin
+  desc 'Build docs'
+  Rake::RDocTask.new do |t|
+    t.title = "ffi-geos #{version}"
+    t.main = 'README.rdoc'
+    t.rdoc_dir = 'doc'
+    t.rdoc_files.include('README.rdoc', 'MIT-LICENSE', 'lib/**/*.rb')
+  end
+rescue LoadError
+  puts 'Rake::RDocTask is not supported on this platform.'
 end
