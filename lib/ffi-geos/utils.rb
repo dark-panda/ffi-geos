@@ -38,10 +38,10 @@ module Geos
           cs = args.first
         elsif args.length == 2
           cs = CoordinateSequence.new(1, 2)
-          cs.x[0], cs.y[0] = args[0], args[1]
+          cs.x[0], cs.y[0] = args[0].to_f, args[1].to_f
         elsif args.length == 3
           cs = CoordinateSequence.new(1, 3)
-          cs.x[0], cs.y[0], cs.z[0] = args
+          cs.x[0], cs.y[0], cs.z[0] = args.map(&:to_f)
         else
           raise ArgumentError.new("Wrong number of arguments (#{args.length} for 1-3)")
         end

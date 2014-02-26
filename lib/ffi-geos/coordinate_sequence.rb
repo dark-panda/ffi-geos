@@ -109,7 +109,7 @@ module Geos
       if points
         points.each_with_index do |point, idx|
           point.each_with_index do |val, dim|
-            self.set_ordinate(idx, dim, val)
+            self.set_ordinate(idx, dim, val.to_f)
           end
         end
       end
