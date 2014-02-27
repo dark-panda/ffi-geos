@@ -8,4 +8,4 @@ rvm:
   - rbx
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libgeos-dev libproj-dev
+  - sudo apt-get install libgeos-dev
