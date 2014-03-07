@@ -20,10 +20,6 @@ Note that versions of JRuby prior to version 1.6.3 have problems in their ffi
 implementation when dealing with AutoPointers that can lead to segfaults during
 garbage collection.
 
-JRuby 1.7.0 is exhibiting some strange and sporadic memory problems that are
-difficult to lock down. Unit tests show that the errors do not occur 100% of
-the time, so it has been difficult to trace the root cause of the errors.
-
 == Features
 
 ffi-geos supports all of the features found in the binary SWIG-based GEOS
@@ -170,7 +166,7 @@ Ruby bindings along with the following enhancements and additions:
 
 == Thanks
 
-* Thanks to Daniel Azuma for the testing and JRuby help.
+* Daniel Azuma for the testing and JRuby help.
 
 * Christopher Meiklejohn for the bug reporting and PreparedGeometry fix.
 
@@ -178,6 +174,8 @@ Ruby bindings along with the following enhancements and additions:
 
 * Charlie Savage for the original SWIG-based GEOS bindings implementation and
   some fixes for MinGW.
+
+* Peter M. Goldstein for some JRuby fixes.
 
 == License
 
