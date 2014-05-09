@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class STRtreeTests < MiniTest::Unit::TestCase
+class STRtreeTests < Minitest::Test
   include TestHelper
 
   def setup_tree

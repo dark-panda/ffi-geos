@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class GeometryTests < MiniTest::Unit::TestCase
+class GeometryTests < Minitest::Test
   include TestHelper
 
   def comparison_tester(method_with_args, geom_a, geom_b, expected)

@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class InterruptTests < MiniTest::Unit::TestCase
+class InterruptTests < Minitest::Test
   include TestHelper
 
   def interrupt_method

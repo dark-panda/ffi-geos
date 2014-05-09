@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class LinearRingTests < MiniTest::Unit::TestCase
+class LinearRingTests < Minitest::Test
   include TestHelper
 
   def setup

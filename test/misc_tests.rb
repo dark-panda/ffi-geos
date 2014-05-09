@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class MiscTests < MiniTest::Unit::TestCase
+class MiscTests < Minitest::Test
   include TestHelper
 
   def thread_tester(name, dims, byte_order, polygon, pause)

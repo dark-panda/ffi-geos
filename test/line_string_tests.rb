@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class LineStringTests < MiniTest::Unit::TestCase
+class LineStringTests < Minitest::Test
   include TestHelper
 
   def test_default_srid

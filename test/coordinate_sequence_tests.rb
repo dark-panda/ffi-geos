@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class CoordinateSequenceTests < MiniTest::Unit::TestCase
+class CoordinateSequenceTests < Minitest::Test
   include TestHelper
 
   def setup

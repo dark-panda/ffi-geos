@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class PolygonTests < MiniTest::Unit::TestCase
+class PolygonTests < Minitest::Test
   include TestHelper
 
   def setup

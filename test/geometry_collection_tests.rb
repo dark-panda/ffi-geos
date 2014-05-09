@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class GeometryCollectionTests < MiniTest::Unit::TestCase
+class GeometryCollectionTests < Minitest::Test
   include TestHelper
 
   def test_geometry_collection_enumerator

@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class PointTests < MiniTest::Unit::TestCase
+class PointTests < Minitest::Test
   include TestHelper
 
   def test_default_srid

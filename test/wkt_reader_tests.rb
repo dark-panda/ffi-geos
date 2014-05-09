@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class WktReaderTests < MiniTest::Unit::TestCase
+class WktReaderTests < Minitest::Test
   include TestHelper
 
   def wkt_tester(type_id, geom_type, klass, *geoms)

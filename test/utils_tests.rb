@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class UtilsTests < MiniTest::Unit::TestCase
+class UtilsTests < Minitest::Test
   include TestHelper
 
   def test_orientation_index

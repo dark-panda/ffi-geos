@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class PreparedGeometryTests < MiniTest::Unit::TestCase
+class PreparedGeometryTests < Minitest::Test
   include TestHelper
 
   POINT_A = 'POINT(0 0)'

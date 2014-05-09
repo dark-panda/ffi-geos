@@ -98,6 +98,6 @@ module TestHelper
 end
 
 if RUBY_VERSION >= '1.9'
-  MiniTest::Reporters.use!(MiniTest::Reporters::SpecReporter.new)
+  Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)
 end
 

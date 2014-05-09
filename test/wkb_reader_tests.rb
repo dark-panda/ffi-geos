@@ -3,7 +3,7 @@
 $: << File.dirname(__FILE__)
 require 'test_helper'
 
-class WkbReaderTests < MiniTest::Unit::TestCase
+class WkbReaderTests < Minitest::Test
   include TestHelper
 
   def setup
