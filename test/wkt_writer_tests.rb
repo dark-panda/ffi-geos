@@ -73,7 +73,7 @@ class WktWriterTests < Minitest::Test
   end
 
   def test_rounding_precision_too_high
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       @writer.rounding_precision = 1000
     end
   end
@@ -101,12 +101,12 @@ class WktWriterTests < Minitest::Test
     assert_equal('POINT (3 2)', write(geom_2d))
 
     # 1 is invalid
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       writer.output_dimensions = 1
     end
 
     # 4 is invalid
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       writer.output_dimensions = 4
     end
   end

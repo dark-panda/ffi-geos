@@ -43,7 +43,7 @@ module Geos
         end
 
         if cs.length != 1
-          raise RuntimeError.new("IllegalArgumentException: Point coordinate list must contain a single element")
+          raise ArgumentError.new("IllegalArgumentException: Point coordinate list must contain a single element")
         end
 
         cs_dup = cs.dup
@@ -58,7 +58,7 @@ module Geos
         cs = cs_from_cs_or_geom(cs)
 
         if cs.length <= 1 && cs.length != 0
-          raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
+          raise ArgumentError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
         cs_dup = cs.dup
@@ -73,7 +73,7 @@ module Geos
         cs = cs_from_cs_or_geom(cs)
 
         if cs.length <= 1 && cs.length != 0
-          raise RuntimeError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
+          raise ArgumentError.new("IllegalArgumentException: point array must contain 0 or >1 elements")
         end
 
         cs.ptr.autorelease = false

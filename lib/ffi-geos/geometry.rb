@@ -6,6 +6,12 @@ module Geos
 
     attr_reader :ptr
 
+    class CouldntNormalizeError < Geos::Error
+      def initialize(klass)
+        super("Couldn't normalize #{klass}")
+      end
+    end
+
     # For internal use. Geometry objects should be created via WkbReader,
     # WktReader and the various Geos.create_* methods.
     def initialize(ptr, options = {})
@@ -48,7 +54,7 @@ module Geos
 
     def normalize!
       if FFIGeos.GEOSNormalize_r(Geos.current_handle, self.ptr) == -1
-        raise RuntimeError.new("Couldn't normalize #{self.class}")
+        raise Geos::Geometry::CouldntNormalizeError.new(self.class)
       end
 
       self

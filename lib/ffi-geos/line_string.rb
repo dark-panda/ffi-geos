@@ -29,7 +29,7 @@ module Geos
 
     def point_n(n)
       if n < 0 || n >= self.num_points
-        raise RuntimeError.new("Index out of bounds")
+        raise Geos::IndexBoundsError.new
       else
         cast_geometry_ptr(
           FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle, self.ptr, n), {

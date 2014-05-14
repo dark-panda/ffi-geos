@@ -114,7 +114,7 @@ class WktReaderTests < Minitest::Test
   end
 
   def test_read_exception
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::WktReader::ParseError) do
       read('gibberish')
     end
   end

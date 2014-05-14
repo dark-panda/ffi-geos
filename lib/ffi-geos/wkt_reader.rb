@@ -6,6 +6,9 @@ module Geos
 
     attr_reader :ptr
 
+    class ParseError < Geos::ParseError
+    end
+
     def initialize(*args)
       ptr = if args.first.is_a?(FFI::Pointer)
         args.first
@@ -23,6 +26,8 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSWKTReader_read_r(Geos.current_handle, self.ptr, wkt), {
         :srid => options[:srid]
       })
+    rescue Geos::GEOSException => e
+      raise ParseError.new(e)
     end
 
     def self.release(ptr) #:nodoc:

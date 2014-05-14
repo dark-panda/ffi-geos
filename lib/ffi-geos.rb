@@ -1023,7 +1023,7 @@ module Geos
     end
 
     def error_handler(*args)
-      raise RuntimeError.new(args[0] % args[1])
+      raise Geos::GEOSException.new(args[0] % args[1])
     end
   end
 
@@ -1178,10 +1178,25 @@ module Geos
     ].freeze
   end
 
-  class MixedSRIDsError < RuntimeError
+  class Error < ::RuntimeError
+  end
+
+  class GEOSException < Error
+  end
+
+  class IndexBoundsError < Error
+    def initialize(*)
+      super("Index out of bounds")
+    end
+  end
+
+  class MixedSRIDsError < Error
     def initialize(srid_a, srid_b)
       super("Operation on mixed SRIDs (#{srid_a} vs. #{srid_b})")
     end
+  end
+
+  class ParseError < Error
   end
 
   include GeomTypes

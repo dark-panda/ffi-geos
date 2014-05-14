@@ -28,7 +28,7 @@ class STRtreeTests < Minitest::Test
 
     @tree.query(read('POINT(5 5)'))
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::STRtree::AlreadyBuiltError) do
       @tree.insert(read('POINT(0 0)'), 'test')
     end
   end

@@ -206,4 +206,16 @@ class WkbReaderTests < Minitest::Test
         :srid => 4326
       }).srid)
   end
+
+  def test_read_parse_error
+    assert_raises(Geos::WkbReader::ParseError) do
+      @wkb_reader.read("FOO")
+    end
+  end
+
+  def test_read_hex_parse_error
+    assert_raises(Geos::WkbReader::ParseError) do
+      @wkb_reader.read_hex("FOO")
+    end
+  end
 end

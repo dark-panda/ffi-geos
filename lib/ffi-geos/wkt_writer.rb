@@ -70,7 +70,7 @@ module Geos
       def rounding_precision=(r)
         r = r.to_i
         if r > 255
-          raise RuntimeError.new("Rounding precision cannot be greater than 255")
+          raise ArgumentError.new("Rounding precision cannot be greater than 255")
         end
 
         @rounding_precision = r
@@ -93,7 +93,7 @@ module Geos
       def output_dimensions=(dim)
         dim = dim.to_i
         if dim < 2 || dim > 3
-          raise RuntimeError.new("Output dimensions must be either 2 or 3")
+          raise ArgumentError.new("Output dimensions must be either 2 or 3")
         end
         FFIGeos.GEOSWKTWriter_setOutputDimension_r(Geos.current_handle, self.ptr, dim)
       end

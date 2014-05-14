@@ -69,7 +69,7 @@ class UtilsTests < Minitest::Test
 
   def test_bad_create_point
     cs = Geos::CoordinateSequence.new(0, 0)
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       Geos.create_point(cs)
     end
   end
@@ -119,7 +119,7 @@ class UtilsTests < Minitest::Test
 
   def test_create_bad_line_string
     cs = Geos::CoordinateSequence.new(1, 0)
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       Geos::create_line_string(cs)
     end
   end
@@ -172,7 +172,7 @@ class UtilsTests < Minitest::Test
   def test_bad_create_linear_ring
     cs = Geos::CoordinateSequence.new(1, 0)
 
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       Geos::create_linear_ring(cs)
     end
   end
@@ -415,25 +415,25 @@ class UtilsTests < Minitest::Test
     # GEOS taking ownership of CoordinateSequences and deleting them out from
     # under us and GC blowing up.
 
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       cs = Geos::CoordinateSequence.new(0, 2)
       Geos.create_point(cs)
       GC.start
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       cs = Geos::CoordinateSequence.new(1, 2)
       Geos.create_line_string(cs)
       GC.start
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       cs = Geos::CoordinateSequence.new(1, 2)
       Geos.create_linear_ring(cs)
       GC.start
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::GEOSException) do
       cs = Geos::CoordinateSequence.new([
         [0, 0],
         [0, 5],

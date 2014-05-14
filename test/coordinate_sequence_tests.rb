@@ -45,29 +45,29 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   def test_check_bounds
-    assert_raises(RuntimeError) { @cs.set_x(10, 0.1) }
-    assert_raises(RuntimeError) { @cs.set_x(-1, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_x(10, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_x(-1, 0.1) }
 
-    assert_raises(RuntimeError) { @cs.set_y(10, 0.1) }
-    assert_raises(RuntimeError) { @cs.set_y(-1, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_y(10, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_y(-1, 0.1) }
 
-    assert_raises(RuntimeError) { @cs.set_z(10, 0.1) }
-    assert_raises(RuntimeError) { @cs.set_z(-1, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_z(10, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_z(-1, 0.1) }
 
-    assert_raises(RuntimeError) { @cs.set_ordinate(10, 0, 0.1) }
-    assert_raises(RuntimeError) { @cs.set_ordinate(-1, 0, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_ordinate(10, 0, 0.1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.set_ordinate(-1, 0, 0.1) }
 
-    assert_raises(RuntimeError) { @cs.get_x(10) }
-    assert_raises(RuntimeError) { @cs.get_x(-1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_x(10) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_x(-1) }
 
-    assert_raises(RuntimeError) { @cs.get_y(10) }
-    assert_raises(RuntimeError) { @cs.get_y(-1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_y(10) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_y(-1) }
 
-    assert_raises(RuntimeError) { @cs.get_z(10) }
-    assert_raises(RuntimeError) { @cs.get_z(-1) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_z(10) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_z(-1) }
 
-    assert_raises(RuntimeError) { @cs.get_ordinate(10, 0) }
-    assert_raises(RuntimeError) { @cs.get_ordinate(-1, 0) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_ordinate(10, 0) }
+    assert_raises(Geos::IndexBoundsError) { @cs.get_ordinate(-1, 0) }
   end
 
   def test_clone
@@ -216,15 +216,15 @@ class CoordinateSequenceTests < Minitest::Test
     assert_equal('NaN', cs.z[0].to_s)
     assert_equal('NaN', cs.z[1].to_s)
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       cs.x[100]
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       cs.y[100]
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       cs.z[100]
     end
   end
@@ -243,15 +243,15 @@ class CoordinateSequenceTests < Minitest::Test
     assert_equal(2, cs.get_y(0))
     assert_equal(11, cs.get_y(1))
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       cs.x[100] = 10
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       cs.y[100] = 10
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       cs.z[100] = 10
     end
   end

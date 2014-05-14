@@ -143,7 +143,7 @@ class LineStringTests < Minitest::Test
     simple_tester(:point_n, 'POINT (14 14)', geom, 2)
     simple_tester(:point_n, 'POINT (14 10)', geom, 3)
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       geom.point_n(4)
     end
 

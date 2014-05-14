@@ -16,7 +16,7 @@ class ToolsTests < Minitest::Test
     assert(Geos::Tools.bool_result(1))
     refute(Geos::Tools.bool_result(0))
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::UnexpectedBooleanResultError) do
       Geos::Tools.bool_result(-1)
     end
   end

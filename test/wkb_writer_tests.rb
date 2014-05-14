@@ -440,11 +440,11 @@ class WkbWriterTests < Minitest::Test
   end
 
   def test_illegal_output_dimensions
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       @wkb_writer.output_dimensions = 10
     end
 
-    assert_raises(RuntimeError) do
+    assert_raises(ArgumentError) do
       @wkb_writer.output_dimensions = 0
     end
   end

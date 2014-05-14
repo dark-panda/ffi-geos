@@ -1,6 +1,24 @@
 # encoding: UTF-8
 
 module Geos
+  class NullPointerError < Geos::Error
+    def initialize(*)
+      super("Tried to create a Geometry from a NULL pointer!")
+    end
+  end
+
+  class InvalidGeometryTypeError < Geos::Error
+    def initialize(*)
+      super("Invalid geometry type")
+    end
+  end
+
+  class UnexpectedBooleanResultError < Geos::Error
+    def initialize(result)
+      super("Unexpected boolean result: #{result}")
+    end
+  end
+
   module Tools
     include GeomTypes
 
@@ -10,7 +28,7 @@ module Geos
       }.merge(options)
 
       if geom_ptr.null?
-        raise RuntimeError.new("Tried to create a Geometry from a NULL pointer!")
+        raise Geos::NullPointerError.new
       end
 
       klass = case FFIGeos.GEOSGeomTypeId_r(Geos.current_handle, geom_ptr)
@@ -31,7 +49,7 @@ module Geos
         when GEOS_GEOMETRYCOLLECTION
           GeometryCollection
         else
-          raise RuntimeError.new("Invalid geometry type")
+          raise Geos::InvalidGeometryTypeError.new
       end
 
       klass.new(geom_ptr, options).tap { |ret|
@@ -76,14 +94,14 @@ module Geos
       end
     end
 
-    def bool_result(r)
-      case r
+    def bool_result(result)
+      case result
       when 1
         true
       when 0
         false
       else
-        raise RuntimeError.new("Unexpected boolean result: #{r}")
+        raise Geos::UnexpectedBooleanResultError.new(result)
       end
     end
 

@@ -9,6 +9,12 @@ module Geos
 
     undef :clone, :dup
 
+    class AlreadyBuiltError < Geos::Error
+      def initialize(*)
+        super("STRtree has already been built")
+      end
+    end
+
     # :call-seq:
     #   new(capacity)
     #   new(geoms_and_objects)
@@ -71,7 +77,7 @@ module Geos
 
     def insert(geom, item)
       if self.built?
-        raise RuntimeError.new("STRtree has already been built")
+        raise AlreadyBuiltError.new
       else
         check_geometry(geom)
 

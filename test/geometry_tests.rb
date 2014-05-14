@@ -877,7 +877,7 @@ class GeometryTests < Minitest::Test
       1
     )
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::IndexBoundsError) do
       simple_tester(
         :interior_ring_n,
         nil,
@@ -1018,7 +1018,7 @@ class GeometryTests < Minitest::Test
     geom_b = read('POINT(3 4)')
 
     # The method only accept lineal geometries
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::GEOSException) do
       geom_a.project(geom_b)
     end
 
@@ -1062,7 +1062,7 @@ class GeometryTests < Minitest::Test
     simple_tester(:interpolate, 'POINT (10 0)', 'LINESTRING(0 0, 10 0)', 20, false)
     simple_tester(:interpolate, 'POINT (10 0)', 'LINESTRING(0 0, 10 0)', 2, true)
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::GEOSException) do
       read('POINT(1 2)').interpolate(0)
     end
   end
@@ -1081,7 +1081,7 @@ class GeometryTests < Minitest::Test
     tester['POINT (5 0)', 'LINESTRING(0 0, 10 0)', 0.5]
     tester['POINT (10 0)', 'LINESTRING(0 0, 10 0)', 2]
 
-    assert_raises(RuntimeError) do
+    assert_raises(Geos::GEOSException) do
       read('POINT(1 2)').interpolate_normalized(0)
     end
   end

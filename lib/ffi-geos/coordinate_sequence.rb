@@ -4,7 +4,7 @@ module Geos
 
   # A CoordinateSequence is a list of coordinates in a Geometry.
   class CoordinateSequence
-    class ParseError < ArgumentError
+    class ParseError < Geos::ParseError
     end
 
     class CoordinateAccessor
@@ -262,7 +262,7 @@ module Geos
 
     def check_bounds(idx) #:nodoc:
       if idx < 0 || idx >= self.length
-        raise RuntimeError.new("Index out of bounds")
+        raise Geos::IndexBoundsError.new("Index out of bounds")
       end
     end
 

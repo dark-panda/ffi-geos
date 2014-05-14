@@ -6,6 +6,9 @@ module Geos
 
     attr_reader :ptr
 
+    class ParseError < Geos::ParseError
+    end
+
     def initialize(*args)
       ptr = if args.first.is_a?(FFI::Pointer)
         args.first
@@ -23,12 +26,16 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize), {
         :srid => options[:srid]
       })
+    rescue Geos::GEOSException => e
+      raise ParseError.new(e)
     end
 
     def read_hex(wkb, options = {})
       cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize), {
         :srid => options[:srid]
       })
+    rescue Geos::GEOSException => e
+      raise ParseError.new(e)
     end
 
     def self.release(ptr) #:nodoc:
