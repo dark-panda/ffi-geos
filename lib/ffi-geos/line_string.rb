@@ -68,5 +68,20 @@ module Geos
         bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle, self.ptr))
       end
     end
+
+    def to_linear_ring
+      if self.closed?
+        Geos.create_linear_ring(self.coord_seq, :srid => pick_srid_according_to_policy(self.srid))
+      else
+        self_cs = self.coord_seq.to_a
+        self_cs.push(self_cs[0])
+
+        Geos.create_linear_ring(self_cs, :srid => pick_srid_according_to_policy(self.srid))
+      end
+    end
+
+    def to_polygon
+      self.to_linear_ring.to_polygon
+    end
   end
 end

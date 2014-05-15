@@ -157,4 +157,40 @@ class LineStringTests < Minitest::Test
       read('POINT (0 0)').point_n(0)
     end
   end
+
+  def test_to_linear_ring
+    simple_tester(:to_linear_ring, 'LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', 'LINESTRING (0 0, 0 5, 5 5, 5 0, 0 0)')
+    simple_tester(:to_linear_ring, 'LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', 'LINESTRING (0 0, 0 5, 5 5, 5 0)')
+
+    writer.output_dimensions = 3
+    simple_tester(:to_linear_ring, 'LINEARRING Z (0 0 0, 0 5 0, 5 5 0, 5 0 0, 0 0 0)', 'LINESTRING Z (0 0 0, 0 5 0, 5 5 0, 5 0 0, 0 0 0)')
+    simple_tester(:to_linear_ring, 'LINEARRING Z (0 0 0, 0 5 0, 5 5 0, 5 0 0, 0 0 0)', 'LINESTRING Z (0 0 0, 0 5 0, 5 5 0, 5 0 0)')
+  end
+
+  def test_to_linear_ring_with_srid
+    wkt = 'LINESTRING (0 0, 5 0, 5 5, 0 5, 0 0)'
+    expected = 'LINEARRING (0 0, 5 0, 5 5, 0 5, 0 0)'
+
+    srid_copy_tester(:to_linear_ring, expected, 0, :zero, wkt)
+    srid_copy_tester(:to_linear_ring, expected, 4326, :lenient, wkt)
+    srid_copy_tester(:to_linear_ring,  expected, 4326, :strict, wkt)
+  end
+
+  def test_to_polygon
+    simple_tester(:to_polygon, 'POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', 'LINESTRING (0 0, 0 5, 5 5, 5 0, 0 0)')
+    simple_tester(:to_polygon, 'POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', 'LINESTRING (0 0, 0 5, 5 5, 5 0)')
+
+    writer.output_dimensions = 3
+    simple_tester(:to_polygon, 'POLYGON Z ((0 0 0, 0 5 0, 5 5 0, 5 0 0, 0 0 0))', 'LINESTRING Z (0 0 0, 0 5 0, 5 5 0, 5 0 0, 0 0 0)')
+    simple_tester(:to_polygon, 'POLYGON Z ((0 0 0, 0 5 0, 5 5 0, 5 0 0, 0 0 0))', 'LINESTRING Z (0 0 0, 0 5 0, 5 5 0, 5 0 0)')
+  end
+
+  def test_to_polygon_with_srid
+    wkt = 'LINESTRING (0 0, 5 0, 5 5, 0 5, 0 0)'
+    expected = 'POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))'
+
+    srid_copy_tester(:to_polygon, expected, 0, :zero, wkt)
+    srid_copy_tester(:to_polygon, expected, 4326, :lenient, wkt)
+    srid_copy_tester(:to_polygon,  expected, 4326, :strict, wkt)
+  end
 end
