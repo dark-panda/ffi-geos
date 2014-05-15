@@ -432,6 +432,32 @@ class WkbWriterTests < Minitest::Test
     geom = read('POINT(1 2 3)')
     geom.srid = 4326
 
+    tester = lambda { |expected, *args|
+      expected.force_encoding('BINARY') if expected.respond_to?(:force_encoding)
+
+      assert_equal(
+        expected,
+        @wkb_writer.write(geom, *args)
+      )
+    }
+
+    tester[
+      "\x01\x01\x00\x00\x20\xE6\x10\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40", {
+        :include_srid => true
+      }
+    ]
+
+    tester[
+      "\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40"
+    ]
+  end
+
+  def test_write_hex_with_options
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::FFIGeos)
+
+    geom = read('POINT(1 2 3)')
+    geom.srid = 4326
+
     assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom, {
       :include_srid => true
     }))
