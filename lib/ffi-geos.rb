@@ -1110,7 +1110,7 @@ module Geos
       create_empty_collection
       create_empty_linear_ring
     }.each do |m|
-      self.class_eval <<-EOF
+      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
         def #{m}(*args)
           Geos::Utils.#{m}(*args)
         end

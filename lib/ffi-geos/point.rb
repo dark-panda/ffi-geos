@@ -69,7 +69,7 @@ module Geos
       envelope
       topology_preserve_simplify
     }.each do |method|
-      self.class_eval(<<-EOF)
+      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
         def #{method}(*args)
           self.dup.tap { |ret|
             ret.srid = pick_srid_according_to_policy(ret.srid)
