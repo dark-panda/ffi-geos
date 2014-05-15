@@ -12,10 +12,10 @@ module Geos
         # Registers an interrupt method or block that may be called during
         # certain operations such as Geos::Geometry#buffer. During these
         # blocks you can interrupt the current operation using
-        # Geos.request_interrupt and cancel that interrupt request using
-        # Geos.clear_interrupt.
+        # Geos::Interrupt.request and cancel that interrupt request using
+        # Geos::Interrupt.clear.
         #
-        # The return value for Geos.register_interrupt is a reference to the
+        # The return value for Geos::Interrupt.register is a reference to the
         # previously registered callback, allowing you to chain interrupt
         # calls together by calling #call on the previously registered callback.
         #
@@ -25,9 +25,9 @@ module Geos
         # up in unexpected ways while interrupts are firing.
         def register(method_or_block = nil, &block)
           if method_or_block.nil? && !block_given?
-            raise ArgumentError.new("Expected either a method or a block for Geos.register_interrupt")
+            raise ArgumentError.new("Expected either a method or a block for Geos::Interrupt.register")
           elsif !method_or_block.nil? && block_given?
-            raise ArgumentError.new("Cannot use both a method and a block for Geos.register_interrupt")
+            raise ArgumentError.new("Cannot use both a method and a block for Geos::Interrupt.register")
           else
             retval = @current_interrupt_callback
 
@@ -44,7 +44,7 @@ module Geos
         end
 
         # Interrupt the current operation. This method should generally be
-        # called from within a callback registered with Geos.register_interrupt
+        # called from within a callback registered with Geos::Interrupt.register
         # but can be called at any time to interrupt the next interruptable
         # operation.
         def request
@@ -53,7 +53,7 @@ module Geos
 
         # Cancel a request to interrupt the current operation. This method
         # should be called from within a callback registered with
-        # Geos.register_interrupt but can be called at any time all the same.
+        # Geos::Interrupt.register but can be called at any time all the same.
         def cancel
           FFIGeos.GEOS_interruptCancel
         end
