@@ -6,6 +6,11 @@ require 'test_helper'
 class UtilsTests < Minitest::Test
   include TestHelper
 
+  def setup
+    super
+    writer.trim = true
+  end
+
   def test_orientation_index
     skip unless ENV['FORCE_TESTS'] || (defined?(Geos::Utils) && Geos::Utils.respond_to?(:orientation_index))
 
@@ -44,19 +49,16 @@ class UtilsTests < Minitest::Test
   end
 
   def test_create_point
-    cs = Geos::CoordinateSequence.new(1, 2)
-    cs.set_x(0, 10)
-    cs.set_y(0, 20)
-
-    create_method_tester('POINT(10 20)', :create_point, cs, Geos::GEOS_POINT, Geos::Point)
+    cs = Geos::CoordinateSequence.new([[ 10, 20 ]])
+    create_method_tester('POINT (10 20)', :create_point, cs, Geos::GEOS_POINT, Geos::Point)
   end
 
   def test_create_point_with_x_and_y_arguments
-    assert_equal('POINT (10 20)', write(Geos.create_point(10, 20), :trim => true))
+    assert_equal('POINT (10 20)', write(Geos.create_point(10, 20)))
   end
 
   def test_create_point_with_x_y_and_z_arguments
-    assert_equal('POINT Z (10 20 30)', write(Geos.create_point(10, 20, 30), :trim => true, :output_dimensions => 3))
+    assert_equal('POINT Z (10 20 30)', write(Geos.create_point(10, 20, 30), :output_dimensions => 3))
   end
 
   def test_create_point_with_too_many_arguments
@@ -73,16 +75,15 @@ class UtilsTests < Minitest::Test
   end
 
   def test_create_line_string
-    cs = Geos::CoordinateSequence.new(2, 3)
-    cs.set_x(0, 10)
-    cs.set_y(0, 20)
-    cs.set_z(0, 30)
-    cs.set_x(1, 30)
-    cs.set_y(1, 20)
-    cs.set_z(1, 10)
+    cs = Geos::CoordinateSequence.new([
+     [ 10, 20, 30 ],
+     [ 30, 20, 10 ]
+    ])
+
+    writer.output_dimensions = 3
 
     create_method_tester(
-      'LINESTRING (10 20 30, 30 20 10)',
+      'LINESTRING Z (10 20 30, 30 20 10)',
       :create_line_string,
       cs,
       Geos::GEOS_LINESTRING,
@@ -124,22 +125,17 @@ class UtilsTests < Minitest::Test
   end
 
   def test_create_linear_ring
-    cs = Geos::CoordinateSequence.new(4,3)
-    cs.set_x(0, 7)
-    cs.set_y(0, 8)
-    cs.set_z(0, 9)
-    cs.set_x(1, 3)
-    cs.set_y(1, 3)
-    cs.set_z(1, 3)
-    cs.set_x(2, 11)
-    cs.set_y(2, 15.2)
-    cs.set_z(2, 2)
-    cs.set_x(3, 7)
-    cs.set_y(3, 8)
-    cs.set_z(3, 9)
+    cs = Geos::CoordinateSequence.new([
+      [ 7, 8, 9 ],
+      [ 3, 3, 3 ],
+      [ 11, 15.2, 2 ],
+      [ 7, 8, 9 ]
+    ])
+
+    writer.output_dimensions = 3
 
     create_method_tester(
-      'LINEARRING (7 8 9, 3 3 3, 11 15.2 2, 7 8 9)',
+      'LINEARRING Z (7 8 9, 3 3 3, 11 15.2 2, 7 8 9)',
       :create_linear_ring,
       cs,
       Geos::GEOS_LINEARRING,
@@ -196,7 +192,7 @@ class UtilsTests < Minitest::Test
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
-    assert_equal('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))', write(geom, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))', write(geom))
   end
 
   def test_create_polygon_with_coordinate_sequences
@@ -220,7 +216,7 @@ class UtilsTests < Minitest::Test
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
-    assert_equal('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0), (2 2, 2 4, 4 4, 4 2, 2 2))', write(geom, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0), (2 2, 2 4, 4 4, 4 2, 2 2))', write(geom))
   end
 
   def test_create_polygon_with_holes
@@ -265,7 +261,6 @@ class UtilsTests < Minitest::Test
   def test_create_multi_point
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
 
-    writer.rounding_precision = 0
     assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
     assert_equal('MULTIPOINT (0 0, 10 10)', write(Geos.create_multi_point(
       read('POINT(0 0)'),
@@ -287,7 +282,6 @@ class UtilsTests < Minitest::Test
   def test_create_multi_line_string
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_line_string)
 
-    writer.rounding_precision = 0
     assert_equal('MULTILINESTRING EMPTY', write(Geos.create_multi_line_string))
     assert_equal('MULTILINESTRING ((0 0, 10 10), (10 10, 20 20))', write(Geos.create_multi_line_string(
       read('LINESTRING(0 0, 10 10)'),
@@ -309,7 +303,6 @@ class UtilsTests < Minitest::Test
   def test_create_multi_polygon
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_polygon)
 
-    writer.rounding_precision = 0
     assert_equal('MULTIPOLYGON EMPTY', write(Geos.create_multi_polygon))
     assert_equal('MULTIPOLYGON (((0 0, 0 5, 5 5, 5 0, 0 0)), ((10 10, 10 15, 15 15, 15 10, 10 10)))', write(Geos.create_multi_polygon(
       read('POLYGON((0 0, 0 5, 5 5, 5 0, 0 0))'),
@@ -331,7 +324,6 @@ class UtilsTests < Minitest::Test
   def test_create_geometry_collection
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
 
-    writer.rounding_precision = 0
     assert_equal('GEOMETRYCOLLECTION EMPTY', write(Geos.create_geometry_collection))
     assert_equal('GEOMETRYCOLLECTION (POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0)), POLYGON ((10 10, 10 15, 15 15, 15 10, 10 10)))',
       write(Geos.create_geometry_collection(

@@ -6,6 +6,11 @@ require 'test_helper'
 class PointTests < Minitest::Test
   include TestHelper
 
+  def setup
+    super
+    writer.trim = true
+  end
+
   def test_default_srid
     geom = read('POINT(0 0)')
     assert_equal(0, geom.srid)

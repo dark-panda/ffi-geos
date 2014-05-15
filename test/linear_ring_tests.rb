@@ -26,8 +26,6 @@ class LinearRingTests < Minitest::Test
   end
 
   def test_to_polygon_with_srid
-    writer.trim = true
-
     wkt = 'LINEARRING (0 0, 5 0, 5 5, 0 5, 0 0)'
     expected = 'POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))'
 

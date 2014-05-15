@@ -6,6 +6,11 @@ require 'test_helper'
 class GeometryCollectionTests < Minitest::Test
   include TestHelper
 
+  def setup
+    super
+    writer.trim = true
+  end
+
   def test_geometry_collection_enumerator
     skip unless ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:[])
 

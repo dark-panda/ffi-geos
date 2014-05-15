@@ -8,7 +8,7 @@ class PolygonTests < Minitest::Test
 
   def setup
     super
-    writer.rounding_precision = 2
+    writer.trim = true
   end
 
   def test_default_srid
