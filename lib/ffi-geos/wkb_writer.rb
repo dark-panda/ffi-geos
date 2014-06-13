@@ -73,7 +73,7 @@ module Geos
 
     def include_srid=(val)
       FFIGeos.GEOSWKBWriter_setIncludeSRID_r(Geos.current_handle, self.ptr,
-        val ? 1 : 0
+        Geos::Tools.bool_to_int(val)
       )
     end
 

@@ -60,7 +60,7 @@ module Geos
       def trim=(val)
         @trim = !!val
         FFIGeos.GEOSWKTWriter_setTrim_r(Geos.current_handle, self.ptr,
-          @trim ? 1 : 0
+          Geos::Tools.bool_to_int(@trim)
         )
       end
     end
@@ -83,7 +83,7 @@ module Geos
       def old_3d=(val)
         @old_3d = !!val
         FFIGeos.GEOSWKTWriter_setOld3D_r(Geos.current_handle, self.ptr,
-          @old_3d ? 1 : 0
+          Geos::Tools.bool_to_int(@old_3d)
         )
       end
     end

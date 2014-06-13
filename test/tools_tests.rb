@@ -21,6 +21,15 @@ class ToolsTests < Minitest::Test
     end
   end
 
+  def test_bool_to_int
+    assert_equal(1, Geos::Tools.bool_to_int(1))
+    assert_equal(1, Geos::Tools.bool_to_int(true))
+    assert_equal(1, Geos::Tools.bool_to_int(""))
+    assert_equal(1, Geos::Tools.bool_to_int(0))
+    assert_equal(0, Geos::Tools.bool_to_int(false))
+    assert_equal(0, Geos::Tools.bool_to_int(nil))
+  end
+
   def test_pick_srid_from_geoms
     Geos.srid_copy_policy = :default
     assert_equal(0, Geos::Tools.pick_srid_from_geoms(4326, 4269))

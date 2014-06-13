@@ -567,7 +567,7 @@ module Geos
 
     if FFIGeos.respond_to?(:GEOSDelaunayTriangulation_r)
       def delaunay_triangulation(tolerance, options = {})
-        cast_geometry_ptr(FFIGeos.GEOSDelaunayTriangulation_r(Geos.current_handle, self.ptr, tolerance, options[:only_edges] ? 1 : 0))
+        cast_geometry_ptr(FFIGeos.GEOSDelaunayTriangulation_r(Geos.current_handle, self.ptr, tolerance, bool_to_int(options[:only_edges])))
       end
     end
 

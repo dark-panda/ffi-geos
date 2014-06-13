@@ -105,6 +105,14 @@ module Geos
       end
     end
 
+    def bool_to_int(bool)
+      if bool
+        1
+      else
+        0
+      end
+    end
+
     def check_enum_value(enum, value)
       enum[value] or
         raise TypeError.new("Couldn't find valid #{enum.tag} value: #{value}")

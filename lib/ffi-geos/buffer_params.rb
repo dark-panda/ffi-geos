@@ -69,7 +69,7 @@ module Geos
       end
 
       def single_sided=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setSingleSided_r(Geos.current_handle, ptr, value ? 1 : 0))
+        if bool_result(FFIGeos.GEOSBufferParams_setSingleSided_r(Geos.current_handle, ptr, Geos::Tools.bool_to_int(value)))
           @params[:single_sided] = value
         end
       end
