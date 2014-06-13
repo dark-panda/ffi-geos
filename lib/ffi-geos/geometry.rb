@@ -592,6 +592,32 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSVoronoiDiagram_r)
+      # :call-seq:
+      #   voronoi_diagram(options = {})
+      #   voronoi_diagram(tolerance, options = {})
+      #
+      #  Options:
+      #
+      #  * :tolerance
+      #  * :envelope
+      #  * :only_edges
+      def voronoi_diagram(*args)
+        options = extract_options!(args)
+
+        tolerance = args.first || options[:tolerance] || 0.0
+
+        envelope_ptr = if options[:envelope]
+          check_geometry(options[:envelope])
+          options[:envelope].ptr
+        end
+
+        only_edges = bool_to_int(options[:only_edges])
+
+        cast_geometry_ptr(FFIGeos.GEOSVoronoiDiagram_r(Geos.current_handle, self.ptr, envelope_ptr, tolerance, only_edges))
+      end
+    end
+
     def to_prepared
       Geos::PreparedGeometry.new(self)
     end
