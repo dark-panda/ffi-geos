@@ -1559,5 +1559,8 @@ class GeometryTests < Minitest::Test
 
     # four points with a tolerance making one collapse
     tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', 2.0, { :only_edges => true }]
+
+    # tolerance as an option
+    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', { :tolerance => 2.0, :only_edges => true }]
   end
 end
