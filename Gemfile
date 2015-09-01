@@ -15,6 +15,7 @@ end
 
 if RUBY_VERSION >= '1.9'
   gem "simplecov"
+  gem "guard"
   gem 'guard-minitest'
 end
 
