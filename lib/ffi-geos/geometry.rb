@@ -207,6 +207,14 @@ module Geos
     end
     alias :representative_point :point_on_surface
 
+    if FFIGeos.respond_to?(:GEOSClipByRect_r)
+      # Available in GEOS 3.5.0+
+      def clip_by_rect(xmin, ymin, xmax, ymax)
+        cast_geometry_ptr(FFIGeos.GEOSClipByRect_r(Geos.current_handle, self.ptr, xmin, ymin, xmax, ymax))
+      end
+      alias :clip_by_rectangle :clip_by_rect
+    end
+
     def centroid
       cast_geometry_ptr(FFIGeos.GEOSGetCentroid_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end

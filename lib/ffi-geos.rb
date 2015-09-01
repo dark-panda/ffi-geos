@@ -430,6 +430,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      :GEOSClipByRect_r => [
+        # *geom, *handle, *geom, xmin, ymin, xmax, ymax
+        :pointer, :pointer, :pointer, :double, :double, :double, :double
+      ],
+
       :GEOSGetCentroid_r => [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
