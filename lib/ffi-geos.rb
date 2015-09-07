@@ -138,6 +138,10 @@ module Geos
 
     FFI_LAYOUT = {
       #### Utility functions ####
+
+      # Initialization and cleanup
+
+      # deprecated in GEOS 3.5.0+
       :initGEOS_r => [
         :pointer,
 
@@ -152,6 +156,24 @@ module Geos
         # void, *handle
         :void, :pointer
       ],
+      # / deprecated in GEOS 3.5.0+
+
+      # GEOS 3.5.0+
+      :GEOS_init_r => [ :pointer ],
+
+      :GEOSContext_setNoticeMessageHandler_r => [
+        :void, :pointer, callback([ :string, :string ], :void)
+      ],
+
+      :GEOSContext_setErrorMessageHandler_r => [
+        :void, :pointer, callback([ :string, :string ], :void)
+      ],
+
+      :GEOS_finish_r => [
+        # void, *handle
+        :void, :pointer
+      ],
+      # / GEOS 3.5.0+
 
       :GEOS_interruptRegisterCallback => [
         :pointer,
@@ -1014,27 +1036,43 @@ module Geos
   class Handle
     attr_reader :ptr
 
-    def initialize
-      @ptr = FFI::AutoPointer.new(
-        FFIGeos.initGEOS_r(
-          @notice_handler = self.method(:notice_handler),
-          @error_handler = self.method(:error_handler)
-        ),
-        self.class.method(:release)
-      )
+    if FFIGeos.respond_to?(:GEOS_init_r)
+      def initialize
+        @ptr = FFI::AutoPointer.new(FFIGeos.GEOS_init_r, self.class.method(:release))
+
+        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler = self.method(:notice_handler))
+        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler = self.method(:error_handler))
+      end
+
+      def self.release(ptr)
+        FFIGeos.GEOS_finish_r(ptr)
+      end
+
+    # Deprecated initialization and teardown...
+    else
+      def initialize
+        @ptr = FFI::AutoPointer.new(
+          FFIGeos.initGEOS_r(
+            @notice_handler = self.method(:notice_handler),
+            @error_handler = self.method(:error_handler)
+          ),
+          self.class.method(:release)
+        )
+      end
+
+      def self.release(ptr)
+        FFIGeos.finishGEOS_r(ptr)
+      end
     end
 
-    def self.release(ptr)
-      FFIGeos.finishGEOS_r(ptr)
-    end
+    private
+      def notice_handler(*args)
+        # no-op, just to appease initGEOS.
+      end
 
-    def notice_handler(*args)
-      # no-op, just to appease initGEOS.
-    end
-
-    def error_handler(*args)
-      raise Geos::GEOSException.new(args[0] % args[1])
-    end
+      def error_handler(*args)
+        raise Geos::GEOSException.new(args[0] % args[1])
+      end
   end
 
   class << self
