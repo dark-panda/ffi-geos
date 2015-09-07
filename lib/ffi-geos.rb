@@ -162,11 +162,13 @@ module Geos
       :GEOS_init_r => [ :pointer ],
 
       :GEOSContext_setNoticeMessageHandler_r => [
-        :void, :pointer, callback([ :string, :string ], :void)
+        # void, *handle, callback, *void
+        :void, :pointer, callback([ :string, :string ], :void), :pointer
       ],
 
       :GEOSContext_setErrorMessageHandler_r => [
-        :void, :pointer, callback([ :string, :string ], :void)
+        # void, *handle, callback, *void
+        :void, :pointer, callback([ :string, :string ], :void), :pointer
       ],
 
       :GEOS_finish_r => [
@@ -1040,8 +1042,8 @@ module Geos
       def initialize
         @ptr = FFI::AutoPointer.new(FFIGeos.GEOS_init_r, self.class.method(:release))
 
-        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler = self.method(:notice_handler))
-        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler = self.method(:error_handler))
+        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler = self.method(:notice_handler), nil)
+        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler = self.method(:error_handler), nil)
       end
 
       def self.release(ptr)
