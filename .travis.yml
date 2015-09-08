@@ -7,4 +7,4 @@ rvm:
   - rbx-2
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libgeos-dev
+  - sudo apt-get install -y libgeos-c1
