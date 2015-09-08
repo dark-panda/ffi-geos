@@ -109,7 +109,7 @@ module Geos
       if points
         points.each_with_index do |point, idx|
           point.each_with_index do |val, dim|
-            self.set_ordinate(idx, dim, val.to_f)
+            self.set_ordinate(idx, dim, val)
           end
         end
       end
@@ -164,24 +164,24 @@ module Geos
     # Sets the x value of a coordinate. Can also be set via #x[]=.
     def set_x(idx, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle, self.ptr, idx, val)
+      FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle, self.ptr, idx, val.to_f)
     end
 
     # Sets the y value of a coordinate. Can also be set via #y[]=.
     def set_y(idx, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle, self.ptr, idx, val)
+      FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle, self.ptr, idx, val.to_f)
     end
 
     # Sets the z value of a coordinate. Can also be set via #z[]=.
     def set_z(idx, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle, self.ptr, idx, val)
+      FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle, self.ptr, idx, val.to_f)
     end
 
     def set_ordinate(idx, dim, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle, self.ptr, idx, dim, val)
+      FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle, self.ptr, idx, dim, val.to_f)
     end
 
     # Gets the x value of a coordinate. Can also be retrieved via #x[].
