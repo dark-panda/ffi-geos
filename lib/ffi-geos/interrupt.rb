@@ -35,7 +35,7 @@ module Geos
               FFIGeos.GEOS_interruptRegisterCallback(method_or_block)
               method_or_block
             elsif block_given?
-              FFIGeos.GEOS_interruptRegisterCallback(&block)
+              FFIGeos.GEOS_interruptRegisterCallback(block)
               block
             end
 
