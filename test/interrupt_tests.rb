@@ -41,6 +41,8 @@ class InterruptTests < Minitest::Test
       begin
         buffer = geom.buffer(1, 8)
       rescue => e
+        # no-op
+      ensure
         assert_match(/^InterruptedException/, e.message)
         assert_nil(buffer)
         assert_interrupt_called
@@ -62,6 +64,8 @@ class InterruptTests < Minitest::Test
       begin
         buffer = geom.buffer(1, 8)
       rescue => e
+        # no-op
+      ensure
         assert_match(/^InterruptedException/, e.message)
         assert_nil(buffer)
         assert_interrupt_called
@@ -85,6 +89,8 @@ class InterruptTests < Minitest::Test
       begin
         buffer = geom.buffer(1, 8)
       rescue => e
+        # no-op
+      ensure
         assert_match(/^InterruptedException/, e.message)
         assert_nil(buffer)
         assert_interrupt_called
@@ -118,6 +124,8 @@ class InterruptTests < Minitest::Test
       begin
         buffer = geom.buffer(1, 8)
       rescue => e
+        # no-op
+      ensure
         assert_match(/^InterruptedException/, e.message)
         assert_nil(buffer)
         assert_interrupt_called(1)
