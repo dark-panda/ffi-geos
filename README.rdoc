@@ -75,11 +75,15 @@ Ruby bindings along with the following enhancements and additions:
   convenience methods and geometry conversion and manipulation methods.
 
 * *NEW IN ffi-geos 1.0.0* -- all errors thrown by ffi-geos are now instances of
-  `Geos::Error` or subclasses thereof. `Geos::Error` itself is a descendant
-  of `RuntimeError` as is the case with the native Geos extension. This means
-  that code like `rescue RuntimeError` should still work but you can now
+  Geos::Error or subclasses thereof. Geos::Error itself is a descendant
+  of RuntimeError as is the case with the native Geos extension. This means
+  that code like rescue RuntimeError should still work but you can now
   further capture more precise error types by capturing errors like
-  `Geos::Error`, `Geos::ParseError`, etc.
+  Geos::Error, Geos::ParseError, etc.
+
+* *NEW IN ffi-geos 1.0.0* -- new methods for Geom::Geometry#voronoi_diagram,
+  Geos::MultiLineString#closed? and Geos::Geometry#clip_by_rect when using
+  GEOS 3.5.0+.
 
 == Thanks
 

@@ -208,7 +208,7 @@ module Geos
     alias :representative_point :point_on_surface
 
     if FFIGeos.respond_to?(:GEOSClipByRect_r)
-      # Available in GEOS 3.5.0+
+      # Available in GEOS 3.5.0+.
       def clip_by_rect(xmin, ymin, xmax, ymax)
         cast_geometry_ptr(FFIGeos.GEOSClipByRect_r(Geos.current_handle, self.ptr, xmin, ymin, xmax, ymax))
       end
@@ -593,6 +593,8 @@ module Geos
     end
 
     if FFIGeos.respond_to?(:GEOSVoronoiDiagram_r)
+      # Available in GEOS 3.5.0+
+      #
       # :call-seq:
       #   voronoi_diagram(options = {})
       #   voronoi_diagram(tolerance, options = {})
