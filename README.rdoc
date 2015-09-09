@@ -7,12 +7,15 @@
 * GEOS version 3.3.0 or greater. GEOS 3.2.2 and below will work to an extent,
   but some features and methods will be disabled or missing.
 
-Ruby versions known to work:
+Ruby versions known to work according to travis-ci and local testing:
 
-* Ruby MRI 1.9.2, 1.9.3, 2.0+ x86_64, OSX 10.6.5+
-* Ruby MRI 1.9.2, 1.9.3, 2.0+ i386, linux
-* Ruby MRI 1.9.2, 1.9.3, 2.0+ x86_64, linux
-* JRuby 1.6+, x86_64 OSX 10.6.5+
+* Ruby MRI 1.9.3, 2.0+, 2.1+, 2.2+
+* Ruby MRI 1.8.7 works but as Ruby 1.8 is no longer being maintained, there's
+  no guarantee this will continue in the future and is therefore no longer
+  being tested with the same rigour as more modern versions of Ruby.
+* Rubinius 2
+* JRuby 1.6+, with the exception of versions of JRuby prior to 1.6.3 as per
+  below. This includes both 1.8 and 1.9 modes.
 
 === JRuby Notes
 
