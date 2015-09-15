@@ -43,7 +43,7 @@ module Geos
         raise ArgumentError.new("STRtree capacity must be greater than 0")
       end
 
-      ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle, capacity)
+      ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle_pointer, capacity)
 
       @ptr = FFI::AutoPointer.new(
         ptr,
@@ -64,7 +64,7 @@ module Geos
     end
 
     def self.release(ptr) #:nodoc:
-      FFIGeos.GEOSSTRtree_destroy_r(Geos.current_handle, ptr)
+      FFIGeos.GEOSSTRtree_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
     def built?
@@ -92,7 +92,7 @@ module Geos
         }
         @ptrs[key] = key_ptr
 
-        FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle, self.ptr, geom.ptr, key_ptr)
+        FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle_pointer, self.ptr, geom.ptr, key_ptr)
       end
     end
 
@@ -105,7 +105,7 @@ module Geos
 
       if key
         key_ptr = @ptrs[key]
-        result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle, self.ptr, geom.ptr, key_ptr)
+        result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle_pointer, self.ptr, geom.ptr, key_ptr)
         @built = true
 
         if result == 1
@@ -131,7 +131,7 @@ module Geos
       }
 
       FFIGeos.GEOSSTRtree_query_r(
-        Geos.current_handle,
+        Geos.current_handle_pointer,
         self.ptr,
         geom.ptr,
         callback,

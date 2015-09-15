@@ -92,7 +92,7 @@ module Geos
         size ||= 0
         dimensions ||= 0
 
-        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle, size, dimensions), true ]
+        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle_pointer, size, dimensions), true ]
       end
 
       @ptr = FFI::AutoPointer.new(
@@ -118,7 +118,7 @@ module Geos
 
     def initialize_copy(source)
       @ptr = FFI::AutoPointer.new(
-        FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle, source.ptr),
+        FFIGeos.GEOSCoordSeq_clone_r(Geos.current_handle_pointer, source.ptr),
         self.class.method(:release)
       )
 
@@ -128,7 +128,7 @@ module Geos
     end
 
     def self.release(ptr) #:nodoc:
-      FFIGeos.GEOSCoordSeq_destroy_r(Geos.current_handle, ptr)
+      FFIGeos.GEOSCoordSeq_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
     # Yields coordinates as [ x, y, z ]. The z coordinate may be omitted for
@@ -165,31 +165,31 @@ module Geos
     # Sets the x value of a coordinate. Can also be set via #x[]=.
     def set_x(idx, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle, self.ptr, idx, val.to_f)
+      FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle_pointer, self.ptr, idx, val.to_f)
     end
 
     # Sets the y value of a coordinate. Can also be set via #y[]=.
     def set_y(idx, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle, self.ptr, idx, val.to_f)
+      FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle_pointer, self.ptr, idx, val.to_f)
     end
 
     # Sets the z value of a coordinate. Can also be set via #z[]=.
     def set_z(idx, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle, self.ptr, idx, val.to_f)
+      FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle_pointer, self.ptr, idx, val.to_f)
     end
 
     def set_ordinate(idx, dim, val)
       self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle, self.ptr, idx, dim, val.to_f)
+      FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle_pointer, self.ptr, idx, dim, val.to_f)
     end
 
     # Gets the x value of a coordinate. Can also be retrieved via #x[].
     def get_x(idx)
       self.check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle, self.ptr, idx, double_ptr)
+      FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle_pointer, self.ptr, idx, double_ptr)
       double_ptr.read_double
     end
 
@@ -197,7 +197,7 @@ module Geos
     def get_y(idx)
       self.check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle, self.ptr, idx, double_ptr)
+      FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle_pointer, self.ptr, idx, double_ptr)
       double_ptr.read_double
     end
 
@@ -205,20 +205,20 @@ module Geos
     def get_z(idx)
       self.check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle, self.ptr, idx, double_ptr)
+      FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle_pointer, self.ptr, idx, double_ptr)
       double_ptr.read_double
     end
 
     def get_ordinate(idx, dim)
       self.check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle, self.ptr, idx, dim, double_ptr)
+      FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle_pointer, self.ptr, idx, dim, double_ptr)
       double_ptr.read_double
     end
 
     def length
       int_ptr = FFI::MemoryPointer.new(:int)
-      FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle, self.ptr, int_ptr)
+      FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle_pointer, self.ptr, int_ptr)
       int_ptr.read_int
     end
     alias_method :size, :length
@@ -232,7 +232,7 @@ module Geos
         @dimensions
       else
         int_ptr = FFI::MemoryPointer.new(:int)
-        FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle, self.ptr, int_ptr)
+        FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle_pointer, self.ptr, int_ptr)
         @dimensions = int_ptr.read_int
       end
     end

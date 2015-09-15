@@ -12,7 +12,7 @@ module Geos
         :include_srid => false
       }.merge(options)
 
-      ptr = FFIGeos.GEOSWKBWriter_create_r(Geos.current_handle)
+      ptr = FFIGeos.GEOSWKBWriter_create_r(Geos.current_handle_pointer)
       @ptr = FFI::AutoPointer.new(
         ptr,
         self.class.method(:release)
@@ -22,7 +22,7 @@ module Geos
     end
 
     def self.release(ptr) #:nodoc:
-      FFIGeos.GEOSWKBWriter_destroy_r(Geos.current_handle, ptr)
+      FFIGeos.GEOSWKBWriter_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
     # Options can be set temporarily for individual writes using an options
@@ -37,7 +37,7 @@ module Geos
       end
 
       size_t = FFI::MemoryPointer.new(:size_t)
-      FFIGeos.GEOSWKBWriter_write_r(Geos.current_handle, self.ptr, geom.ptr, size_t).get_bytes(0, size_t.read_int)
+      FFIGeos.GEOSWKBWriter_write_r(Geos.current_handle_pointer, self.ptr, geom.ptr, size_t).get_bytes(0, size_t.read_int)
     ensure
       set_options(old_options) unless old_options.nil?
     end
@@ -52,7 +52,7 @@ module Geos
       end
 
       size_t = FFI::MemoryPointer.new(:size_t)
-      FFIGeos.GEOSWKBWriter_writeHEX_r(Geos.current_handle, self.ptr, geom.ptr, size_t).get_string(0, size_t.read_int)
+      FFIGeos.GEOSWKBWriter_writeHEX_r(Geos.current_handle_pointer, self.ptr, geom.ptr, size_t).get_string(0, size_t.read_int)
     ensure
       set_options(old_options) unless old_options.nil?
     end
@@ -61,30 +61,30 @@ module Geos
       if dim < 2 || dim > 3
         raise ArgumentError.new("Output dimensions must be either 2 or 3")
       end
-      FFIGeos.GEOSWKBWriter_setOutputDimension_r(Geos.current_handle, self.ptr, dim)
+      FFIGeos.GEOSWKBWriter_setOutputDimension_r(Geos.current_handle_pointer, self.ptr, dim)
     end
 
     def output_dimensions
-      FFIGeos.GEOSWKBWriter_getOutputDimension_r(Geos.current_handle, self.ptr)
+      FFIGeos.GEOSWKBWriter_getOutputDimension_r(Geos.current_handle_pointer, self.ptr)
     end
 
     def include_srid
-      bool_result(FFIGeos.GEOSWKBWriter_getIncludeSRID_r(Geos.current_handle, self.ptr))
+      bool_result(FFIGeos.GEOSWKBWriter_getIncludeSRID_r(Geos.current_handle_pointer, self.ptr))
     end
 
     def include_srid=(val)
-      FFIGeos.GEOSWKBWriter_setIncludeSRID_r(Geos.current_handle, self.ptr,
+      FFIGeos.GEOSWKBWriter_setIncludeSRID_r(Geos.current_handle_pointer, self.ptr,
         Geos::Tools.bool_to_int(val)
       )
     end
 
     def byte_order
-      FFIGeos.GEOSWKBWriter_getByteOrder_r(Geos.current_handle, self.ptr)
+      FFIGeos.GEOSWKBWriter_getByteOrder_r(Geos.current_handle_pointer, self.ptr)
     end
 
     def byte_order=(val)
       check_enum_value(Geos::ByteOrders, val)
-      FFIGeos.GEOSWKBWriter_setByteOrder_r(Geos.current_handle, self.ptr, val)
+      FFIGeos.GEOSWKBWriter_setByteOrder_r(Geos.current_handle_pointer, self.ptr, val)
     end
 
     private

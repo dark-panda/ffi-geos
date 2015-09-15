@@ -6,7 +6,7 @@ module Geos
     if FFIGeos.respond_to?(:GEOSGeomGetX_r)
       def get_x
         double_ptr = FFI::MemoryPointer.new(:double)
-        FFIGeos.GEOSGeomGetX_r(Geos.current_handle, self.ptr, double_ptr)
+        FFIGeos.GEOSGeomGetX_r(Geos.current_handle_pointer, self.ptr, double_ptr)
         double_ptr.read_double
       end
     else
@@ -19,7 +19,7 @@ module Geos
     if FFIGeos.respond_to?(:GEOSGeomGetY_r)
       def get_y
         double_ptr = FFI::MemoryPointer.new(:double)
-        FFIGeos.GEOSGeomGetY_r(Geos.current_handle, self.ptr, double_ptr)
+        FFIGeos.GEOSGeomGetY_r(Geos.current_handle_pointer, self.ptr, double_ptr)
         double_ptr.read_double
       end
     else
@@ -32,7 +32,7 @@ module Geos
     if FFIGeos.respond_to?(:GEOSGeomGetZ_r)
       def get_z
         double_ptr = FFI::MemoryPointer.new(:double)
-        FFIGeos.GEOSGeomGetZ_r(Geos.current_handle, self.ptr, double_ptr)
+        FFIGeos.GEOSGeomGetZ_r(Geos.current_handle_pointer, self.ptr, double_ptr)
         double_ptr.read_double
       end
     else

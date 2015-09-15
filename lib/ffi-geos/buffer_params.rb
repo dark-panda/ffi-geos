@@ -25,7 +25,7 @@ module Geos
       def initialize(params = {})
         params = Geos::Constants::BUFFER_PARAM_DEFAULTS.merge(params)
 
-        ptr = FFIGeos.GEOSBufferParams_create_r(Geos.current_handle)
+        ptr = FFIGeos.GEOSBufferParams_create_r(Geos.current_handle_pointer)
         @ptr = FFI::AutoPointer.new(
           ptr,
           self.class.method(:release)
@@ -38,13 +38,13 @@ module Geos
       end
 
       def self.release(ptr) #:nodoc:
-        FFIGeos.GEOSBufferParams_destroy_r(Geos.current_handle, ptr)
+        FFIGeos.GEOSBufferParams_destroy_r(Geos.current_handle_pointer, ptr)
       end
 
       def endcap=(value)
         check_enum_value(Geos::BufferCapStyles, value)
 
-        if bool_result(FFIGeos.GEOSBufferParams_setEndCapStyle_r(Geos.current_handle, ptr, value))
+        if bool_result(FFIGeos.GEOSBufferParams_setEndCapStyle_r(Geos.current_handle_pointer, ptr, value))
           @params[:endcap] = symbol_for_enum(Geos::BufferCapStyles, value)
         end
       end
@@ -52,25 +52,25 @@ module Geos
       def join=(value)
         check_enum_value(Geos::BufferJoinStyles, value)
 
-        if bool_result(FFIGeos.GEOSBufferParams_setJoinStyle_r(Geos.current_handle, ptr, value))
+        if bool_result(FFIGeos.GEOSBufferParams_setJoinStyle_r(Geos.current_handle_pointer, ptr, value))
           @params[:join] = symbol_for_enum(Geos::BufferJoinStyles, value)
         end
       end
 
       def mitre_limit=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setMitreLimit_r(Geos.current_handle, ptr, value))
+        if bool_result(FFIGeos.GEOSBufferParams_setMitreLimit_r(Geos.current_handle_pointer, ptr, value))
           @params[:mitre_limit] = value
         end
       end
 
       def quad_segs=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setQuadrantSegments_r(Geos.current_handle, ptr, value))
+        if bool_result(FFIGeos.GEOSBufferParams_setQuadrantSegments_r(Geos.current_handle_pointer, ptr, value))
           @params[:quad_segs] = value
         end
       end
 
       def single_sided=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setSingleSided_r(Geos.current_handle, ptr, Geos::Tools.bool_to_int(value)))
+        if bool_result(FFIGeos.GEOSBufferParams_setSingleSided_r(Geos.current_handle_pointer, ptr, Geos::Tools.bool_to_int(value)))
           @params[:single_sided] = value
         end
       end

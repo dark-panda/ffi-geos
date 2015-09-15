@@ -106,4 +106,102 @@ class MiscTests < Minitest::Test
       Geos::BufferParams.new.dup
     end
   end
+
+  def notice_handler_tester
+    results = ''.dup
+    geom = read('POLYGON((0 0, 0 5, 5 0, 5 5, 0 0))')
+
+    yield results
+
+    refute(geom.valid?, "Expected geom to be invalid")
+    assert_match(/^NOTICE: .+$/, results)
+  ensure
+    Geos.current_handle.reset_notice_handler
+  end
+
+  def notice_handler_method(results, *args)
+    results << "NOTICE: #{args[0] % args[1]}"
+  end
+
+  def test_setting_notice_handler_with_method
+    skip unless ENV['FORCE_TESTS'] || Geos::Handle.method_defined?(:notice_handler=)
+
+    notice_handler_tester do |results|
+      Geos.current_handle.notice_handler = method(:notice_handler_method).curry(2)[results]
+    end
+  end
+
+  def test_setting_notice_handler_with_proc
+    skip unless ENV['FORCE_TESTS'] || Geos::Handle.method_defined?(:notice_handler=)
+
+    notice_handler_tester do |results|
+      Geos.current_handle.notice_handler = proc do |*args|
+        results << "NOTICE: #{args[0] % args[1]}"
+      end
+    end
+  end
+
+  def test_setting_notice_handler_with_block
+    skip unless ENV['FORCE_TESTS'] || Geos::Handle.method_defined?(:notice_handler=)
+
+    notice_handler_tester do |results|
+      Geos.current_handle.notice_handler do |*args|
+        results << "NOTICE: #{args[0] % args[1]}"
+      end
+    end
+  end
+
+  def error_handler_tester
+    results = ''.dup
+    geom = nil
+
+    yield results
+
+    assert_raises(RuntimeError) do
+      geom = read('POLYGON((0 0, 0 5, 5 0, 5 5))')
+    end
+
+    assert_nil(geom)
+    assert_match(/^ERROR: .+$/, results)
+  ensure
+    Geos.current_handle.reset_error_handler
+  end
+
+  def error_handler_method(results, *args)
+    message = "ERROR: #{args[0] % args[1]}".dup
+    results << message
+    raise message
+  end
+
+  def test_setting_error_handler_with_method
+    skip unless ENV['FORCE_TESTS'] || Geos::Handle.method_defined?(:error_handler=)
+
+    error_handler_tester do |results|
+      Geos.current_handle.error_handler = method(:error_handler_method).curry(2)[results]
+    end
+  end
+
+  def test_setting_error_handler_with_proc
+    skip unless ENV['FORCE_TESTS'] || Geos::Handle.method_defined?(:error_handler=)
+
+    error_handler_tester do |results|
+      Geos.current_handle.error_handler = proc do |*args|
+        message = "ERROR: #{args[0] % args[1]}".dup
+        results << message
+        raise message
+      end
+    end
+  end
+
+  def test_setting_error_handler_with_block
+    skip unless ENV['FORCE_TESTS'] || Geos::Handle.method_defined?(:error_handler=)
+
+    error_handler_tester do |results|
+      Geos.current_handle.error_handler do |*args|
+        message = "ERROR: #{args[0] % args[1]}".dup
+        results << message
+        raise message
+      end
+    end
+  end
 end

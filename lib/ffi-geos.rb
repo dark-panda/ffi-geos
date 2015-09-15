@@ -1062,12 +1062,42 @@ module Geos
       def initialize
         @ptr = FFI::AutoPointer.new(FFIGeos.GEOS_init_r, self.class.method(:release))
 
-        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler = self.method(:notice_handler), nil)
-        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler = self.method(:error_handler), nil)
+        reset_notice_handler
+        reset_error_handler
       end
 
       def self.release(ptr)
         FFIGeos.GEOS_finish_r(ptr)
+      end
+
+      def notice_handler=(method_or_block)
+        @notice_handler = method_or_block
+        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler, nil)
+        @notice_handler
+      end
+
+      def error_handler=(method_or_block)
+        @error_handler = method_or_block
+        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler, nil)
+        @error_handler
+      end
+
+      def notice_handler(&block)
+        self.notice_handler = block if block_given?
+        @notice_handler
+      end
+
+      def error_handler(&block)
+        self.error_handler = block if block_given?
+        @error_handler
+      end
+
+      def reset_notice_handler
+        self.notice_handler = self.method(:default_notice_handler)
+      end
+
+      def reset_error_handler
+        self.error_handler = self.method(:default_error_handler)
       end
 
     # Deprecated initialization and teardown...
@@ -1075,8 +1105,8 @@ module Geos
       def initialize
         @ptr = FFI::AutoPointer.new(
           FFIGeos.initGEOS_r(
-            @notice_handler = self.method(:notice_handler),
-            @error_handler = self.method(:error_handler)
+            @notice_handler = self.method(:default_notice_handler),
+            @error_handler = self.method(:default_error_handler)
           ),
           self.class.method(:release)
         )
@@ -1085,14 +1115,22 @@ module Geos
       def self.release(ptr)
         FFIGeos.finishGEOS_r(ptr)
       end
+
+      def notice_handler
+        @notice_handler
+      end
+
+      def error_handler
+        @error_handler
+      end
     end
 
     private
-      def notice_handler(*args)
-        # no-op, just to appease initGEOS.
+      def default_notice_handler(*args)
+        # no-op
       end
 
-      def error_handler(*args)
+      def default_error_handler(*args)
         raise Geos::GEOSException.new(args[0] % args[1])
       end
   end
@@ -1108,7 +1146,10 @@ module Geos
 
     def current_handle
       Thread.current[:ffi_geos_handle] ||= Geos::Handle.new
-      Thread.current[:ffi_geos_handle].ptr
+    end
+
+    def current_handle_pointer
+      current_handle.ptr
     end
 
     def srid_copy_policy

@@ -32,7 +32,7 @@ module Geos
         raise Geos::NullPointerError.new
       end
 
-      klass = case FFIGeos.GEOSGeomTypeId_r(Geos.current_handle, geom_ptr)
+      klass = case FFIGeos.GEOSGeomTypeId_r(Geos.current_handle_pointer, geom_ptr)
         when GEOS_POINT
           Point
         when GEOS_LINESTRING

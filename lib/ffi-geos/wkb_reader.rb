@@ -14,7 +14,7 @@ module Geos
       ptr = if args.first.is_a?(FFI::Pointer)
         args.first
       else
-        FFIGeos.GEOSWKBReader_create_r(Geos.current_handle, *args)
+        FFIGeos.GEOSWKBReader_create_r(Geos.current_handle_pointer, *args)
       end
 
       @ptr = FFI::AutoPointer.new(
@@ -24,7 +24,7 @@ module Geos
     end
 
     def read(wkb, options = {})
-      cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize), {
+      cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle_pointer, self.ptr, wkb, wkb.bytesize), {
         :srid => options[:srid]
       })
     rescue Geos::GEOSException => e
@@ -32,7 +32,7 @@ module Geos
     end
 
     def read_hex(wkb, options = {})
-      cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle, self.ptr, wkb, wkb.bytesize), {
+      cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle_pointer, self.ptr, wkb, wkb.bytesize), {
         :srid => options[:srid]
       })
     rescue Geos::GEOSException => e
@@ -40,7 +40,7 @@ module Geos
     end
 
     def self.release(ptr) #:nodoc:
-      FFIGeos.GEOSWKBReader_destroy_r(Geos.current_handle, ptr)
+      FFIGeos.GEOSWKBReader_destroy_r(Geos.current_handle_pointer, ptr)
     end
   end
 end

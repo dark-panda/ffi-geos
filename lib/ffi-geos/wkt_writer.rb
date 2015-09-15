@@ -16,7 +16,7 @@ module Geos
         :output_dimensions => 2
       }.merge(options)
 
-      ptr = FFIGeos.GEOSWKTWriter_create_r(Geos.current_handle)
+      ptr = FFIGeos.GEOSWKTWriter_create_r(Geos.current_handle_pointer)
       @ptr = FFI::AutoPointer.new(
         ptr,
         self.class.method(:release)
@@ -26,7 +26,7 @@ module Geos
     end
 
     def self.release(ptr) #:nodoc:
-      FFIGeos.GEOSWKTWriter_destroy_r(Geos.current_handle, ptr)
+      FFIGeos.GEOSWKTWriter_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
     def set_options(options) #:nodoc:
@@ -51,7 +51,7 @@ module Geos
         set_options(options)
       end
 
-      FFIGeos.GEOSWKTWriter_write_r(Geos.current_handle, self.ptr, geom.ptr)
+      FFIGeos.GEOSWKTWriter_write_r(Geos.current_handle_pointer, self.ptr, geom.ptr)
     ensure
       set_options(old_options) unless options.nil?
     end
@@ -60,7 +60,7 @@ module Geos
       # Available in GEOS 3.3+.
       def trim=(val)
         @trim = !!val
-        FFIGeos.GEOSWKTWriter_setTrim_r(Geos.current_handle, self.ptr,
+        FFIGeos.GEOSWKTWriter_setTrim_r(Geos.current_handle_pointer, self.ptr,
           Geos::Tools.bool_to_int(@trim)
         )
       end
@@ -75,7 +75,7 @@ module Geos
         end
 
         @rounding_precision = r
-        FFIGeos.GEOSWKTWriter_setRoundingPrecision_r(Geos.current_handle, self.ptr, @rounding_precision)
+        FFIGeos.GEOSWKTWriter_setRoundingPrecision_r(Geos.current_handle_pointer, self.ptr, @rounding_precision)
       end
     end
 
@@ -83,7 +83,7 @@ module Geos
       # Available in GEOS 3.3+.
       def old_3d=(val)
         @old_3d = !!val
-        FFIGeos.GEOSWKTWriter_setOld3D_r(Geos.current_handle, self.ptr,
+        FFIGeos.GEOSWKTWriter_setOld3D_r(Geos.current_handle_pointer, self.ptr,
           Geos::Tools.bool_to_int(@old_3d)
         )
       end
@@ -96,14 +96,14 @@ module Geos
         if dim < 2 || dim > 3
           raise ArgumentError.new("Output dimensions must be either 2 or 3")
         end
-        FFIGeos.GEOSWKTWriter_setOutputDimension_r(Geos.current_handle, self.ptr, dim)
+        FFIGeos.GEOSWKTWriter_setOutputDimension_r(Geos.current_handle_pointer, self.ptr, dim)
       end
     end
 
     if FFIGeos.respond_to?(:GEOSWKTWriter_getOutputDimension_r)
       # Available in GEOS 3.3+.
       def output_dimensions
-        FFIGeos.GEOSWKTWriter_getOutputDimension_r(Geos.current_handle, self.ptr)
+        FFIGeos.GEOSWKTWriter_getOutputDimension_r(Geos.current_handle_pointer, self.ptr)
       end
     end
   end

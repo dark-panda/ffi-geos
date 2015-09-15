@@ -15,7 +15,7 @@ module Geos
         # Available in GEOS 3.3.0+.
         def orientation_index(ax, ay, bx, by, px, py)
           FFIGeos.GEOSOrientationIndex_r(
-            Geos.current_handle,
+            Geos.current_handle_pointer,
             ax, ay, bx, by, px, py
           )
         end
@@ -24,7 +24,7 @@ module Geos
       if FFIGeos.respond_to?(:GEOSRelatePatternMatch_r)
         # Available in GEOS 3.3.0+.
         def relate_match(mat, pat)
-          bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle, mat, pat))
+          bool_result(FFIGeos.GEOSRelatePatternMatch_r(Geos.current_handle_pointer, mat, pat))
         end
       end
 
@@ -50,7 +50,7 @@ module Geos
         cs_dup = cs.dup
         cs_dup.ptr.autorelease = false
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle, cs_dup.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPoint_r(Geos.current_handle_pointer, cs_dup.ptr), {
           :srid => options[:srid]
         })
       end
@@ -65,7 +65,7 @@ module Geos
         cs_dup = cs.dup
         cs_dup.ptr.autorelease = false
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle, cs_dup.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLineString_r(Geos.current_handle_pointer, cs_dup.ptr), {
           :srid => options[:srid]
         })
       end
@@ -79,7 +79,7 @@ module Geos
 
         cs.ptr.autorelease = false
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle_pointer, cs.ptr), {
           :srid => options[:srid]
         })
       end
@@ -103,32 +103,32 @@ module Geos
           i.ptr.autorelease = false
         }
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle, outer_dup.ptr, ary, inner_dups.length), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createPolygon_r(Geos.current_handle_pointer, outer_dup.ptr, ary, inner_dups.length), {
           :srid => options[:srid]
         })
       end
 
       def create_empty_point(options = {})
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPoint_r(Geos.current_handle), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPoint_r(Geos.current_handle_pointer), {
           :srid => options[:srid]
         })
       end
 
       def create_empty_line_string(options = {})
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyLineString_r(Geos.current_handle), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyLineString_r(Geos.current_handle_pointer), {
           :srid => options[:srid]
         })
       end
 
       def create_empty_polygon(options = {})
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPolygon_r(Geos.current_handle), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyPolygon_r(Geos.current_handle_pointer), {
           :srid => options[:srid]
         })
       end
 
       def create_empty_collection(t, options = {})
         check_enum_value(Geos::GeometryTypes, t)
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyCollection_r(Geos.current_handle, t), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createEmptyCollection_r(Geos.current_handle_pointer, t), {
           :srid => options[:srid]
         })
       end
@@ -183,7 +183,7 @@ module Geos
         ary = FFI::MemoryPointer.new(:pointer, geoms.length)
         ary.write_array_of_pointer(geoms_dups.map(&:ptr))
 
-        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle, t, ary, geoms_dups.length), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createCollection_r(Geos.current_handle_pointer, t, ary, geoms_dups.length), {
           :srid => options[:srid]
         })
       end
