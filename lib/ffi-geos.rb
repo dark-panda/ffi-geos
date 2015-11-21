@@ -1012,26 +1012,21 @@ module Geos
       #### /Algorithms ####
     }
 
-    begin
-      ffi_lib(geos_library_path)
+    ffi_lib(geos_library_path)
 
-      FFI_LAYOUT.each do |fun, ary|
-        ret = ary.shift
-        begin
-          self.class_eval do
-            attach_function(fun, ary, ret)
-          end
-        rescue FFI::NotFoundError
-          # that's okay
+    FFI_LAYOUT.each do |fun, ary|
+      ret = ary.shift
+      begin
+        self.class_eval do
+          attach_function(fun, ary, ret)
         end
+      rescue FFI::NotFoundError
+        # that's okay
       end
-
-      # Checks to see if we actually have the GEOS library loaded.
-      FFIGeos.GEOSversion
-
-    rescue LoadError, NoMethodError
-      raise LoadError.new("Couldn't load the GEOS CAPI library.")
     end
+
+    # Checks to see if we actually have the GEOS library loaded.
+    FFIGeos.GEOSversion
   end
 
   class Handle
