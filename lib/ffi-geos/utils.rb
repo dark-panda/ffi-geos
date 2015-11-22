@@ -78,7 +78,7 @@ module Geos
 
         cs.ptr.autorelease = false
 
-        ret = cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs.ptr), {
+        cast_geometry_ptr(FFIGeos.GEOSGeom_createLinearRing_r(Geos.current_handle, cs.ptr), {
           :srid => options[:srid]
         })
       end
