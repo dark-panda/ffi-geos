@@ -11,9 +11,9 @@ module Geos
 
     def initialize(*args)
       ptr = if args.first.is_a?(FFI::Pointer)
-        args.first
-      else
-        FFIGeos.GEOSWKTReader_create_r(Geos.current_handle, *args)
+              args.first
+            else
+              FFIGeos.GEOSWKTReader_create_r(Geos.current_handle, *args)
       end
 
       @ptr = FFI::AutoPointer.new(
@@ -23,9 +23,7 @@ module Geos
     end
 
     def read(wkt, options = {})
-      cast_geometry_ptr(FFIGeos.GEOSWKTReader_read_r(Geos.current_handle, self.ptr, wkt), {
-        :srid => options[:srid]
-      })
+      cast_geometry_ptr(FFIGeos.GEOSWKTReader_read_r(Geos.current_handle, ptr, wkt), srid: options[:srid])
     rescue Geos::GEOSException => e
       raise ParseError.new(e)
     end

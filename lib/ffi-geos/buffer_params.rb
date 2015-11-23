@@ -32,7 +32,7 @@ module Geos
 
         @params = {}
         VALID_PARAMETERS.each do |param|
-          self.send("#{param}=", params[param])
+          send("#{param}=", params[param])
         end
       end
 
@@ -75,7 +75,7 @@ module Geos
       end
 
       VALID_PARAMETERS.each do |param|
-        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        class_eval(<<-EOF, __FILE__, __LINE__ + 1)
           def #{param}
             @params[:#{param}]
           end
@@ -88,7 +88,7 @@ module Geos
         params = Geos::Constants::BUFFER_PARAM_DEFAULTS.merge(params)
 
         VALID_PARAMETERS.each do |param|
-          self.send("#{param}=", params[param])
+          send("#{param}=", params[param])
         end
       end
     end

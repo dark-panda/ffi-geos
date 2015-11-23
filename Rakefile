@@ -7,7 +7,7 @@ require 'rake/testtask'
 require 'rdoc/task'
 require 'bundler/gem_tasks'
 
-$:.push File.expand_path(File.dirname(__FILE__), 'lib')
+$LOAD_PATH.push File.expand_path(File.dirname(__FILE__), 'lib')
 
 version = Geos::VERSION
 
@@ -18,7 +18,7 @@ Rake::TestTask.new(:test) do |t|
   t.warning = !!ENV['WARNINGS']
 end
 
-task :default => :test
+task default: :test
 
 begin
   desc 'Build docs'

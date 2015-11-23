@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class GeometryCollectionTests < Minitest::Test
@@ -58,7 +58,7 @@ class GeometryCollectionTests < Minitest::Test
       POINT(10 20)
     )')
 
-    assert_equal(2, geom.select { |point| point == read('POINT(10 20)') }.length)
+    assert_equal(2, geom.count { |point| point == read('POINT(10 20)') })
   end
 
   def test_default_srid

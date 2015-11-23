@@ -18,7 +18,7 @@ require 'minitest/reporters' if RUBY_VERSION >= '1.9'
 if ENV['USE_BINARY_GEOS']
   require 'geos'
 else
-  require File.join(File.dirname(__FILE__), %w{ .. lib ffi-geos })
+  require File.join(File.dirname(__FILE__), %w( .. lib ffi-geos ))
 end
 
 puts "Ruby version #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} - #{RbConfig::CONFIG['RUBY_INSTALL_NAME']}"
@@ -32,9 +32,7 @@ end
 
 puts "ffi-geos version #{Geos::VERSION}" if defined?(Geos::VERSION)
 
-if defined?(Geos::FFIGeos)
-  puts "Using #{Geos::FFIGeos.geos_library_path}"
-end
+puts "Using #{Geos::FFIGeos.geos_library_path}" if defined?(Geos::FFIGeos)
 
 module TestHelper
   TOLERANCE = 0.0000000000001
@@ -80,14 +78,14 @@ module TestHelper
   end
 
   {
-    :empty => 'to be empty',
-    :valid => 'to be valid',
-    :simple => 'to be simple',
-    :ring => 'to be ring',
-    :closed => 'to be closed',
-    :has_z => 'to have z dimension'
+    empty: 'to be empty',
+    valid: 'to be valid',
+    simple: 'to be simple',
+    ring: 'to be ring',
+    closed: 'to be closed',
+    has_z: 'to have z dimension'
   }.each do |t, m|
-    self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+    class_eval(<<-EOF, __FILE__, __LINE__ + 1)
       def assert_geom_#{t}(geom)
         assert(geom.#{t}?, "Expected geom #{m}")
       end
@@ -106,9 +104,7 @@ module TestHelper
     geom = geom_from_geom_or_wkt(geom)
     result = geom.send(method, *args)
 
-    if result.is_a?(Geos::Geometry)
-      result = write(result)
-    end
+    result = write(result) if result.is_a?(Geos::Geometry)
 
     assert_equal(expected, result)
   end
@@ -138,12 +134,12 @@ module TestHelper
     result = geom.send(method, *args)
 
     case result
-      when Geos::Geometry
-        result = [ write(result) ]
-      when Array
-        result = result.collect { |r|
-          write(r)
-        }
+    when Geos::Geometry
+      result = [write(result)]
+    when Array
+      result = result.collect { |r|
+        write(r)
+      }
     end
 
     assert_equal(expected, result)
@@ -153,4 +149,3 @@ end
 if RUBY_VERSION >= '1.9'
   Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)
 end
-

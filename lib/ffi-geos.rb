@@ -8,51 +8,51 @@ module Geos
   GEOS_BASE = File.join(File.dirname(__FILE__), 'ffi-geos')
 
   autoload :WktReader,
-    File.join(GEOS_BASE, 'wkt_reader')
+           File.join(GEOS_BASE, 'wkt_reader')
   autoload :WktWriter,
-    File.join(GEOS_BASE, 'wkt_writer')
+           File.join(GEOS_BASE, 'wkt_writer')
   autoload :WkbReader,
-    File.join(GEOS_BASE, 'wkb_reader')
+           File.join(GEOS_BASE, 'wkb_reader')
   autoload :WkbWriter,
-    File.join(GEOS_BASE, 'wkb_writer')
+           File.join(GEOS_BASE, 'wkb_writer')
   autoload :CoordinateSequence,
-    File.join(GEOS_BASE, 'coordinate_sequence')
+           File.join(GEOS_BASE, 'coordinate_sequence')
   autoload :Geometry,
-    File.join(GEOS_BASE, 'geometry')
+           File.join(GEOS_BASE, 'geometry')
   autoload :PreparedGeometry,
-    File.join(GEOS_BASE, 'prepared_geometry')
+           File.join(GEOS_BASE, 'prepared_geometry')
   autoload :GeometryCollection,
-    File.join(GEOS_BASE, 'geometry_collection')
+           File.join(GEOS_BASE, 'geometry_collection')
   autoload :LineString,
-    File.join(GEOS_BASE, 'line_string')
+           File.join(GEOS_BASE, 'line_string')
   autoload :LinearRing,
-    File.join(GEOS_BASE, 'linear_ring')
+           File.join(GEOS_BASE, 'linear_ring')
   autoload :MultiLineString,
-    File.join(GEOS_BASE, 'multi_line_string')
+           File.join(GEOS_BASE, 'multi_line_string')
   autoload :MultiPoint,
-    File.join(GEOS_BASE, 'multi_point')
+           File.join(GEOS_BASE, 'multi_point')
   autoload :MultiPolygon,
-    File.join(GEOS_BASE, 'multi_polygon')
+           File.join(GEOS_BASE, 'multi_polygon')
   autoload :Polygon,
-    File.join(GEOS_BASE, 'polygon')
+           File.join(GEOS_BASE, 'polygon')
   autoload :Point,
-    File.join(GEOS_BASE, 'point')
+           File.join(GEOS_BASE, 'point')
   autoload :STRtree,
-    File.join(GEOS_BASE, 'strtree')
+           File.join(GEOS_BASE, 'strtree')
   autoload :BufferParams,
-    File.join(GEOS_BASE, 'buffer_params')
+           File.join(GEOS_BASE, 'buffer_params')
   autoload :Tools,
-    File.join(GEOS_BASE, 'tools')
+           File.join(GEOS_BASE, 'tools')
   autoload :Utils,
-    File.join(GEOS_BASE, 'utils')
+           File.join(GEOS_BASE, 'utils')
   autoload :Interrupt,
-    File.join(GEOS_BASE, 'interrupt')
+           File.join(GEOS_BASE, 'interrupt')
 
   module FFIGeos
     def self.search_paths
       @search_paths ||= begin
         if ENV['GEOS_LIBRARY_PATH']
-          [ ENV['GEOS_LIBRARY_PATH'] ]
+          [ENV['GEOS_LIBRARY_PATH']]
         elsif FFI::Platform::IS_WINDOWS
           ENV['PATH'].split(File::PATH_SEPARATOR)
         else
@@ -81,7 +81,7 @@ module Geos
     # For backwards compatibility with older ffi-geos versions where this
     # used to return an Array.
     def self.geos_library_paths
-      [ self.geos_library_path ]
+      [geos_library_path]
     end
 
     extend ::FFI::Library
@@ -141,861 +141,860 @@ module Geos
       # Initialization and cleanup
 
       # deprecated in GEOS 3.5.0+
-      :initGEOS_r => [
+      initGEOS_r: [
         :pointer,
 
         # notice callback
-        callback([ :string, :string ], :void),
+        callback([:string, :string], :void),
 
         # error callback
-        callback([ :string, :string ], :void)
+        callback([:string, :string], :void)
       ],
 
-      :finishGEOS_r => [
+      finishGEOS_r: [
         # void, *handle
         :void, :pointer
       ],
       # / deprecated in GEOS 3.5.0+
 
       # GEOS 3.5.0+
-      :GEOS_init_r => [ :pointer ],
+      GEOS_init_r: [:pointer],
 
-      :GEOSContext_setNoticeMessageHandler_r => [
+      GEOSContext_setNoticeMessageHandler_r: [
         # void, *handle, callback, *void
-        :void, :pointer, callback([ :string, :string ], :void), :pointer
+        :void, :pointer, callback([:string, :string], :void), :pointer
       ],
 
-      :GEOSContext_setErrorMessageHandler_r => [
+      GEOSContext_setErrorMessageHandler_r: [
         # void, *handle, callback, *void
-        :void, :pointer, callback([ :string, :string ], :void), :pointer
+        :void, :pointer, callback([:string, :string], :void), :pointer
       ],
 
-      :GEOS_finish_r => [
+      GEOS_finish_r: [
         # void, *handle
         :void, :pointer
       ],
       # / GEOS 3.5.0+
 
-      :GEOS_interruptRegisterCallback => [
+      GEOS_interruptRegisterCallback: [
         :pointer,
         callback([], :void)
       ],
 
-      :GEOS_interruptRequest => [
+      GEOS_interruptRequest: [
         :void
       ],
 
-      :GEOS_interruptCancel => [
+      GEOS_interruptCancel: [
         :void
       ],
 
-      :GEOSversion => [
+      GEOSversion: [
         :string
       ],
 
-      :GEOSjtsport => [
+      GEOSjtsport: [
         :string
       ],
 
-      :GEOSPolygonize_r => [
+      GEOSPolygonize_r: [
         # *geom, *handle, **geoms, ngeoms
         :pointer, :pointer, :pointer, :uint
       ],
 
-      :GEOSPolygonizer_getCutEdges_r => [
+      GEOSPolygonizer_getCutEdges_r: [
         # *geom, *handle, **geoms, ngeoms
         :pointer, :pointer, :pointer, :uint
       ],
 
-      :GEOSPolygonize_full_r => [
+      GEOSPolygonize_full_r: [
         # *geom, *handle, *geom, **cuts, **dangles, **invalid
         :pointer, :pointer, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeom_createPoint_r => [
+      GEOSGeom_createPoint_r: [
         # *geom, *handle, *coord_seq
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeom_createEmptyPoint_r => [
+      GEOSGeom_createEmptyPoint_r: [
         # *geom, *handle
         :pointer, :pointer
       ],
 
-      :GEOSGeom_createEmptyLineString_r => [
+      GEOSGeom_createEmptyLineString_r: [
         # *geom, *handle
         :pointer, :pointer
       ],
 
-      :GEOSGeom_createLinearRing_r => [
+      GEOSGeom_createLinearRing_r: [
         # *geom, *handle, *coord_seq
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeom_createLineString_r => [
+      GEOSGeom_createLineString_r: [
         # *geom, *handle, *coord_seq
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeom_createPolygon_r => [
+      GEOSGeom_createPolygon_r: [
         # *geom, *handle, *geom, **holes, nholes
         :pointer, :pointer, :pointer, :pointer, :uint
       ],
 
-      :GEOSGeom_createEmptyPolygon_r => [
+      GEOSGeom_createEmptyPolygon_r: [
         # *geom, *handle
         :pointer, :pointer
       ],
 
-      :GEOSGeom_createCollection_r => [
+      GEOSGeom_createCollection_r: [
         # *geom, *handle, type, **geoms, ngeoms
         :pointer, :pointer, :geometry_type, :pointer, :uint
       ],
 
-      :GEOSGeom_createEmptyCollection_r => [
+      GEOSGeom_createEmptyCollection_r: [
         # *geom, *handle, type
         :pointer, :pointer, :geometry_type
       ],
       #### /Utility functions ####
 
       #### CoordinateSequence functions ####
-      :GEOSCoordSeq_create_r => [
+      GEOSCoordSeq_create_r: [
         # *coord_seq, *handle, size, dims
         :pointer, :pointer, :uint, :uint
       ],
 
-      :GEOSCoordSeq_destroy_r => [
+      GEOSCoordSeq_destroy_r: [
         # void, *handle, *coord_seq
         :void, :pointer, :pointer
       ],
 
-      :GEOSCoordSeq_clone_r => [
+      GEOSCoordSeq_clone_r: [
         # *coord_seq, *handle, *coord_seq
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSCoordSeq_setX_r => [
+      GEOSCoordSeq_setX_r: [
         # 0 on exception, *handle, *coord_seq, idx, val
         :int, :pointer, :pointer, :uint, :double
       ],
 
-      :GEOSCoordSeq_setY_r => [
+      GEOSCoordSeq_setY_r: [
         # 0 on exception, *handle, *coord_seq, idx, val
         :int, :pointer, :pointer, :uint, :double
       ],
 
-      :GEOSCoordSeq_setZ_r => [
+      GEOSCoordSeq_setZ_r: [
         # 0 on exception, *handle, *coord_seq, idx, val
         :int, :pointer, :pointer, :uint, :double
       ],
 
-      :GEOSCoordSeq_setOrdinate_r => [
+      GEOSCoordSeq_setOrdinate_r: [
         # 0 on exception, *handle, *coord_seq, idx, dim, val
         :int, :pointer, :pointer, :uint, :uint, :double
       ],
 
-      :GEOSCoordSeq_getX_r => [
+      GEOSCoordSeq_getX_r: [
         # 0 on exception, *handle, *coord_seq, idx, (double *) val
         :int, :pointer, :pointer, :uint, :pointer
       ],
 
-      :GEOSCoordSeq_getY_r => [
+      GEOSCoordSeq_getY_r: [
         # 0 on exception, *handle, *coord_seq, idx, (double *) val
         :int, :pointer, :pointer, :uint, :pointer
       ],
 
-      :GEOSCoordSeq_getZ_r => [
+      GEOSCoordSeq_getZ_r: [
         # 0 on exception, *handle, *coord_seq, idx, (double *) val
         :int, :pointer, :pointer, :uint, :pointer
       ],
 
-      :GEOSCoordSeq_getOrdinate_r => [
+      GEOSCoordSeq_getOrdinate_r: [
         # 0 on exception, *handle, *coord_seq, idx, dim, (double *) val
         :int, :pointer, :pointer, :uint, :uint, :pointer
       ],
 
-      :GEOSCoordSeq_getSize_r => [
+      GEOSCoordSeq_getSize_r: [
         # 0 on exception, *handle, *coord_seq, (uint *) size
         :int, :pointer, :pointer, :pointer
       ],
 
-      :GEOSCoordSeq_getDimensions_r => [
+      GEOSCoordSeq_getDimensions_r: [
         # 0 on exception, *handle, *coord_seq, (uint *) size
         :int, :pointer, :pointer, :pointer
       ],
       #### /CoordinateSequence functions ####
 
       #### Geometry functions ####
-      :GEOSGeom_destroy_r => [
+      GEOSGeom_destroy_r: [
         # void, *handle, *geom
         :void, :pointer, :pointer
       ],
 
-      :GEOSGeom_clone_r => [
+      GEOSGeom_clone_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeomTypeId_r => [
+      GEOSGeomTypeId_r: [
         # type, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSGeomType_r => [
+      GEOSGeomType_r: [
         # type, *handle, *geom
         :string, :pointer, :pointer
       ],
 
-      :GEOSGetSRID_r => [
+      GEOSGetSRID_r: [
         # srid, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSSetSRID_r => [
+      GEOSSetSRID_r: [
         # void, *handle, *geom, srid
         :void, :pointer, :pointer, :int
       ],
 
-      :GEOSGeom_getDimensions_r => [
+      GEOSGeom_getDimensions_r: [
         # dims, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSGetNumGeometries_r => [
+      GEOSGetNumGeometries_r: [
         # ngeoms, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSGetNumCoordinates_r => [
+      GEOSGetNumCoordinates_r: [
         # numcoords, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSGeom_getCoordSeq_r => [
+      GEOSGeom_getCoordSeq_r: [
         # *coord_seq, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSIntersection_r => [
+      GEOSIntersection_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSBufferWithParams_r => [
+      GEOSBufferWithParams_r: [
         # *geom, *handle, *geom, *params, width
         :pointer, :pointer, :pointer, :pointer, :double
       ],
 
-      :GEOSBuffer_r => [
+      GEOSBuffer_r: [
         # *geom, *handle, *geom, width, quad_segs
         :pointer, :pointer, :pointer, :double, :int
       ],
 
-      :GEOSBufferWithStyle_r => [
+      GEOSBufferWithStyle_r: [
         # *geom, *handle, *geom, width, quad_segs, buffer_cap_style, buffer_join_style, mitre_limit
         :pointer, :pointer, :pointer, :double, :int, :buffer_cap_style, :buffer_join_style, :double
       ],
 
       # Deprecated in GEOS 3.3.0.
-      :GEOSSingleSidedBuffer_r => [
+      GEOSSingleSidedBuffer_r: [
         # *geom, *handle, *geom, width, quad_segs, buffer_join_style, mitre_limit, is_left
         :pointer, :pointer, :pointer, :double, :int, :buffer_join_style, :double, :int
       ],
 
-      :GEOSOffsetCurve_r => [
+      GEOSOffsetCurve_r: [
         # *geom, *handle, *geom, width, quad_segs, buffer_join_style, mitre_limit
         :pointer, :pointer, :pointer, :double, :int, :buffer_join_style, :double
       ],
 
-      :GEOSConvexHull_r => [
+      GEOSConvexHull_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSDifference_r => [
+      GEOSDifference_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSSymDifference_r => [
+      GEOSSymDifference_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSBoundary_r => [
+      GEOSBoundary_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSUnion_r => [
+      GEOSUnion_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSUnaryUnion_r => [
+      GEOSUnaryUnion_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSNode_r => [
+      GEOSNode_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
       # Deprecated in GEOS 3.3.0. Use GEOSUnaryUnion_r instead.
-      :GEOSUnionCascaded_r => [
+      GEOSUnionCascaded_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSPointOnSurface_r => [
+      GEOSPointOnSurface_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSClipByRect_r => [
+      GEOSClipByRect_r: [
         # *geom, *handle, *geom, xmin, ymin, xmax, ymax
         :pointer, :pointer, :pointer, :double, :double, :double, :double
       ],
 
-      :GEOSGetCentroid_r => [
+      GEOSGetCentroid_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSEnvelope_r => [
+      GEOSEnvelope_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSLineMerge_r => [
+      GEOSLineMerge_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSSimplify_r => [
+      GEOSSimplify_r: [
         # *geom, *handle, *geom, tolerance
         :pointer, :pointer, :pointer, :double
       ],
 
-      :GEOSTopologyPreserveSimplify_r => [
+      GEOSTopologyPreserveSimplify_r: [
         # *geom, *handle, *geom, tolerance
         :pointer, :pointer, :pointer, :double
       ],
 
-      :GEOSGeom_extractUniquePoints_r => [
+      GEOSGeom_extractUniquePoints_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSSharedPaths_r => [
+      GEOSSharedPaths_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSSnap_r => [
+      GEOSSnap_r: [
         # *geom, *handle, *geom_a, *geom_b, tolerance
         :pointer, :pointer, :pointer, :pointer, :double
       ],
 
-      :GEOSDelaunayTriangulation_r => [
+      GEOSDelaunayTriangulation_r: [
         # *geom, *handle, *geom, tolerance, only_edges
         :pointer, :pointer, :pointer, :double, :int
       ],
 
-      :GEOSVoronoiDiagram_r => [
+      GEOSVoronoiDiagram_r: [
         # *geom, *handle, *geom, *envelope, tolerance, only_edges
         :pointer, :pointer, :pointer, :pointer, :double, :int
       ],
 
-      :GEOSRelate_r => [
+      GEOSRelate_r: [
         # string, *handle, *geom_a, *geom_b
         :string, :pointer, :pointer, :pointer
       ],
 
-      :GEOSRelatePatternMatch_r => [
+      GEOSRelatePatternMatch_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, pattern_a, pattern_b
         :char, :pointer, :string, :string
       ],
 
-      :GEOSRelatePattern_r => [
+      GEOSRelatePattern_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b, pattern
         :char, :pointer, :pointer, :pointer, :string
       ],
 
-      :GEOSRelateBoundaryNodeRule_r => [
+      GEOSRelateBoundaryNodeRule_r: [
         # string, *handle, *geom_a, *geom_b, bnr
         :string, :pointer, :pointer, :pointer, :relate_boundary_node_rule
       ],
 
-      :GEOSDisjoint_r => [
+      GEOSDisjoint_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSTouches_r => [
+      GEOSTouches_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSIntersects_r => [
+      GEOSIntersects_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSCrosses_r => [
+      GEOSCrosses_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSWithin_r => [
+      GEOSWithin_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSContains_r => [
+      GEOSContains_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSOverlaps_r => [
+      GEOSOverlaps_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSCovers_r => [
+      GEOSCovers_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSCoveredBy_r => [
+      GEOSCoveredBy_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSEquals_r => [
+      GEOSEquals_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSEqualsExact_r => [
+      GEOSEqualsExact_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
         :char, :pointer, :pointer, :pointer, :double
       ],
 
-      :GEOSisEmpty_r => [
+      GEOSisEmpty_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSisValid_r => [
+      GEOSisValid_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSisValidReason_r => [
+      GEOSisValidReason_r: [
         # reason, *handle, *geom
         :string, :pointer, :pointer
       ],
 
-      :GEOSisValidDetail_r => [
+      GEOSisValidDetail_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom, flags, (string**) reasons, **geoms
         :char, :pointer, :pointer, :int, :pointer, :pointer
       ],
 
-      :GEOSisSimple_r => [
+      GEOSisSimple_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSisRing_r => [
+      GEOSisRing_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSHasZ_r => [
+      GEOSHasZ_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSisClosed_r => [
+      GEOSisClosed_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSArea_r => [
+      GEOSArea_r: [
         # (0 on exception, 1 otherwise), *handle, *geom, (double *) area
         :int, :pointer, :pointer, :pointer
       ],
 
-      :GEOSLength_r => [
+      GEOSLength_r: [
         # (0 on exception, 1 otherwise), *handle, *geom, (double *) length
         :int, :pointer, :pointer, :pointer
       ],
 
-      :GEOSDistance_r => [
+      GEOSDistance_r: [
         # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, (double *) distance
         :int, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSHausdorffDistance_r => [
+      GEOSHausdorffDistance_r: [
         # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, (double *) distance
         :int, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSHausdorffDistanceDensify_r => [
+      GEOSHausdorffDistanceDensify_r: [
         # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, densifyFrac, (double *) distance
         :int, :pointer, :pointer, :pointer, :double, :pointer
       ],
 
-      :GEOSNearestPoints_r => [
+      GEOSNearestPoints_r: [
         # (NULL on exception, pointer to CoordinateSequence otherwise), *handle, *geom, *geom
         :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSGetGeometryN_r => [
+      GEOSGetGeometryN_r: [
         # *geom, *handle, *geom, n
         :pointer, :pointer, :pointer, :int
       ],
 
-      :GEOSGetNumInteriorRings_r => [
+      GEOSGetNumInteriorRings_r: [
         # rings, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSNormalize_r => [
+      GEOSNormalize_r: [
         # -1 on exception, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSGetInteriorRingN_r => [
+      GEOSGetInteriorRingN_r: [
         # *geom, *handle, *geom, n
         :pointer, :pointer, :pointer, :int
       ],
 
-      :GEOSGetExteriorRing_r => [
+      GEOSGetExteriorRing_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeomGetNumPoints_r => [
+      GEOSGeomGetNumPoints_r: [
         # numpoints, *handle, *geom
         :int, :pointer, :pointer
       ],
 
-      :GEOSGeomGetX_r => [
+      GEOSGeomGetX_r: [
         # -1 on exception, *handle, *geom, *point
         :int, :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeomGetY_r => [
+      GEOSGeomGetY_r: [
         # -1 on exception, *handle, *geom, *point
         :int, :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeomGetZ_r => [
+      GEOSGeomGetZ_r: [
         # -1 on exception, *handle, *geom, *point
         :int, :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeomGetPointN_r => [
+      GEOSGeomGetPointN_r: [
         # *point, *handle, *geom, n
         :pointer, :pointer, :pointer, :int
       ],
 
-      :GEOSGeomGetStartPoint_r => [
+      GEOSGeomGetStartPoint_r: [
         # *point, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSGeomGetEndPoint_r => [
+      GEOSGeomGetEndPoint_r: [
         # *point, *handle, *geom
         :pointer, :pointer, :pointer
       ],
       #### /Geometry functions ####
 
       #### STRtree functions ####
-      :GEOSSTRtree_create_r => [
+      GEOSSTRtree_create_r: [
         # *tree, *handle, node_capacity
         :pointer, :pointer, :size_t
       ],
 
-      :GEOSSTRtree_insert_r => [
+      GEOSSTRtree_insert_r: [
         # void, *handle, *tree, *geom, *void
         :void, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSSTRtree_query_r => [
+      GEOSSTRtree_query_r: [
         # void, *handle, *tree, *geom, void query_callback((void *) item, (void *) user_data), (void *) user_data
-        :void, :pointer, :pointer, :pointer, callback([ :pointer, :pointer ], :void), :pointer
+        :void, :pointer, :pointer, :pointer, callback([:pointer, :pointer], :void), :pointer
       ],
 
-      :GEOSSTRtree_iterate_r => [
+      GEOSSTRtree_iterate_r: [
         # void, *handle, *tree, void query_callback((void *) item, (void *) user_data), (void *) user_data
-        :void, :pointer, :pointer, callback([ :pointer, :pointer ], :void), :pointer
+        :void, :pointer, :pointer, callback([:pointer, :pointer], :void), :pointer
       ],
 
-      :GEOSSTRtree_remove_r => [
+      GEOSSTRtree_remove_r: [
         # bool, *handle, *tree, *geom, (void *) item
         :char, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSSTRtree_destroy_r => [
+      GEOSSTRtree_destroy_r: [
         # void, *handle, *tree
         :void, :pointer, :pointer
       ],
       #### /STRtree functions ####
 
       #### PreparedGeometry functions ####
-      :GEOSPrepare_r => [
+      GEOSPrepare_r: [
         # *prepared, *handle, *geom
         :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedGeom_destroy_r => [
+      GEOSPreparedGeom_destroy_r: [
         # void, *handle, *geom
         :void, :pointer, :pointer
       ],
 
-      :GEOSPreparedContains_r => [
+      GEOSPreparedContains_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedContainsProperly_r => [
+      GEOSPreparedContainsProperly_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedCoveredBy_r => [
+      GEOSPreparedCoveredBy_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedCovers_r => [
+      GEOSPreparedCovers_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedCrosses_r => [
+      GEOSPreparedCrosses_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedDisjoint_r => [
+      GEOSPreparedDisjoint_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedIntersects_r => [
+      GEOSPreparedIntersects_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedOverlaps_r => [
+      GEOSPreparedOverlaps_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedTouches_r => [
+      GEOSPreparedTouches_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
 
-      :GEOSPreparedWithin_r => [
+      GEOSPreparedWithin_r: [
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
       #### /PreparedGeometry functions ####
 
       #### WktReader functions ####
-      :GEOSWKTReader_create_r => [
+      GEOSWKTReader_create_r: [
         # *wktr, *handle
         :pointer, :pointer
       ],
 
-      :GEOSWKTReader_read_r => [
+      GEOSWKTReader_read_r: [
         # *geom, *handle, *wktr, string
         :pointer, :pointer, :pointer, :string
       ],
 
-      :GEOSWKTReader_destroy_r => [
+      GEOSWKTReader_destroy_r: [
         # void, *handle, *wktr
         :void, :pointer, :pointer
       ],
       #### /WktReader functions ###
 
       #### WktWriter functions ####
-      :GEOSWKTWriter_create_r => [
+      GEOSWKTWriter_create_r: [
         # *wktw, *handle
         :pointer, :pointer
       ],
 
-      :GEOSWKTWriter_write_r => [
+      GEOSWKTWriter_write_r: [
         # string, *handle, *wktw, *geom
         :string, :pointer, :pointer, :pointer
       ],
 
-      :GEOSWKTWriter_destroy_r => [
+      GEOSWKTWriter_destroy_r: [
         # void, *handle, *wktw
         :void, :pointer, :pointer
       ],
 
-      :GEOSWKTWriter_setTrim_r => [
+      GEOSWKTWriter_setTrim_r: [
         # void, *handle, *wktw, bool
         :void, :pointer, :pointer, :char
       ],
 
-      :GEOSWKTWriter_setRoundingPrecision_r => [
+      GEOSWKTWriter_setRoundingPrecision_r: [
         # void, *handle, *wktw, precision
         :void, :pointer, :pointer, :int
       ],
 
-      :GEOSWKTWriter_setOutputDimension_r => [
+      GEOSWKTWriter_setOutputDimension_r: [
         # void, *handle, *wktw, dimensions
         :void, :pointer, :pointer, :int
       ],
 
-      :GEOSWKTWriter_getOutputDimension_r => [
+      GEOSWKTWriter_getOutputDimension_r: [
         # dimensions, *handle, *wktw
         :int, :pointer, :pointer
       ],
 
-      :GEOSWKTWriter_setOld3D_r => [
+      GEOSWKTWriter_setOld3D_r: [
         # void, *handle, *wktw, bool
         :void, :pointer, :pointer, :int
       ],
       #### /WktWriter functions ####
 
       #### WkbReader functions ####
-      :GEOSWKBReader_create_r => [
+      GEOSWKBReader_create_r: [
         # *wkbr, *handle
         :pointer, :pointer
       ],
 
-      :GEOSWKBReader_destroy_r => [
+      GEOSWKBReader_destroy_r: [
         # void, *handle, *wkbr
         :void, :pointer, :pointer
       ],
 
-      :GEOSWKBReader_read_r => [
+      GEOSWKBReader_read_r: [
         # *geom, *handle, *wkbr, (unsigned char *) string, size_t
         :pointer, :pointer, :pointer, :pointer, :size_t
       ],
 
-      :GEOSWKBReader_readHEX_r => [
+      GEOSWKBReader_readHEX_r: [
         # *geom, *handle, *wkbr, string, size_t
         :pointer, :pointer, :pointer, :string, :size_t
       ],
       #### /WkbReader functions ####
 
       #### WkbWriter functions ####
-      :GEOSWKBWriter_create_r => [
+      GEOSWKBWriter_create_r: [
         # *wkbw, *handle
         :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_destroy_r => [
+      GEOSWKBWriter_destroy_r: [
         # void, *handle, *wkbw
         :void, :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_write_r => [
+      GEOSWKBWriter_write_r: [
         # (unsigned char *) string, *handle, *wkbw, *geom, *size_t
         :pointer, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_writeHEX_r => [
+      GEOSWKBWriter_writeHEX_r: [
         # (unsigned char *) string, *handle, *wkbw, *geom, *size_t
         :pointer, :pointer, :pointer, :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_setOutputDimension_r => [
+      GEOSWKBWriter_setOutputDimension_r: [
         # void, *handle, *wkbw, dimensions
         :void, :pointer, :pointer, :int
       ],
 
-      :GEOSWKBWriter_getOutputDimension_r => [
+      GEOSWKBWriter_getOutputDimension_r: [
         # dimensions, *handle, *wkbw
         :int, :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_getByteOrder_r => [
+      GEOSWKBWriter_getByteOrder_r: [
         # byte_order, *handle, *wkbw
         :byte_order, :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_setByteOrder_r => [
+      GEOSWKBWriter_setByteOrder_r: [
         # void, *handle, *wkbw, byte_order
         :void, :pointer, :pointer, :byte_order
       ],
 
-      :GEOSWKBWriter_getIncludeSRID_r => [
+      GEOSWKBWriter_getIncludeSRID_r: [
         # bool, *handle, *geom
         :char, :pointer, :pointer
       ],
 
-      :GEOSWKBWriter_setIncludeSRID_r => [
+      GEOSWKBWriter_setIncludeSRID_r: [
         # void, *handle, *geom, bool
         :void, :pointer, :pointer, :char
       ],
       #### /WkbWriter functions ####
 
-
       #### Linearref functions ####
-      :GEOSProject_r => [
+      GEOSProject_r: [
         # distance, *handle, *geom_a, *geom_b
         :double, :pointer, :pointer, :pointer
       ],
 
-      :GEOSProjectNormalized_r => [
+      GEOSProjectNormalized_r: [
         # distance, *handle, *geom_a, *geom_b
         :double, :pointer, :pointer, :pointer
       ],
 
-      :GEOSInterpolate_r => [
+      GEOSInterpolate_r: [
         # *geom, *handle, *geom, distance
         :pointer, :pointer, :pointer, :double
       ],
 
-      :GEOSInterpolateNormalized_r => [
+      GEOSInterpolateNormalized_r: [
         # *geom, *handle, *geom, distance
         :pointer, :pointer, :pointer, :double
       ],
       #### /Linearref functions ####
 
       #### BufferParams functions ####
-      :GEOSBufferParams_create_r => [
+      GEOSBufferParams_create_r: [
         # GEOSBufferParams*, *handle
         :pointer, :pointer
       ],
 
-      :GEOSBufferParams_destroy_r => [
+      GEOSBufferParams_destroy_r: [
         # void, *handle, *params
         :void, :pointer, :pointer
       ],
 
-      :GEOSBufferParams_setEndCapStyle_r => [
+      GEOSBufferParams_setEndCapStyle_r: [
         # 0 on exception, *handle, *params, style
         :int, :pointer, :pointer, :buffer_cap_style
       ],
 
-      :GEOSBufferParams_setJoinStyle_r => [
+      GEOSBufferParams_setJoinStyle_r: [
         # 0 on exception, *handle, *params, style
         :int, :pointer, :pointer, :buffer_join_style
       ],
 
-      :GEOSBufferParams_setMitreLimit_r => [
+      GEOSBufferParams_setMitreLimit_r: [
         # 0 on exception, *handle, *params, mitre_limit
         :int, :pointer, :pointer, :double
       ],
 
-      :GEOSBufferParams_setQuadrantSegments_r => [
+      GEOSBufferParams_setQuadrantSegments_r: [
         # 0 on exception, *handle, *params, quad_segs
         :int, :pointer, :pointer, :int
       ],
 
-      :GEOSBufferParams_setSingleSided_r => [
+      GEOSBufferParams_setSingleSided_r: [
         # 0 on exception, *handle, *params, bool
         :int, :pointer, :pointer, :int
       ],
@@ -1005,7 +1004,7 @@ module Geos
       # -1 if reaching P takes a counter-clockwise (left) turn
       # 1 if reaching P takes a clockwise (right) turn
       # 0 if P is collinear with A-B
-      :GEOSOrientationIndex_r => [
+      GEOSOrientationIndex_r: [
         # int, *handle, Ax, Ay, Bx, By, Px, Py
         :int, :pointer, :double, :double, :double, :double, :double, :double
       ]
@@ -1017,7 +1016,7 @@ module Geos
     FFI_LAYOUT.each do |fun, ary|
       ret = ary.shift
       begin
-        self.class_eval do
+        class_eval do
           attach_function(fun, ary, ret)
         end
       rescue FFI::NotFoundError
@@ -1036,8 +1035,8 @@ module Geos
       def initialize
         @ptr = FFI::AutoPointer.new(FFIGeos.GEOS_init_r, self.class.method(:release))
 
-        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler = self.method(:notice_handler), nil)
-        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler = self.method(:error_handler), nil)
+        FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler = method(:notice_handler), nil)
+        FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler = method(:error_handler), nil)
       end
 
       def self.release(ptr)
@@ -1049,8 +1048,8 @@ module Geos
       def initialize
         @ptr = FFI::AutoPointer.new(
           FFIGeos.initGEOS_r(
-            @notice_handler = self.method(:notice_handler),
-            @error_handler = self.method(:error_handler)
+            @notice_handler = method(:notice_handler),
+            @error_handler = method(:error_handler)
           ),
           self.class.method(:release)
         )
@@ -1062,13 +1061,14 @@ module Geos
     end
 
     private
-      def notice_handler(*args)
-        # no-op, just to appease initGEOS.
-      end
 
-      def error_handler(*args)
-        raise Geos::GEOSException.new(args[0] % args[1])
-      end
+    def notice_handler(*args)
+      # no-op, just to appease initGEOS.
+    end
+
+    def error_handler(*args)
+      fail Geos::GEOSException.new(args[0] % args[1])
+    end
   end
 
   class << self
@@ -1115,7 +1115,7 @@ module Geos
       elsif Geos::Constants::SRID_COPY_POLICIES.include?(policy)
         Thread.current[:ffi_geos_srid_copy_policy] = policy
       else
-        raise ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
+        fail ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
       end
     end
 
@@ -1129,11 +1129,11 @@ module Geos
       elsif Geos::Constants::SRID_COPY_POLICIES.include?(policy)
         @srid_copy_policy_default = policy
       else
-        raise ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
+        fail ArgumentError.new("Invalid SRID policy #{policy} (must be one of #{Geos::Constants::SRID_COPY_POLICIES})")
       end
     end
 
-    %w{
+    %w(
       create_point
       create_line_string
       create_linear_ring
@@ -1153,8 +1153,8 @@ module Geos
       create_empty_geometry_collection
       create_empty_collection
       create_empty_linear_ring
-    }.each do |m|
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+    ).each do |m|
+      class_eval(<<-EOF, __FILE__, __LINE__ + 1)
         def #{m}(*args)
           Geos::Utils.#{m}(*args)
         end
@@ -1201,7 +1201,7 @@ module Geos
             (versions[9].to_i if versions[9])
           ]
         else
-          [ '0.0.0', 0, 0, 0, nil, '0.0.0', 0, 0, 0 ]
+          ['0.0.0', 0, 0, 0, nil, '0.0.0', 0, 0, 0]
         end
     GEOS_CAPI_FIRST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i
     GEOS_CAPI_LAST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i + GEOS_CAPI_VERSION_MINOR.to_i
@@ -1209,10 +1209,10 @@ module Geos
 
   module Constants
     BUFFER_PARAM_DEFAULTS = {
-      :quad_segs => 8,
-      :endcap => :round,
-      :join => :round,
-      :mitre_limit => 5.0
+      quad_segs: 8,
+      endcap: :round,
+      join: :round,
+      mitre_limit: 5.0
     }.freeze
 
     SRID_COPY_POLICIES = [
@@ -1230,7 +1230,7 @@ module Geos
 
   class IndexBoundsError < Error
     def initialize(*)
-      super("Index out of bounds")
+      super('Index out of bounds')
     end
   end
 

@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class LinearRingTests < Minitest::Test
@@ -40,6 +40,6 @@ class LinearRingTests < Minitest::Test
 
     srid_copy_tester(:to_line_string, expected, 0, :zero, wkt)
     srid_copy_tester(:to_line_string, expected, 4326, :lenient, wkt)
-    srid_copy_tester(:to_line_string,  expected, 4326, :strict, wkt)
+    srid_copy_tester(:to_line_string, expected, 4326, :strict, wkt)
   end
 end

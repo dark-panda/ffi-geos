@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class InterruptTests < Minitest::Test
@@ -36,7 +36,7 @@ class InterruptTests < Minitest::Test
     interrupt_tester do
       geom = read('LINESTRING(0 0, 1 0)')
 
-      Geos::Interrupt.register(self.method(:interrupt_method))
+      Geos::Interrupt.register(method(:interrupt_method))
 
       begin
         buffer = geom.buffer(1, 8)
@@ -129,7 +129,7 @@ class InterruptTests < Minitest::Test
         assert_match(/^InterruptedException/, e.message)
         assert_nil(buffer)
         assert_interrupt_called(1)
-        assert_equal([ :prc_1, :prc_0 ], called)
+        assert_equal([:prc_1, :prc_0], called)
       end
     end
   end
@@ -183,7 +183,7 @@ class InterruptTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || Geos::Interrupt.available?
 
     assert_raises(ArgumentError) do
-      Geos::Interrupt.register(self.method(:interrupt_method)) do
+      Geos::Interrupt.register(method(:interrupt_method)) do
         # no-op
       end
     end
@@ -197,4 +197,3 @@ class InterruptTests < Minitest::Test
     end
   end
 end
-

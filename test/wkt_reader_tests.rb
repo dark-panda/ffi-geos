@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class WktReaderTests < Minitest::Test
@@ -121,6 +121,6 @@ class WktReaderTests < Minitest::Test
 
   def test_read_with_srid
     assert_equal(0, read('POINT (0 0)').srid)
-    assert_equal(4326, read('POINT (0 0)', :srid => 4326).srid)
+    assert_equal(4326, read('POINT (0 0)', srid: 4326).srid)
   end
 end
