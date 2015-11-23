@@ -12,6 +12,7 @@ platforms :rbx do
   gem 'rubinius-developer_tools'
 end
 
+gem 'rubocop', '0.35.1'
 
 if RUBY_VERSION >= '1.9'
   gem "simplecov"
