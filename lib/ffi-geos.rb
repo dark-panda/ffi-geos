@@ -66,7 +66,7 @@ module Geos
         ENV['GEOS_LIBRARY_PATH']
       else
         Dir.glob(search_paths.map { |path|
-          File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}"))
+          File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}{,.?}"))
         }).first
       end
     end
