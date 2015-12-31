@@ -25,7 +25,7 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSGetGeometryN_r(Geos.current_handle, self.ptr, n), :auto_free => false)
       end
     end
-    alias :geometry_n :get_geometry_n
+    alias_method :geometry_n, :get_geometry_n
 
     def [](*args)
       if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
@@ -34,7 +34,7 @@ module Geos
         self.to_a[*args]
       end
     end
-    alias :slice :[]
-    alias :at :[]
+    alias_method :slice, :[]
+    alias_method :at, :[]
   end
 end

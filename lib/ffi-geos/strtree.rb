@@ -171,7 +171,7 @@ module Geos
         }
       }.compact
     end
-    alias :query_geoms :query_geometries
+    alias_method :query_geoms, :query_geometries
 
     def iterate
       @storage.values.each do |v|

@@ -13,7 +13,7 @@ module Geos
         self.coord_seq.get_x(0)
       end
     end
-    alias :x :get_x
+    alias_method :x, :get_x
 
     if FFIGeos.respond_to?(:GEOSGeomGetY_r)
       def get_y
@@ -26,7 +26,7 @@ module Geos
         self.coord_seq.get_y(0)
       end
     end
-    alias :y :get_y
+    alias_method :y, :get_y
 
     if FFIGeos.respond_to?(:GEOSGeomGetZ_r)
       def get_z
@@ -39,7 +39,7 @@ module Geos
         self.coord_seq.get_z(0)
       end
     end
-    alias :z :get_z
+    alias_method :z, :get_z
 
     def area
       0
@@ -60,7 +60,7 @@ module Geos
     def normalize!
       self
     end
-    alias :normalize :normalize!
+    alias_method :normalize, :normalize!
 
     %w{
       convex_hull

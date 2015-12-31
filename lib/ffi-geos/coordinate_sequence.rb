@@ -155,7 +155,7 @@ module Geos
         self.to_a[*args]
       end
     end
-    alias :slice :[]
+    alias_method :slice, :[]
 
     def has_z?
       self.dimensions == 3
@@ -220,7 +220,7 @@ module Geos
       FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle, self.ptr, int_ptr)
       int_ptr.read_int
     end
-    alias :size :length
+    alias_method :size, :length
 
     def empty?
       self.length == 0

@@ -46,7 +46,7 @@ module Geos
         self.to_a[*args]
       end
     end
-    alias :slice :[]
+    alias_method :slice, :[]
 
     def offset_curve(width, options = {})
       options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)

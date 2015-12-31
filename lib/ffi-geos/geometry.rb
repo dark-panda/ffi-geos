@@ -59,7 +59,7 @@ module Geos
 
       self
     end
-    alias :normalize :normalize!
+    alias_method :normalize, :normalize!
 
     def srid
       FFIGeos.GEOSGetSRID_r(Geos.current_handle, self.ptr)
@@ -156,7 +156,7 @@ module Geos
         :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
       })
     end
-    alias :symmetric_difference :sym_difference
+    alias_method :symmetric_difference, :sym_difference
 
     def boundary
       cast_geometry_ptr(FFIGeos.GEOSBoundary_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
@@ -205,20 +205,20 @@ module Geos
     def point_on_surface
       cast_geometry_ptr(FFIGeos.GEOSPointOnSurface_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
-    alias :representative_point :point_on_surface
+    alias_method :representative_point, :point_on_surface
 
     if FFIGeos.respond_to?(:GEOSClipByRect_r)
       # Available in GEOS 3.5.0+.
       def clip_by_rect(xmin, ymin, xmax, ymax)
         cast_geometry_ptr(FFIGeos.GEOSClipByRect_r(Geos.current_handle, self.ptr, xmin, ymin, xmax, ymax))
       end
-      alias :clip_by_rectangle :clip_by_rect
+      alias_method :clip_by_rectangle, :clip_by_rect
     end
 
     def centroid
       cast_geometry_ptr(FFIGeos.GEOSGetCentroid_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
-    alias :center :centroid
+    alias_method :center, :centroid
 
     def envelope
       cast_geometry_ptr(FFIGeos.GEOSEnvelope_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
@@ -261,7 +261,7 @@ module Geos
     def extract_unique_points
       cast_geometry_ptr(FFIGeos.GEOSGeom_extractUniquePoints_r(Geos.current_handle, self.ptr), :srid_copy => self.srid)
     end
-    alias :unique_points :extract_unique_points
+    alias_method :unique_points, :extract_unique_points
 
     def disjoint?(geom)
       check_geometry(geom)
@@ -346,7 +346,7 @@ module Geos
       check_geometry(geom)
       bool_result(FFIGeos.GEOSEquals_r(Geos.current_handle, self.ptr, geom.ptr))
     end
-    alias :equals? :eql?
+    alias_method :equals?, :eql?
 
     def ==(geom)
       if geom.is_a?(Geos::Geometry)
@@ -360,15 +360,15 @@ module Geos
       check_geometry(geom)
       bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle, self.ptr, geom.ptr, tolerance))
     end
-    alias :equals_exact? :eql_exact?
-    alias :exactly_equals? :eql_exact?
+    alias_method :equals_exact?, :eql_exact?
+    alias_method :exactly_equals?, :eql_exact?
 
     def eql_almost?(geom, decimal = 6)
       check_geometry(geom)
       bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle, self.ptr, geom.ptr, 0.5 * 10 ** (-decimal)))
     end
-    alias :equals_almost? :eql_almost?
-    alias :almost_equals? :eql_almost?
+    alias_method :equals_almost?, :eql_almost?
+    alias_method :almost_equals?, :eql_almost?
 
     def empty?
       bool_result(FFIGeos.GEOSisEmpty_r(Geos.current_handle, self.ptr))
@@ -519,7 +519,7 @@ module Geos
         :srid_copy => pick_srid_from_geoms(self.srid, geom.srid)
       })
     end
-    alias :snap_to :snap
+    alias_method :snap_to, :snap
 
     def shared_paths(geom)
       check_geometry(geom)

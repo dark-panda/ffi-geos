@@ -19,7 +19,7 @@ module Geos
         )
       end
     end
-    alias :interior_ring :interior_ring_n
+    alias_method :interior_ring, :interior_ring_n
 
     def exterior_ring
       cast_geometry_ptr(
