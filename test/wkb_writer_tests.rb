@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class WkbWriterTests < Minitest::Test
@@ -21,14 +21,12 @@ class WkbWriterTests < Minitest::Test
     @wkb_writer.include_srid = include_srid
 
     result = if hex
-      @wkb_writer.write_hex(geom)
-    else
-      @wkb_writer.write(geom)
+               @wkb_writer.write_hex(geom)
+             else
+               @wkb_writer.write(geom)
     end
 
-    if ''.respond_to?(:force_encoding)
-      expected.force_encoding('BINARY')
-    end
+    expected.force_encoding('BINARY') if ''.respond_to?(:force_encoding)
 
     assert_equal(Geos::Tools.symbol_for_enum(Geos::ByteOrders, byte_order), @wkb_writer.byte_order)
     assert_equal(dimensions, @wkb_writer.output_dimensions)
@@ -123,8 +121,6 @@ class WkbWriterTests < Minitest::Test
     )
   end
 
-
-
   def test_2d_little_endian_with_3d_input
     wkb_tester(
       '010100000000000000000018400000000000001C40',
@@ -146,8 +142,6 @@ class WkbWriterTests < Minitest::Test
       true
     )
   end
-
-
 
   def test_2d_big_endian_with_3d_input
     wkb_tester(
@@ -316,8 +310,6 @@ class WkbWriterTests < Minitest::Test
     )
   end
 
-
-
   def test_2d_little_endian_with_3d_input_binary
     wkb_tester(
       '010100000000000000000018400000000000001C40',
@@ -443,7 +435,7 @@ class WkbWriterTests < Minitest::Test
 
     tester[
       "\x01\x01\x00\x00\x20\xE6\x10\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40", {
-        :include_srid => true
+        include_srid: true
       }
     ]
 
@@ -459,8 +451,8 @@ class WkbWriterTests < Minitest::Test
     geom.srid = 4326
 
     assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom, {
-      :include_srid => true
-    }))
+                                                                                               include_srid: true
+                                                                                             }))
 
     assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
   end

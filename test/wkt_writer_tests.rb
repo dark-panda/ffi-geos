@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class WktWriterTests < Minitest::Test
@@ -10,9 +10,7 @@ class WktWriterTests < Minitest::Test
     geom = read('POINT(12.3456789 98.7654321)')
     wkt = write(geom)
 
-    x, y = if wkt =~ /^POINT\s\((\d+\.\d+)\s*(\d+\.\d+)\)$/
-      [ $1.to_f, $2.to_f ]
-    end
+    x, y = ([Regexp.last_match(1).to_f, Regexp.last_match(2).to_f] if wkt =~ /^POINT\s\((\d+\.\d+)\s*(\d+\.\d+)\)$/)
 
     assert_in_delta(12.3456789, x, TOLERANCE)
     assert_in_delta(98.7654321, y, TOLERANCE)
@@ -118,17 +116,17 @@ class WktWriterTests < Minitest::Test
 
     geom = read('POINT(1 2 3)')
     assert_equal('POINT (1 2)', write(geom, {
-      :trim => true
-    }))
+                                        trim: true
+                                      }))
 
     assert_equal('POINT (1.0000 2.0000)', write(geom, {
-      :rounding_precision => 4
-    }))
+                                                  rounding_precision: 4
+                                                }))
 
     assert_equal('POINT Z (1 2 3)', write(geom, {
-      :output_dimensions => 3,
-      :trim => true
-    }))
+                                            output_dimensions: 3,
+                                            trim: true
+                                          }))
 
     assert_equal('POINT (1.00 2.00)', write(geom))
   end

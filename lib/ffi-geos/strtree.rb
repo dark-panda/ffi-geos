@@ -11,7 +11,7 @@ module Geos
 
     class AlreadyBuiltError < Geos::Error
       def initialize(*)
-        super("STRtree has already been built")
+        super('STRtree has already been built')
       end
     end
 
@@ -23,23 +23,23 @@ module Geos
       geoms_and_objects = nil # forward declaration
 
       capacity = if args.length == 1 && args.first.is_a?(Fixnum)
-        args.first
-      else
-        geoms_and_objects = if args.first.first.is_a?(Array)
-          args.first
-        else
-          args
-        end
+                   args.first
+                 else
+                   geoms_and_objects = if args.first.first.is_a?(Array)
+                                         args.first
+                                       else
+                                         args
+                   end
 
-        geoms_and_objects.each do |geom, obj|
-          check_geometry(geom)
-        end
+                   geoms_and_objects.each do |geom, _obj|
+                     check_geometry(geom)
+                   end
 
-        geoms_and_objects.length
+                   geoms_and_objects.length
       end
 
       if capacity <= 0
-        raise ArgumentError.new("STRtree capacity must be greater than 0")
+        fail ArgumentError.new('STRtree capacity must be greater than 0')
       end
 
       ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle, capacity)
@@ -57,7 +57,7 @@ module Geos
 
       if geoms_and_objects
         geoms_and_objects.each do |geom, obj|
-          self.insert(geom, obj)
+          insert(geom, obj)
         end
       end
     end
@@ -77,7 +77,7 @@ module Geos
 
     def insert(geom, item)
       if self.built?
-        raise AlreadyBuiltError.new
+        fail AlreadyBuiltError.new
       else
         check_geometry(geom)
 
@@ -86,30 +86,28 @@ module Geos
         key_ptr.write_int(key)
 
         @storage[key] = {
-          :item => item,
-          :geometry => geom
+          item: item,
+          geometry: geom
         }
         @ptrs[key] = key_ptr
 
-        FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle, self.ptr, geom.ptr, key_ptr)
+        FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle, ptr, geom.ptr, key_ptr)
       end
     end
 
     def remove(geom, item)
       check_geometry(geom)
 
-      key = if storage = @storage.detect { |k, v| v[:item] == item }
-        storage[0]
+      key = if storage = @storage.detect { |_k, v| v[:item] == item }
+              storage[0]
       end
 
       if key
         key_ptr = @ptrs[key]
-        result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle, self.ptr, geom.ptr, key_ptr)
+        result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle, ptr, geom.ptr, key_ptr)
         @built = true
 
-        if result == 1
-          @storage.delete(key)
-        end
+        @storage.delete(key) if result == 1
       end
     end
 
@@ -119,19 +117,17 @@ module Geos
       @built = true
       retval = []
 
-      callback = proc { |*args|
+      callback = proc do |*args|
         key = args.first.read_int
         storage = @storage[key]
         retval << storage
 
-        if block_given?
-          yield(storage)
-        end
-      }
+        yield(storage) if block_given?
+      end
 
       FFIGeos.GEOSSTRtree_query_r(
         Geos.current_handle,
-        self.ptr,
+        ptr,
         geom.ptr,
         callback,
         nil
@@ -141,35 +137,31 @@ module Geos
     end
 
     def query(geom, ret = :item)
-      self.query_all(geom).collect { |storage|
+      query_all(geom).collect do |storage|
         item = if ret.is_a?(Array)
-          storage.inject({}) do |memo, k|
-            memo.tap {
-              memo[k] = storage[k]
-            }
-          end
-        elsif ret == :all
-          storage
-        else
-          storage[ret]
+                 storage.inject({}) do |memo, k|
+                   memo.tap do
+                     memo[k] = storage[k]
+                   end
+                 end
+               elsif ret == :all
+                 storage
+               else
+                 storage[ret]
         end
 
-        item.tap {
-          if block_given?
-            yield(item)
-          end
-        }
-      }.compact
+        item.tap do
+          yield(item) if block_given?
+        end
+      end.compact
     end
 
     def query_geometries(geom)
-      self.query_all(geom).collect { |storage|
-        storage[:geometry].tap { |val|
-          if block_given?
-            yield(val)
-          end
-        }
-      }.compact
+      query_all(geom).collect do |storage|
+        storage[:geometry].tap do |val|
+          yield(val) if block_given?
+        end
+      end.compact
     end
     alias_method :query_geoms, :query_geometries
 

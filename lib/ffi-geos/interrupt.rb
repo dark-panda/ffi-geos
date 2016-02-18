@@ -25,18 +25,18 @@ module Geos
         # up in unexpected ways while interrupts are firing.
         def register(method_or_block = nil, &block)
           if method_or_block.nil? && !block_given?
-            raise ArgumentError.new("Expected either a method or a block for Geos::Interrupt.register")
+            fail ArgumentError.new('Expected either a method or a block for Geos::Interrupt.register')
           elsif !method_or_block.nil? && block_given?
-            raise ArgumentError.new("Cannot use both a method and a block for Geos::Interrupt.register")
+            fail ArgumentError.new('Cannot use both a method and a block for Geos::Interrupt.register')
           else
             retval = @current_interrupt_callback
 
             @current_interrupt_callback = if method_or_block
-              FFIGeos.GEOS_interruptRegisterCallback(method_or_block)
-              method_or_block
-            elsif block_given?
-              FFIGeos.GEOS_interruptRegisterCallback(block)
-              block
+                                            FFIGeos.GEOS_interruptRegisterCallback(method_or_block)
+                                            method_or_block
+                                          elsif block_given?
+                                            FFIGeos.GEOS_interruptRegisterCallback(block)
+                                            block
             end
 
             retval
@@ -70,4 +70,3 @@ module Geos
     end
   end
 end
-

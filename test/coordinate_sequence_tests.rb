@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class CoordinateSequenceTests < Minitest::Test
@@ -106,11 +106,11 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_read_from_array
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 1, 1 ],
-      [ 2, 2 ],
-      [ 3, 3 ],
-      [ 4, 4 ]
+      [0, 0],
+      [1, 1],
+      [2, 2],
+      [3, 3],
+      [4, 4]
     ])
 
     assert_equal(2, cs.dimensions)
@@ -118,90 +118,90 @@ class CoordinateSequenceTests < Minitest::Test
 
     assert_raises(Geos::CoordinateSequence::ParseError) do
       cs = Geos::CoordinateSequence.new([
-        [ 1, 2 ],
-        [ 1, 2, 3 ]
+        [1, 2],
+        [1, 2, 3]
       ])
     end
 
     assert_raises(Geos::CoordinateSequence::ParseError) do
       cs = Geos::CoordinateSequence.new([
-        [ 1, 2, 3, 4 ]
+        [1, 2, 3, 4]
       ])
     end
   end
 
   def test_to_point
-    cs = Geos::CoordinateSequence.new([5,7])
-    assert_equal('POINT (5 7)', write(cs.to_point, :trim => true))
+    cs = Geos::CoordinateSequence.new([5, 7])
+    assert_equal('POINT (5 7)', write(cs.to_point, trim: true))
   end
 
   def test_to_to_linear_ring
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 0, 5 ],
-      [ 5, 5 ],
-      [ 5, 0 ],
-      [ 0, 0 ]
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0],
+      [0, 0]
     ])
 
-    assert_equal('LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', write(cs.to_linear_ring, :trim => true))
+    assert_equal('LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', write(cs.to_linear_ring, trim: true))
   end
 
   def test_empty
     cs = Geos::CoordinateSequence.new
     assert_geom_empty(cs)
 
-    cs = Geos::CoordinateSequence.new([4,1])
+    cs = Geos::CoordinateSequence.new([4, 1])
     refute_geom_empty(cs)
   end
 
   def test_to_empty_linear_ring
     cs = Geos::CoordinateSequence.new
 
-    assert_equal('LINEARRING EMPTY', write(cs.to_linear_ring, :trim => true))
+    assert_equal('LINEARRING EMPTY', write(cs.to_linear_ring, trim: true))
   end
 
   def test_to_line_string
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 0, 5 ],
-      [ 5, 5 ],
-      [ 5, 0 ]
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0]
     ])
 
-    assert_equal('LINESTRING (0 0, 0 5, 5 5, 5 0)', write(cs.to_line_string, :trim => true))
+    assert_equal('LINESTRING (0 0, 0 5, 5 5, 5 0)', write(cs.to_line_string, trim: true))
   end
 
   def test_to_empty_line_string
     cs = Geos::CoordinateSequence.new
 
-    assert_equal('LINESTRING EMPTY', write(cs.to_line_string, :trim => true))
+    assert_equal('LINESTRING EMPTY', write(cs.to_line_string, trim: true))
   end
 
   def test_to_polygon
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 0, 5 ],
-      [ 5, 5 ],
-      [ 5, 0 ],
-      [ 0, 0 ]
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0],
+      [0, 0]
     ])
 
-    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(cs.to_polygon, :trim => true))
+    assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(cs.to_polygon, trim: true))
   end
 
   def test_to_empty_polygon
     cs = Geos::CoordinateSequence.new
 
-    assert_equal('POLYGON EMPTY', write(cs.to_polygon, :trim => true))
+    assert_equal('POLYGON EMPTY', write(cs.to_polygon, trim: true))
   end
 
   def test_to_s
     cs = Geos::CoordinateSequence.new([[1, 2], [10, 11]])
-    assert_equal("1.0 2.0, 10.0 11.0", cs.to_s)
+    assert_equal('1.0 2.0, 10.0 11.0', cs.to_s)
 
     cs = Geos::CoordinateSequence.new([[1, 2, 3], [10, 11, 12]])
-    assert_equal("1.0 2.0 3.0, 10.0 11.0 12.0", cs.to_s)
+    assert_equal('1.0 2.0 3.0, 10.0 11.0 12.0', cs.to_s)
   end
 
   def test_get_by_proxy
@@ -265,7 +265,7 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   def test_options_hash
-    cs = Geos::CoordinateSequence.new(:size => 10, :dimensions => 2)
+    cs = Geos::CoordinateSequence.new(size: 10, dimensions: 2)
 
     assert_equal(10, cs.size)
     assert_equal(2, cs.dimensions)
@@ -281,8 +281,8 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_array_like_access
     cs = Geos::CoordinateSequence.new([
-      [ 0, 1 ],
-      [ 2, 3 ]
+      [0, 1],
+      [2, 3]
     ])
 
     assert_equal(0, cs[0][0])
@@ -291,7 +291,7 @@ class CoordinateSequenceTests < Minitest::Test
     assert_equal(3, cs[1][1])
 
     cs = Geos::CoordinateSequence.new([
-      [ 4, 5, 6 ]
+      [4, 5, 6]
     ])
 
     assert_equal(4, cs[0][0])
@@ -301,9 +301,9 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_slice
     cs = Geos::CoordinateSequence.new([
-      [ 0, 1 ],
-      [ 2, 3 ],
-      [ 4, 5 ]
+      [0, 1],
+      [2, 3],
+      [4, 5]
     ])
 
     assert_equal([[0, 1], [2, 3]], cs.slice(0..1))
@@ -312,7 +312,7 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   def test_proxy_clone
-    cs = Geos::CoordinateSequence.new([ 10, 20 ])
+    cs = Geos::CoordinateSequence.new([10, 20])
     cs2 = cs.clone
 
     cs.x[0] = 100
@@ -325,8 +325,8 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   def test_has_z
-    assert_geom_has_z(Geos::CoordinateSequence.new([ 0, 1, 2 ]))
-    refute_geom_has_z(Geos::CoordinateSequence.new([ 0, 1 ]))
+    assert_geom_has_z(Geos::CoordinateSequence.new([0, 1, 2]))
+    refute_geom_has_z(Geos::CoordinateSequence.new([0, 1]))
     refute_geom_has_z(Geos::CoordinateSequence.new(1, 2))
     assert_geom_has_z(Geos::CoordinateSequence.new(1, 3))
     assert_geom_has_z(read('POINT (0 0 0)').coord_seq)

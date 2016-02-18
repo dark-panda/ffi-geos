@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class GeometryTests < Minitest::Test
@@ -43,7 +43,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((10 0, 1.6e-14 -10, -10 -3.2e-14, -4.6e-14 10, 10 0))',
       'POINT(0 0)',
       10,
-      { :quad_segs => 1 }
+      { quad_segs: 1 }
     )
 
     # End cap styles
@@ -52,7 +52,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((1e+02 10, 1.1e+02 0, 1e+02 -10, 0 -10, -10 1.2e-15, 0 10, 1e+02 10))',
       'LINESTRING(0 0, 100 0)',
       10,
-      { :quad_segs => 1, :endcap => :round }
+      { quad_segs: 1, endcap: :round }
     )
 
     simple_tester(
@@ -60,7 +60,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((1e+02 10, 1e+02 -10, 0 -10, 0 10, 1e+02 10))',
       'LINESTRING(0 0, 100 0)',
       10,
-      { :quad_segs => 1, :endcap => :flat }
+      { quad_segs: 1, endcap: :flat }
     )
 
     simple_tester(
@@ -68,7 +68,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((1e+02 10, 1.1e+02 10, 1.1e+02 -10, 0 -10, -10 -10, -10 10, 1e+02 10))',
       'LINESTRING(0 0, 100 0)',
       10,
-      { :quad_segs => 1, :endcap => :square }
+      { quad_segs: 1, endcap: :square }
     )
 
     # Join styles
@@ -77,7 +77,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 0, 1.1e+02 -7.1, 1e+02 -10, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
-      { :quad_segs => 2, :join => :round }
+      { quad_segs: 2, join: :round }
     )
 
     simple_tester(
@@ -85,7 +85,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 0, 1e+02 -10, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
-      { :quad_segs => 2, :join => :bevel }
+      { quad_segs: 2, join: :bevel }
     )
 
     simple_tester(
@@ -93,7 +93,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 -10, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
-      { :quad_segs => 2, :join => :mitre }
+      { quad_segs: 2, join: :mitre }
     )
 
     simple_tester(
@@ -101,7 +101,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((90 10, 90 1e+02, 93 1.1e+02, 1e+02 1.1e+02, 1.1e+02 1.1e+02, 1.1e+02 1e+02, 1.1e+02 -5, 1e+02 -9.1, 0 -10, -7.1 -7.1, -10 1.2e-15, -7.1 7.1, 0 10, 90 10))',
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
-      { :quad_segs => 2, :join => :mitre, :mitre_limit => 1.0 }
+      { quad_segs: 2, join: :mitre, mitre_limit: 1.0 }
     )
 
     # Single-sided buffering
@@ -110,7 +110,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((1e+02 0, 0 0, 0 10, 1e+02 10, 1e+02 0))',
       'LINESTRING(0 0, 100 0)',
       10,
-      { :single_sided => true }
+      { single_sided: true }
     )
 
     simple_tester(
@@ -118,7 +118,7 @@ class GeometryTests < Minitest::Test
       'POLYGON ((0 0, 1e+02 0, 1e+02 -10, 0 -10, 0 0))',
       'LINESTRING(0 0, 100 0)',
       -10,
-      { :single_sided => true }
+      { single_sided: true }
     )
   end
 
@@ -206,7 +206,7 @@ class GeometryTests < Minitest::Test
   end
 
   def test_sym_difference
-    %w{ sym_difference symmetric_difference }.each do |method|
+    %w( sym_difference symmetric_difference ).each do |method|
       comparison_tester(
         method,
         'GEOMETRYCOLLECTION EMPTY',
@@ -425,10 +425,10 @@ class GeometryTests < Minitest::Test
   end
 
   def test_point_on_surface_and_representative_point
-    %w{
+    %w(
       point_on_surface
       representative_point
-    }.each do |method|
+    ).each do |method|
       simple_tester(
         method,
         'POINT (0 0)',
@@ -452,10 +452,10 @@ class GeometryTests < Minitest::Test
   def test_clip_by_rect
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:clip_by_rect)
 
-    %w{
+    %w(
       clip_by_rect
       clip_by_rectangle
-    }.each do |method|
+    ).each do |method|
       simple_tester(
         method,
         'POINT (0 0)',
@@ -494,10 +494,10 @@ class GeometryTests < Minitest::Test
   end
 
   def test_centroid_and_center
-    %w{
+    %w(
       centroid
       center
-    }.each do |method|
+    ).each do |method|
       simple_tester(
         method,
         'POINT (0 0)',
@@ -655,7 +655,7 @@ class GeometryTests < Minitest::Test
       tests.each do |test|
         expected, method, args = test
         if ENV['FORCE_TESTS'] || geom_a.respond_to?(method)
-          value = geom_a.send(method, *([ geom_b ] + Array(args)))
+          value = geom_a.send(method, *([geom_b] + Array(args)))
           assert_equal(expected, value)
         end
       end
@@ -794,10 +794,10 @@ class GeometryTests < Minitest::Test
   def test_valid_reason
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:valid_reason)
 
-    assert_equal("Valid Geometry", read('POINT(0 0)').valid_reason)
-    assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 NaN)').valid_reason)
-    assert_equal("Invalid Coordinate[0 nan]", read('POINT(0 nan)').valid_reason)
-    assert_equal("Self-intersection[2.5 5]", read('POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))').valid_reason)
+    assert_equal('Valid Geometry', read('POINT(0 0)').valid_reason)
+    assert_equal('Invalid Coordinate[0 nan]', read('POINT(0 NaN)').valid_reason)
+    assert_equal('Invalid Coordinate[0 nan]', read('POINT(0 nan)').valid_reason)
+    assert_equal('Self-intersection[2.5 5]', read('POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))').valid_reason)
   end
 
   def test_valid_detail
@@ -810,13 +810,13 @@ class GeometryTests < Minitest::Test
     }
 
     assert_nil(read('POINT(0 0)').valid_detail)
-    tester["Invalid Coordinate", 'POINT (0 nan)', 'POINT(0 NaN)', 0]
-    tester["Self-intersection", 'POINT (2.5 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
+    tester['Invalid Coordinate', 'POINT (0 nan)', 'POINT(0 NaN)', 0]
+    tester['Self-intersection', 'POINT (2.5 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
 
-    tester["Ring Self-intersection", 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
+    tester['Ring Self-intersection', 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
 
     assert_nil(read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))').valid_detail(
-      :allow_selftouching_ring_forming_hole
+                 :allow_selftouching_ring_forming_hole
     ))
   end
 
@@ -847,7 +847,7 @@ class GeometryTests < Minitest::Test
       ((0 0, 1 0, 1 1, 0 1, 0 0)),
       ((10 10, 10 14, 14 14, 14 10, 10 10),
       (11 11, 11 12, 12 12, 12 11, 11 11)))'
-    )
+                 )
     simple_tester(:num_geometries, 6, 'GEOMETRYCOLLECTION (
       MULTIPOLYGON (
         ((0 0, 1 0, 1 1, 0 1, 0 0)),
@@ -859,7 +859,7 @@ class GeometryTests < Minitest::Test
       LINESTRING (0 0, 2 3),
       MULTIPOINT (0 0, 2 3),
       POINT (9 0))'
-    )
+                 )
   end
 
   # get_geometry_n is segfaulting in the binary GEOS build
@@ -881,7 +881,7 @@ class GeometryTests < Minitest::Test
       (10 10, 10 14, 14 14, 14 10, 10 10),
       (11 11, 11 12, 12 12, 12 11, 11 11),
       (13 11, 13 12, 13.5 12, 13.5 11, 13 11))'
-    )
+                 )
 
     assert_raises(NoMethodError) do
       read('POINT (0 0)').num_interior_rings
@@ -958,7 +958,7 @@ class GeometryTests < Minitest::Test
   def test_interior_rings
     array_tester(
       :interior_rings,
-      [ 'LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)' ],
+      ['LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)'],
       'POLYGON(
         (10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11)
@@ -1023,12 +1023,12 @@ class GeometryTests < Minitest::Test
 
   def test_dimensions
     types = {
-      :dontcare => -3,
-      :non_empty => -2,
-      :empty => -1,
-      :point => 0,
-      :curve => 1,
-      :surface => 2
+      dontcare: -3,
+      non_empty: -2,
+      empty: -1,
+      point: 0,
+      curve: 1,
+      surface: 2
     }
 
     simple_tester(:dimensions, types[:point], 'POINT(0 0)')
@@ -1202,9 +1202,7 @@ class GeometryTests < Minitest::Test
 
       cs = geom_1.nearest_points(geom_2)
 
-      result = if cs
-        cs.to_s
-      end
+      result = (cs.to_s if cs)
 
       assert_equal(expected, result)
     }
@@ -1427,7 +1425,7 @@ class GeometryTests < Minitest::Test
     geom_a = read('POINT(1.0 1.0)')
     geom_b = read('POINT(2.0 2.0)')
 
-    %w{ eql? equals? }.each do |method|
+    %w( eql? equals? ).each do |method|
       assert(geom_a.send(method, geom_a), "Expected geoms to be equal using #{method}")
       refute(geom_a.send(method, geom_b), "Expected geoms to not be equal using #{method}")
     end
@@ -1437,16 +1435,16 @@ class GeometryTests < Minitest::Test
     geom_a = read('POINT(1.0 1.0)')
     geom_b = read('POINT(2.0 2.0)')
 
-    assert(geom_a == geom_a, "Expected geoms to be equal using ==")
-    refute(geom_a == geom_b, "Expected geoms to not be equal using ==")
-    refute(geom_a == "test", "Expected geoms to not be equal using ==")
+    assert(geom_a == geom_a, 'Expected geoms to be equal using ==')
+    refute(geom_a == geom_b, 'Expected geoms to not be equal using ==')
+    refute(geom_a == 'test', 'Expected geoms to not be equal using ==')
   end
 
   def test_eql_exact
     geom_a = read('POINT(1.0 1.0)')
     geom_b = read('POINT(2.0 2.0)')
 
-    %w{ eql_exact? equals_exact? exactly_equals? }.each do |method|
+    %w( eql_exact? equals_exact? exactly_equals? ).each do |method|
       refute(geom_a.send(method, geom_b, 0.001), "Expected geoms to not be equal using #{method}")
     end
   end
@@ -1456,7 +1454,7 @@ class GeometryTests < Minitest::Test
     geom_a = read('POINT (1.0000001 1.0000001)')
     geom_b = read('POINT (1.000001 1.000001)')
 
-    %w{ eql_almost? equals_almost? almost_equals? }.each do |method|
+    %w( eql_almost? equals_almost? almost_equals? ).each do |method|
       assert(geom.send(method, geom_a), "Expected geoms to be equal using #{method}")
       refute(geom.send(method, geom_b), "Expected geoms to not be equal using #{method}")
     end
@@ -1468,7 +1466,7 @@ class GeometryTests < Minitest::Test
 
     refute_equal(geom_a, geom_b)
 
-    %w{ eql_almost? equals_almost? almost_equals? }.each do |method|
+    %w( eql_almost? equals_almost? almost_equals? ).each do |method|
       assert(geom_a.send(method, geom_b, 0), "Expected geoms to be equal using #{method}")
       refute(geom_a.send(method, geom_b, 1), "Expected geoms to not be equal using #{method}")
     end
@@ -1516,7 +1514,7 @@ class GeometryTests < Minitest::Test
     assert_raises(Geos::MixedSRIDsError) do
       Geos.srid_copy_policy = :strict
       geom_c = geom.intersection(geom_b)
-      assert_equal(231231, geom_c.srid)
+      assert_equal(231_231, geom_c.srid)
     end
   ensure
     Geos.srid_copy_policy = :default
@@ -1572,19 +1570,19 @@ class GeometryTests < Minitest::Test
 
     # empty polygon
     tester['GEOMETRYCOLLECTION EMPTY', 'POLYGON EMPTY', 0]
-    tester['MULTILINESTRING EMPTY', 'POLYGON EMPTY', 0, { :only_edges => true }]
+    tester['MULTILINESTRING EMPTY', 'POLYGON EMPTY', 0, { only_edges: true }]
 
     # single point
     tester['GEOMETRYCOLLECTION EMPTY', 'POINT (0 0)', 0]
-    tester['MULTILINESTRING EMPTY', 'POINT (0 0)', 0, { :only_edges => true }]
+    tester['MULTILINESTRING EMPTY', 'POINT (0 0)', 0, { only_edges: true }]
 
     # three collinear points
     tester['GEOMETRYCOLLECTION EMPTY', 'MULTIPOINT(0 0, 5 0, 10 0)', 0]
-    tester['MULTILINESTRING ((5 0, 10 0), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 0)', 0, { :only_edges => true }]
+    tester['MULTILINESTRING ((5 0, 10 0), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 0)', 0, { only_edges: true }]
 
     # three points
     tester['GEOMETRYCOLLECTION (POLYGON ((0 0, 10 10, 5 0, 0 0)))', 'MULTIPOINT(0 0, 5 0, 10 10)', 0]
-    tester['MULTILINESTRING ((5 0, 10 10), (0 0, 10 10), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 10)', 0, { :only_edges => true }]
+    tester['MULTILINESTRING ((5 0, 10 10), (0 0, 10 10), (0 0, 5 0))', 'MULTIPOINT(0 0, 5 0, 10 10)', 0, { only_edges: true }]
 
     # polygon with a hole
     tester[
@@ -1597,15 +1595,15 @@ class GeometryTests < Minitest::Test
       'MULTILINESTRING ((8.5 1, 10 10), (8 2, 10 10), (8 2, 8.5 1), (7 8, 10 10), (7 8, 8 2), (3 8, 10 10), (3 8, 7 8), (2 2, 8.5 1), (2 2, 8 2), (2 2, 7 8), (2 2, 3 8), (0.5 9, 10 10), (0.5 9, 3 8), (0.5 9, 2 2), (0 0, 8.5 1), (0 0, 2 2), (0 0, 0.5 9))',
       'POLYGON((0 0, 8.5 1, 10 10, 0.5 9, 0 0),(2 2, 3 8, 7 8, 8 2, 2 2)))',
       0, {
-        :only_edges => true
+        only_edges: true
       }
     ]
 
     # four points with a tolerance making one collapse
-    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', 2.0, { :only_edges => true }]
+    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', 2.0, { only_edges: true }]
 
     # tolerance as an option
-    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', { :tolerance => 2.0, :only_edges => true }]
+    tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', { tolerance: 2.0, only_edges: true }]
   end
 
   def test_voronoi_diagram
@@ -1624,15 +1622,15 @@ class GeometryTests < Minitest::Test
 
     tester['GEOMETRYCOLLECTION (POLYGON ((50 200, 200 200, 200 50, 50 50, 50 200)), POLYGON ((-100 50, -100 200, 50 200, 50 50, -100 50)), POLYGON ((50 -100, -100 -100, -100 50, 50 50, 50 -100)), POLYGON ((200 50, 200 -100, 50 -100, 50 50, 200 50)))', geom]
 
-    tester['MULTILINESTRING ((50 50, 50 200), (200 50, 50 50), (50 50, -100 50), (50 50, 50 -100))', geom, { :tolerance => 0, :only_edges => true }]
+    tester['MULTILINESTRING ((50 50, 50 200), (200 50, 50 50), (50 50, -100 50), (50 50, 50 -100))', geom, { tolerance: 0, only_edges: true }]
 
     tester['MULTILINESTRING ((50 50, 50 1100), (1100 50, 50 50), (50 50, -1000 50), (50 50, 50 -1000))', geom, {
-      :only_edges => true,
-      :envelope => read(geom).buffer(1000)
+      only_edges: true,
+      envelope: read(geom).buffer(1000)
     }]
 
     # Allows a tolerance for the first argument
     @writer.rounding_precision = 3
-    tester['GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))', "MULTIPOINT ((150 210), (210 270), (150 220), (220 210), (215 269))", 10]
+    tester['GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))', 'MULTIPOINT ((150 210), (210 270), (150 220), (220 210), (215 269))', 10]
   end
 end

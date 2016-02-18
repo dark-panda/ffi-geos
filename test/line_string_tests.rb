@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-$: << File.dirname(__FILE__)
+$LOAD_PATH << File.dirname(__FILE__)
 require 'test_helper'
 
 class LineStringTests < Minitest::Test
@@ -61,7 +61,7 @@ class LineStringTests < Minitest::Test
 
     geom = read('LINESTRING(0 0, 1 1, 2 2, 3 3, 10 0, 2 2)')
 
-    assert_equal(2, geom.select { |point| point == read('POINT(2 2)') }.length)
+    assert_equal(2, geom.count { |point| point == read('POINT(2 2)') })
   end
 
   def test_offset_curve
@@ -73,9 +73,9 @@ class LineStringTests < Minitest::Test
       'LINESTRING (0 2, 10 2)',
       'LINESTRING (0 0, 10 0)',
       2, {
-        :quad_segs => 0,
-        :join => :round,
-        :mitre_limit => 2
+        quad_segs: 0,
+        join: :round,
+        mitre_limit: 2
       }
     )
 
@@ -85,9 +85,9 @@ class LineStringTests < Minitest::Test
       'LINESTRING (10 -2, 0 -2)',
       'LINESTRING (0 0, 10 0)',
       -2, {
-        :quad_segs => 0,
-        :join => :round,
-        :mitre_limit => 2
+        quad_segs: 0,
+        join: :round,
+        mitre_limit: 2
       }
     )
 
@@ -97,9 +97,9 @@ class LineStringTests < Minitest::Test
       'LINESTRING (12 10, 12 0, 10 -2, 0 -2)',
       'LINESTRING (0 0, 10 0, 10 10)',
       -2, {
-        :quad_segs => 1,
-        :join => :round,
-        :mitre_limit => 2
+        quad_segs: 1,
+        join: :round,
+        mitre_limit: 2
       }
     )
 
@@ -109,9 +109,9 @@ class LineStringTests < Minitest::Test
       'LINESTRING (0 2, 8 2, 8 10)',
       'LINESTRING (0 0, 10 0, 10 10)',
       2, {
-        :quad_segs => 1,
-        :join => :round,
-        :mitre_limit => 2
+        quad_segs: 1,
+        join: :round,
+        mitre_limit: 2
       }
     )
   end
@@ -173,7 +173,7 @@ class LineStringTests < Minitest::Test
 
     srid_copy_tester(:to_linear_ring, expected, 0, :zero, wkt)
     srid_copy_tester(:to_linear_ring, expected, 4326, :lenient, wkt)
-    srid_copy_tester(:to_linear_ring,  expected, 4326, :strict, wkt)
+    srid_copy_tester(:to_linear_ring, expected, 4326, :strict, wkt)
   end
 
   def test_to_polygon
@@ -191,6 +191,6 @@ class LineStringTests < Minitest::Test
 
     srid_copy_tester(:to_polygon, expected, 0, :zero, wkt)
     srid_copy_tester(:to_polygon, expected, 4326, :lenient, wkt)
-    srid_copy_tester(:to_polygon,  expected, 4326, :strict, wkt)
+    srid_copy_tester(:to_polygon, expected, 4326, :strict, wkt)
   end
 end

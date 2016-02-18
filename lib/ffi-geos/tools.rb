@@ -3,13 +3,13 @@
 module Geos
   class NullPointerError < Geos::Error
     def initialize(*)
-      super("Tried to create a Geometry from a NULL pointer!")
+      super('Tried to create a Geometry from a NULL pointer!')
     end
   end
 
   class InvalidGeometryTypeError < Geos::Error
     def initialize(*)
-      super("Invalid geometry type")
+      super('Invalid geometry type')
     end
   end
 
@@ -24,63 +24,61 @@ module Geos
 
     def cast_geometry_ptr(geom_ptr, options = {})
       options = {
-        :auto_free => true
+        auto_free: true
       }.merge(options)
 
-      if geom_ptr.null?
-        raise Geos::NullPointerError.new
-      end
+      fail Geos::NullPointerError.new if geom_ptr.null?
 
       klass = case FFIGeos.GEOSGeomTypeId_r(Geos.current_handle, geom_ptr)
-        when GEOS_POINT
-          Point
-        when GEOS_LINESTRING
-          LineString
-        when GEOS_LINEARRING
-          LinearRing
-        when GEOS_POLYGON
-          Polygon
-        when GEOS_MULTIPOINT
-          MultiPoint
-        when GEOS_MULTILINESTRING
-          MultiLineString
-        when GEOS_MULTIPOLYGON
-          MultiPolygon
-        when GEOS_GEOMETRYCOLLECTION
-          GeometryCollection
-        else
-          raise Geos::InvalidGeometryTypeError.new
+              when GEOS_POINT
+                Point
+              when GEOS_LINESTRING
+                LineString
+              when GEOS_LINEARRING
+                LinearRing
+              when GEOS_POLYGON
+                Polygon
+              when GEOS_MULTIPOINT
+                MultiPoint
+              when GEOS_MULTILINESTRING
+                MultiLineString
+              when GEOS_MULTIPOLYGON
+                MultiPolygon
+              when GEOS_GEOMETRYCOLLECTION
+                GeometryCollection
+              else
+                fail Geos::InvalidGeometryTypeError.new
       end
 
-      klass.new(geom_ptr, options).tap { |ret|
+      klass.new(geom_ptr, options).tap do |ret|
         if options[:srid]
           ret.srid = options[:srid] || 0
         elsif options[:srid_copy]
           ret.srid = if Geos.srid_copy_policy == :zero
-            0
-          else
-            options[:srid_copy] || 0
+                       0
+                     else
+                       options[:srid_copy] || 0
           end
         end
-      }
+      end
     end
 
     def check_geometry(geom)
-      raise TypeError.new("Expected Geos::Geometry") unless geom.is_a?(Geos::Geometry)
+      fail TypeError.new('Expected Geos::Geometry') unless geom.is_a?(Geos::Geometry)
     end
 
     def pick_srid_from_geoms(srid_a, srid_b, policy = Geos.srid_copy_policy)
       policy = Geos.srid_copy_policy_default if policy == :default
 
       case policy
-        when :zero
-          0
-        when :lenient
-          srid_a
-        when :strict
-          raise Geos::MixedSRIDsError.new(srid_a, srid_b)
-        else
-          raise ArgumentError.new("Unexpected policy value: #{policy}")
+      when :zero
+        0
+      when :lenient
+        srid_a
+      when :strict
+        fail Geos::MixedSRIDsError.new(srid_a, srid_b)
+      else
+        fail ArgumentError.new("Unexpected policy value: #{policy}")
       end
     end
 
@@ -101,7 +99,7 @@ module Geos
       when 0
         false
       else
-        raise Geos::UnexpectedBooleanResultError.new(result)
+        fail Geos::UnexpectedBooleanResultError.new(result)
       end
     end
 
@@ -114,8 +112,8 @@ module Geos
     end
 
     def check_enum_value(enum, value)
-      enum[value] or
-        raise TypeError.new("Couldn't find valid #{enum.tag} value: #{value}")
+      enum[value] ||
+        fail(TypeError.new("Couldn't find valid #{enum.tag} value: #{value}"))
     end
 
     def symbol_for_enum(enum, value)
