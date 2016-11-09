@@ -670,5 +670,11 @@ module Geos
         double_ptr.read_double
       end
     end
+
+    if FFIGeos.respond_to?(:GEOSMinimumClearanceLine_r)
+      def minimum_clearance_line
+        cast_geometry_ptr(FFIGeos.GEOSMinimumClearanceLine_r(Geos.current_handle_pointer, self.ptr))
+      end
+    end
   end
 end
