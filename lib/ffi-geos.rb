@@ -728,6 +728,11 @@ module Geos
         # precision, *hande, *geom
         :double, :pointer, :pointer
       ],
+
+      :GEOSMinimumRotatedRectangle_r => [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
       #### /Geometry functions ####
 
       #### STRtree functions ####

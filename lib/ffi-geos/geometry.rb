@@ -656,5 +656,11 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSGeom_setPrecision_r(Geos.current_handle, self.ptr, grid_size, flags))
       end
     end
+
+    if FFIGeos.respond_to?(:GEOSMinimumRotatedRectangle_r)
+      def minimum_rotated_rectangle
+        cast_geometry_ptr(FFIGeos.GEOSMinimumRotatedRectangle_r(Geos.current_handle, self.ptr))
+      end
+    end
   end
 end

@@ -1662,4 +1662,13 @@ class GeometryTests < Minitest::Test
     geom_with_precision = geom.with_precision(5.0, :keep_collapsed => true)
     assert_equal('LINESTRING (0 0, 0 0)', write(geom_with_precision))
   end
+
+  def test_minimum_rotated_rectangle
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:minimum_rotated_rectangle)
+
+    geom = read('POLYGON ((1 6, 6 11, 11 6, 6 1, 1 6))')
+    minimum_rotated_rectangle = geom.minimum_rotated_rectangle
+
+    assert_equal('POLYGON ((6 1, 11 6, 6 11, 1 6, 6 1))', write(minimum_rotated_rectangle))
+  end
 end
