@@ -743,6 +743,11 @@ module Geos
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
+
+      :GEOSMinimumWidth_r => [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
       #### /Geometry functions ####
 
       #### STRtree functions ####

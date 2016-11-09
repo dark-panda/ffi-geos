@@ -676,5 +676,11 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSMinimumClearanceLine_r(Geos.current_handle_pointer, self.ptr))
       end
     end
+
+    if FFIGeos.respond_to?(:GEOSMinimumWidth_r)
+      def minimum_width
+        cast_geometry_ptr(FFIGeos.GEOSMinimumWidth_r(Geos.current_handle_pointer, self.ptr))
+      end
+    end
   end
 end
