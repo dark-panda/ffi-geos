@@ -634,5 +634,27 @@ module Geos
 
       "#<Geos::#{self.geom_type}: #{wkt}>"
     end
+
+    if FFIGeos.respond_to?(:GEOSGeom_getPrecision_r)
+      def precision
+        FFIGeos.GEOSGeom_getPrecision_r(Geos.current_handle, self.ptr)
+      end
+    end
+
+    if FFIGeos.respond_to?(:GEOSGeom_setPrecision_r)
+      def with_precision(grid_size, options = {})
+        options = {
+          :no_topology => false,
+          :keep_collapsed => false
+        }.merge(options)
+
+        flags = options.reduce(0) do |memo, (key, value)|
+          memo |= Geos::PrecisionOptions[key] if value
+          memo
+        end
+
+        cast_geometry_ptr(FFIGeos.GEOSGeom_setPrecision_r(Geos.current_handle, self.ptr, grid_size, flags))
+      end
+    end
   end
 end

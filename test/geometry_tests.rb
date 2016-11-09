@@ -1636,4 +1636,30 @@ class GeometryTests < Minitest::Test
     @writer.rounding_precision = 3
     tester['GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))', "MULTIPOINT ((150 210), (210 270), (150 220), (220 210), (215 269))", 10]
   end
+
+  def test_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:precision)
+
+    geom = read('POLYGON EMPTY')
+    scale = geom.precision
+    assert_equal(0.0, scale)
+
+    geom_with_precision = geom.with_precision(2.0)
+
+    assert_equal('POLYGON EMPTY', write(geom_with_precision))
+    scale = geom_with_precision.precision
+    assert_equal(2.0, scale)
+  end
+
+  def test_with_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:with_precision)
+
+    geom = read('LINESTRING(1 0, 2 0)')
+
+    geom_with_precision = geom.with_precision(5.0)
+    assert_equal('LINESTRING EMPTY', write(geom_with_precision))
+
+    geom_with_precision = geom.with_precision(5.0, :keep_collapsed => true)
+    assert_equal('LINESTRING (0 0, 0 0)', write(geom_with_precision))
+  end
 end

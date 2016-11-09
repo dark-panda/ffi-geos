@@ -136,6 +136,11 @@ module Geos
       :geometry_collection, 7
     ])
 
+    Geos::PrecisionOptions = enum(:precision_option, [
+      :no_topology, 1 << 0,
+      :keep_collapsed, 1 << 1
+    ])
+
     FFI_LAYOUT = {
       #### Utility functions ####
 
@@ -712,6 +717,16 @@ module Geos
       :GEOSGeomGetEndPoint_r => [
         # *point, *handle, *geom
         :pointer, :pointer, :pointer
+      ],
+
+      :GEOSGeom_setPrecision_r => [
+        # *geom, *hande, *geom, grid_size, int flags
+        :pointer, :pointer, :pointer, :double, :int
+      ],
+
+      :GEOSGeom_getPrecision_r => [
+        # precision, *hande, *geom
+        :double, :pointer, :pointer
       ],
       #### /Geometry functions ####
 
