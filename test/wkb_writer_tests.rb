@@ -1,4 +1,5 @@
 # encoding: UTF-8
+# frozen_string_literal: true
 
 $: << File.dirname(__FILE__)
 require 'test_helper'
@@ -26,9 +27,7 @@ class WkbWriterTests < Minitest::Test
       @wkb_writer.write(geom)
     end
 
-    if ''.respond_to?(:force_encoding)
-      expected.force_encoding('BINARY')
-    end
+    expected = expected.dup.force_encoding('BINARY') if expected.respond_to?(:encode)
 
     assert_equal(Geos::Tools.symbol_for_enum(Geos::ByteOrders, byte_order), @wkb_writer.byte_order)
     assert_equal(dimensions, @wkb_writer.output_dimensions)
@@ -433,7 +432,7 @@ class WkbWriterTests < Minitest::Test
     geom.srid = 4326
 
     tester = lambda { |expected, *args|
-      expected.force_encoding('BINARY') if expected.respond_to?(:force_encoding)
+      expected = expected.dup.force_encoding('BINARY') if expected.respond_to?(:force_encoding)
 
       assert_equal(
         expected,

@@ -1,4 +1,5 @@
 # encoding: UTF-8
+# frozen_string_literal: true
 
 $: << File.dirname(__FILE__)
 require 'test_helper'

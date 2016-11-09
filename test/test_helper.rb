@@ -1,4 +1,5 @@
 # encoding: BINARY
+# frozen_string_literal: true
 
 if RUBY_VERSION >= '1.9'
   require 'simplecov'
