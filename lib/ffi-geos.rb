@@ -733,6 +733,11 @@ module Geos
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
+
+      :GEOSMinimumClearance_r => [
+        # 0 on success, *handle, *geom, *clearance
+        :int, :pointer, :pointer, :pointer
+      ],
       #### /Geometry functions ####
 
       #### STRtree functions ####

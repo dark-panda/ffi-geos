@@ -662,5 +662,13 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSMinimumRotatedRectangle_r(Geos.current_handle_pointer, self.ptr))
       end
     end
+
+    if FFIGeos.respond_to?(:GEOSMinimumClearance_r)
+      def minimum_clearance
+        double_ptr = FFI::MemoryPointer.new(:double)
+        ret = FFIGeos.GEOSMinimumClearance_r(Geos.current_handle_pointer, self.ptr, double_ptr)
+        double_ptr.read_double
+      end
+    end
   end
 end

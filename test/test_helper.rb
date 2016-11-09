@@ -42,18 +42,23 @@ module TestHelper
 
   def self.included(base)
     base.class_eval do
-      attr_reader :reader, :writer
+      attr_reader :reader, :reader_hex, :writer
     end
   end
 
   def setup
     GC.start
     @reader = Geos::WktReader.new
+    @reader_hex = Geos::WkbReader.new
     @writer = Geos::WktWriter.new
   end
 
   def read(*args)
-    reader.read(*args)
+    if args[0][0] != '0'
+      reader.read(*args)
+    else
+      reader_hex.read_hex(*args)
+    end
   end
 
   def write(*args)

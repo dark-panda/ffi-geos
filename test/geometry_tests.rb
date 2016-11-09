@@ -1671,4 +1671,24 @@ class GeometryTests < Minitest::Test
 
     assert_equal('POLYGON ((6 1, 11 6, 6 11, 1 6, 6 1))', write(minimum_rotated_rectangle))
   end
+
+  def test_minimum_clearance
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:minimum_clearance)
+
+    tester = lambda { |expected_clearance, geom|
+      geom = read(geom)
+      clearance = geom.minimum_clearance
+
+      if expected_clearance.eql?(Float::INFINITY)
+        assert(clearance.infinite?)
+      else
+        assert_in_delta(expected_clearance, clearance, TOLERANCE)
+      end
+    }
+
+    tester[Float::INFINITY, 'LINESTRING EMPTY']
+    tester[20, 'LINESTRING (30 100, 10 100)']
+    tester[100, 'LINESTRING (200 200, 200 100)']
+    tester[3.49284983912134e-05, 'LINESTRING (-112.712119 33.575919, -112.712127 33.575885)']
+  end
 end
