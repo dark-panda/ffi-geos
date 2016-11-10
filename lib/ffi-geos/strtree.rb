@@ -70,6 +70,10 @@ module Geos
       @built
     end
 
+    def built!
+      @built = true
+    end
+
     def next_key
       @storage_key += 1
     end
@@ -105,7 +109,7 @@ module Geos
       if key
         key_ptr = @ptrs[key]
         result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle_pointer, self.ptr, geom.ptr, key_ptr)
-        @built = true
+        built!
 
         if result == 1
           @storage.delete(key)
@@ -116,7 +120,7 @@ module Geos
     def query_all(geom)
       check_geometry(geom)
 
-      @built = true
+      built!
       retval = []
 
       callback = proc { |*args|
@@ -176,6 +180,50 @@ module Geos
     def iterate
       @storage.values.each do |v|
         yield(v)
+      end
+    end
+
+    if FFIGeos.respond_to?(:GEOSSTRtree_nearest_generic_r)
+      def nearest_generic(geom)
+        check_geometry(geom)
+
+        built!
+
+        return nil if @storage.empty?
+
+        callback = proc { |item, _item2, distance_ptr|
+          key = item.read_int
+          geom_from_storage = @storage[key][:geometry]
+
+          next 0 if geom_from_storage.empty?
+
+          distance = geom.distance(geom_from_storage)
+          distance_ptr.write_double(distance)
+
+          next 1
+        }
+
+        key_ptr = FFIGeos.GEOSSTRtree_nearest_generic_r(
+          Geos.current_handle_pointer,
+          self.ptr,
+          geom.ptr,
+          geom.envelope.ptr,
+          callback,
+          nil
+        )
+
+        @storage[key_ptr.read_int] unless key_ptr.null?
+      end
+
+      def nearest(geom)
+        item = nearest_generic(geom)
+        item[:geometry] if item
+      end
+      alias_method :nearest_geometry, :nearest
+
+      def nearest_item(geom)
+        item = nearest_generic(geom)
+        item[:item] if item
       end
     end
   end

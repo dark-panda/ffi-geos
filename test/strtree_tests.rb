@@ -233,4 +233,130 @@ class STRtreeTests < Minitest::Test
     tree.insert(read('POINT (3 3)'), :foo)
     tree.insert(read('POINT (2 7)'))
   end
+
+  def test_nearest
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+
+    geom_1 = read('POINT (3 3)')
+    geom_2 = read('POINT (2 7)')
+    geom_3 = read('POINT (5 4)')
+    geom_4 = read('POINT (3 8)')
+
+    tree = Geos::STRtree.new(2)
+    tree.insert(geom_1)
+    tree.insert(geom_2)
+    tree.insert(geom_3)
+
+    nearest_geom = tree.nearest(geom_4)
+    assert_equal(write(geom_2), write(nearest_geom))
+  end
+
+  def test_nearest_with_depth
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+
+    number_of_geoms = 100
+    geoms = []
+    query_points = []
+    tree = Geos::STRtree.new(8)
+
+    number_of_geoms.times do
+      geom = Geos.create_point(rand, rand)
+      geoms << geom
+      tree.insert(geom)
+
+      query_points << Geos.create_point(rand, rand)
+    end
+
+    query_points.each do |query_point|
+      nearest = tree.nearest(query_point)
+      nearest_brute_force = nil
+      nearest_brute_force_distance = Float::MAX
+
+      number_of_geoms.times do |j|
+        distance = query_point.distance(geoms[j])
+
+        if nearest_brute_force_distance.nil? || distance < nearest_brute_force_distance
+          nearest_brute_force = geoms[j]
+          nearest_brute_force_distance = distance
+        end
+      end
+
+      assert(nearest.equals?(nearest_brute_force))
+    end
+  end
+
+  def test_nearest_with_empty_tree
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+
+    tree = Geos::STRtree.new(10)
+    geom_1 = read('POINT (3 3)')
+    nearest_geom = tree.nearest(geom_1)
+
+    assert_nil(nearest_geom)
+  end
+
+  def test_nearest_with_some_empty_geometries
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+
+    geom_1 = read('LINESTRING EMPTY')
+    geom_2 = read('POINT (2 7)')
+    geom_3 = read('POINT (12 97)')
+    geom_4 = read('LINESTRING (3 8, 4 8)')
+
+    tree = Geos::STRtree.new(4)
+    tree.insert(geom_1)
+    tree.insert(geom_2)
+    tree.insert(geom_3)
+
+    nearest_geom = tree.nearest(geom_4)
+
+    assert_equal(write(geom_2), write(nearest_geom))
+  end
+
+  def test_nearest_with_only_empty_geometries
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+
+    geom_1 = read('LINESTRING EMPTY')
+    geom_2 = read('POINT (2 7)')
+
+    tree = Geos::STRtree.new(4)
+    tree.insert(geom_1)
+
+    assert_raises(Geos::GEOSException, %{Geos::GEOSException: Can't compute envelope of item in BoundablePair}) do
+      tree.nearest(geom_2)
+    end
+  end
+
+  def test_disallowed_inserts_on_nearest
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+
+    setup_tree
+
+    @tree.nearest(read('POINT(5 5)'))
+
+    assert_raises(Geos::STRtree::AlreadyBuiltError) do
+      @tree.insert(read('POINT(0 0)'))
+    end
+  end
+
+  def test_nearest_item
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest_item)
+
+    geom_1 = read('POINT (3 3)')
+    geom_2 = read('POINT (2 7)')
+    geom_3 = read('POINT (5 4)')
+    geom_4 = read('POINT (3 8)')
+
+    item_1 = { :item_1 => :test }
+    item_2 = [ :test ]
+    item_3 = Object.new
+
+    tree = Geos::STRtree.new(2)
+    tree.insert(geom_1, item_1)
+    tree.insert(geom_2, item_2)
+    tree.insert(geom_3, item_3)
+
+    nearest_item = tree.nearest_item(geom_4)
+    assert_equal(item_2, nearest_item)
+  end
 end

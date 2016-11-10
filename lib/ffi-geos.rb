@@ -780,6 +780,11 @@ module Geos
         # void, *handle, *tree
         :void, :pointer, :pointer
       ],
+
+      :GEOSSTRtree_nearest_generic_r => [
+        # *void, *handle, *tree, *item, *item_envelope, int distance_callback(*item_1, *item_2, *double, void *user_data), *user_data
+        :pointer, :pointer, :pointer, :pointer, :pointer, callback([ :pointer, :pointer, :pointer, :pointer ], :int), :pointer
+      ],
       #### /STRtree functions ####
 
       #### PreparedGeometry functions ####
