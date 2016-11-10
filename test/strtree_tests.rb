@@ -30,7 +30,7 @@ class STRtreeTests < Minitest::Test
     @tree.query(read('POINT(5 5)'))
 
     assert_raises(Geos::STRtree::AlreadyBuiltError) do
-      @tree.insert(read('POINT(0 0)'), 'test')
+      @tree.insert(read('POINT(0 0)'))
     end
   end
 
@@ -223,5 +223,14 @@ class STRtreeTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree)
 
     Geos::STRtree.new
+  end
+
+  def test_insert
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree)
+
+    tree = Geos::STRtree.new(2)
+
+    tree.insert(read('POINT (3 3)'), :foo)
+    tree.insert(read('POINT (2 7)'))
   end
 end

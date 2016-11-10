@@ -75,7 +75,7 @@ module Geos
     end
     private :next_key
 
-    def insert(geom, item)
+    def insert(geom, item = nil)
       if self.built?
         raise AlreadyBuiltError.new
       else
