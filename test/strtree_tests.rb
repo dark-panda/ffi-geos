@@ -218,5 +218,10 @@ class STRtreeTests < Minitest::Test
       Geos::STRtree.new([])
     end
   end
-end
 
+  def test_create_without_capacity
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree)
+
+    Geos::STRtree.new
+  end
+end

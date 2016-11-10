@@ -22,10 +22,11 @@ module Geos
     #
     def initialize(*args)
       geoms_and_objects = nil # forward declaration
+      capacity = 10
 
-      capacity = if args.length == 1 && args.first.is_a?(Fixnum)
-        args.first
-      else
+      if args.first.is_a?(Integer)
+        capacity = args.first
+      elsif args.first.is_a?(Array)
         geoms_and_objects = if args.first.first.is_a?(Array)
           args.first
         else
@@ -35,8 +36,6 @@ module Geos
         geoms_and_objects.each do |geom, obj|
           check_geometry(geom)
         end
-
-        geoms_and_objects.length
       end
 
       if capacity <= 0
