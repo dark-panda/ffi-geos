@@ -40,7 +40,7 @@ class GeometryCollectionTests < Minitest::Test
       'POINT (10 20)'
     ], geom[0, 2].collect { |g| write(g) })
 
-    assert_equal(nil, geom[0, -1])
+    assert_nil(geom[0, -1])
     assert_equal([], geom[-1, 0])
     assert_equal([
       'POINT (10 20)',
