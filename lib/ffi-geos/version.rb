@@ -2,6 +2,6 @@
 # frozen_string_literal: true
 
 module Geos
-  VERSION = '1.2.0'.freeze
+  VERSION = '1.2.1.dev'.freeze
 end
 
