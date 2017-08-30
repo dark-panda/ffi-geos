@@ -1272,7 +1272,7 @@ module Geos
           ((\d+)\.(\d+)\.(\d+)((?:dev|rc|beta|alpha)\d*)?)
           -CAPI-
           ((\d+)\.(\d+)\.(\d+))
-          (?:\s+r(\d+))?
+          (?:\s+r?(\h+))?
         $/x)).empty?
           versions = versions[0]
           [
