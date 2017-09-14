@@ -13,6 +13,7 @@ version = Geos::VERSION
 
 desc 'Test GEOS interface'
 Rake::TestTask.new(:test) do |t|
+  t.libs << "#{File.dirname(__FILE__)}/test"
   t.test_files = FileList['test/**/*_tests.rb']
   t.verbose = !!ENV['VERBOSE_TESTS']
   t.warning = !!ENV['WARNINGS']
