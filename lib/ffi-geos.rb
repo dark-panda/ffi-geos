@@ -1056,11 +1056,11 @@ module Geos
     begin
       ffi_lib(geos_library_path)
 
-      FFI_LAYOUT.each do |fun, ary|
+      FFI_LAYOUT.each do |func, ary|
         ret = ary.shift
         begin
           self.class_eval do
-            attach_function(fun, ary, ret)
+            attach_function(func, ary, ret)
           end
         rescue FFI::NotFoundError
           # that's okay
