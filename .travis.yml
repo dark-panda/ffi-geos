@@ -6,11 +6,11 @@ rvm:
   - 2.3.5
   - 2.2.8
   - rbx-3
-  - jruby
+  - jruby-head
 matrix:
   allow_failures:
     - rvm: rbx-3
-    - rvm: jruby
+    - rvm: jruby-head
 addons:
   apt:
     packages:
