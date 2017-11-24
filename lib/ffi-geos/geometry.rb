@@ -665,7 +665,7 @@ module Geos
     if FFIGeos.respond_to?(:GEOSMinimumClearance_r)
       def minimum_clearance
         double_ptr = FFI::MemoryPointer.new(:double)
-        ret = FFIGeos.GEOSMinimumClearance_r(Geos.current_handle_pointer, self.ptr, double_ptr)
+        FFIGeos.GEOSMinimumClearance_r(Geos.current_handle_pointer, self.ptr, double_ptr)
         double_ptr.read_double
       end
     end
