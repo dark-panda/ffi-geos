@@ -71,11 +71,10 @@ class LineStringTests < Minitest::Test
       :offset_curve,
       'LINESTRING (0 2, 10 2)',
       'LINESTRING (0 0, 10 0)',
-      2, {
-        :quad_segs => 0,
-        :join => :round,
-        :mitre_limit => 2
-      }
+      2,
+      quad_segs: 0,
+      join: :round,
+      mitre_limit: 2
     )
 
     # straight right
@@ -83,11 +82,10 @@ class LineStringTests < Minitest::Test
       :offset_curve,
       'LINESTRING (10 -2, 0 -2)',
       'LINESTRING (0 0, 10 0)',
-      -2, {
-        :quad_segs => 0,
-        :join => :round,
-        :mitre_limit => 2
-      }
+      -2,
+      quad_segs: 0,
+      join: :round,
+      mitre_limit: 2
     )
 
     # outside curve
@@ -95,11 +93,10 @@ class LineStringTests < Minitest::Test
       :offset_curve,
       'LINESTRING (12 10, 12 0, 10 -2, 0 -2)',
       'LINESTRING (0 0, 10 0, 10 10)',
-      -2, {
-        :quad_segs => 1,
-        :join => :round,
-        :mitre_limit => 2
-      }
+      -2,
+      quad_segs: 1,
+      join: :round,
+      mitre_limit: 2
     )
 
     # inside curve
@@ -107,11 +104,10 @@ class LineStringTests < Minitest::Test
       :offset_curve,
       'LINESTRING (0 2, 8 2, 8 10)',
       'LINESTRING (0 0, 10 0, 10 10)',
-      2, {
-        :quad_segs => 1,
-        :join => :round,
-        :mitre_limit => 2
-      }
+      2,
+      quad_segs: 1,
+      join: :round,
+      mitre_limit: 2
     )
   end
 
@@ -172,7 +168,7 @@ class LineStringTests < Minitest::Test
 
     srid_copy_tester(:to_linear_ring, expected, 0, :zero, wkt)
     srid_copy_tester(:to_linear_ring, expected, 4326, :lenient, wkt)
-    srid_copy_tester(:to_linear_ring,  expected, 4326, :strict, wkt)
+    srid_copy_tester(:to_linear_ring, expected, 4326, :strict, wkt)
   end
 
   def test_to_polygon
@@ -190,6 +186,6 @@ class LineStringTests < Minitest::Test
 
     srid_copy_tester(:to_polygon, expected, 0, :zero, wkt)
     srid_copy_tester(:to_polygon, expected, 4326, :lenient, wkt)
-    srid_copy_tester(:to_polygon,  expected, 4326, :strict, wkt)
+    srid_copy_tester(:to_polygon, expected, 4326, :strict, wkt)
   end
 end

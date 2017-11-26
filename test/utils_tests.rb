@@ -13,17 +13,17 @@ class UtilsTests < Minitest::Test
   def test_orientation_index
     skip unless ENV['FORCE_TESTS'] || (defined?(Geos::Utils) && Geos::Utils.respond_to?(:orientation_index))
 
-    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 5, 0))
-    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 10, 0))
-    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 0, 0))
-    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, -5, 0))
-    assert_equal(0,  Geos::Utils.orientation_index(0, 0, 10, 0, 20, 0))
-    assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 6))
-    assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 20))
-    assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, 3))
-    assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 5, -2))
-    assert_equal(1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000, 1000001))
-    assert_equal(-1,  Geos::Utils.orientation_index(0, 0, 10, 10, 1000000,  999999))
+    assert_equal(0, Geos::Utils.orientation_index(0, 0, 10, 0, 5, 0))
+    assert_equal(0, Geos::Utils.orientation_index(0, 0, 10, 0, 10, 0))
+    assert_equal(0, Geos::Utils.orientation_index(0, 0, 10, 0, 0, 0))
+    assert_equal(0, Geos::Utils.orientation_index(0, 0, 10, 0, -5, 0))
+    assert_equal(0, Geos::Utils.orientation_index(0, 0, 10, 0, 20, 0))
+    assert_equal(1, Geos::Utils.orientation_index(0, 0, 10, 10, 5, 6))
+    assert_equal(1, Geos::Utils.orientation_index(0, 0, 10, 10, 5, 20))
+    assert_equal(-1, Geos::Utils.orientation_index(0, 0, 10, 10, 5, 3))
+    assert_equal(-1, Geos::Utils.orientation_index(0, 0, 10, 10, 5, -2))
+    assert_equal(1, Geos::Utils.orientation_index(0, 0, 10, 10, 1000000, 1000001))
+    assert_equal(-1, Geos::Utils.orientation_index(0, 0, 10, 10, 1000000, 999999))
   end
 
   def test_relate_match
@@ -57,7 +57,7 @@ class UtilsTests < Minitest::Test
   end
 
   def test_create_point_with_x_y_and_z_arguments
-    assert_equal('POINT Z (10 20 30)', write(Geos.create_point(10, 20, 30), :output_dimensions => 3))
+    assert_equal('POINT Z (10 20 30)', write(Geos.create_point(10, 20, 30), output_dimensions: 3))
   end
 
   def test_create_point_with_too_many_arguments
@@ -75,8 +75,8 @@ class UtilsTests < Minitest::Test
 
   def test_create_line_string
     cs = Geos::CoordinateSequence.new([
-     [ 10, 20, 30 ],
-     [ 30, 20, 10 ]
+      [ 10, 20, 30 ],
+      [ 30, 20, 10 ]
     ])
 
     writer.output_dimensions = 3
@@ -119,7 +119,7 @@ class UtilsTests < Minitest::Test
   def test_create_bad_line_string
     cs = Geos::CoordinateSequence.new(1, 0)
     assert_raises(ArgumentError) do
-      Geos::create_line_string(cs)
+      Geos.create_line_string(cs)
     end
   end
 
@@ -172,7 +172,7 @@ class UtilsTests < Minitest::Test
     cs = Geos::CoordinateSequence.new(1, 0)
 
     assert_raises(ArgumentError) do
-      Geos::create_linear_ring(cs)
+      Geos.create_linear_ring(cs)
     end
   end
 
@@ -185,9 +185,9 @@ class UtilsTests < Minitest::Test
       [ 0, 0 ]
     ])
 
-    exterior_ring = Geos::create_linear_ring(cs)
+    exterior_ring = Geos.create_linear_ring(cs)
 
-    geom = Geos::create_polygon(exterior_ring)
+    geom = Geos.create_polygon(exterior_ring)
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
@@ -211,7 +211,7 @@ class UtilsTests < Minitest::Test
       [ 2, 2 ]
     )
 
-    geom = Geos::create_polygon(outer, inner)
+    geom = Geos.create_polygon(outer, inner)
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
@@ -243,7 +243,7 @@ class UtilsTests < Minitest::Test
       [ 6, 6 ]
     )
 
-    geom = Geos::create_polygon(exterior_ring, [ hole_1, hole_2 ])
+    geom = Geos.create_polygon(exterior_ring, [ hole_1, hole_2 ])
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
@@ -354,7 +354,7 @@ class UtilsTests < Minitest::Test
   def test_create_geometry_collection_with_options
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_geometry_collection)
 
-    geom = Geos.create_collection(:multi_line_string, :srid => 4326)
+    geom = Geos.create_collection(:multi_line_string, srid: 4326)
 
     assert_kind_of(Geos::MultiLineString, geom)
     assert_equal(4326, geom.srid)

@@ -6,82 +6,72 @@ module Geos
 
     def each
       if block_given?
-        self.num_points.times do |n|
-          yield self.point_n(n)
+        num_points.times do |n|
+          yield point_n(n)
         end
         self
       else
-        self.num_points.times.collect { |n|
-          self.point_n(n)
+        num_points.times.collect { |n|
+          point_n(n)
         }.to_enum
       end
     end
 
     if FFIGeos.respond_to?(:GEOSGeomGetNumPoints_r)
       def num_points
-        FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle_pointer, self.ptr)
+        FFIGeos.GEOSGeomGetNumPoints_r(Geos.current_handle_pointer, ptr)
       end
     else
       def num_points
-        self.coord_seq.length
+        coord_seq.length
       end
     end
 
     def point_n(n)
-      if n < 0 || n >= self.num_points
-        raise Geos::IndexBoundsError.new
-      else
-        cast_geometry_ptr(
-          FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle_pointer, self.ptr, n), {
-            :srid_copy => self.srid
-          }
-        )
-      end
+      raise Geos::IndexBoundsError if n < 0 || n >= num_points
+
+      cast_geometry_ptr(FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle_pointer, ptr, n), srid_copy: srid)
     end
 
     def [](*args)
       if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
-        self.point_n(args.first)
+        point_n(args.first)
       else
-        self.to_a[*args]
+        to_a[*args]
       end
     end
-    alias_method :slice, :[]
+    alias slice []
 
     def offset_curve(width, options = {})
       options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 
       cast_geometry_ptr(FFIGeos.GEOSOffsetCurve_r(
-          Geos.current_handle_pointer,
-          self.ptr,
-          width,
-          options[:quad_segs],
-          options[:join],
-          options[:mitre_limit]
-      ), {
-        :srid_copy => self.srid
-      })
+        Geos.current_handle_pointer,
+        ptr,
+        width,
+        options[:quad_segs],
+        options[:join],
+        options[:mitre_limit]
+      ), srid_copy: srid)
     end
 
     if FFIGeos.respond_to?(:GEOSisClosed_r)
       def closed?
-        bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle_pointer, self.ptr))
+        bool_result(FFIGeos.GEOSisClosed_r(Geos.current_handle_pointer, ptr))
       end
     end
 
     def to_linear_ring
-      if self.closed?
-        Geos.create_linear_ring(self.coord_seq, :srid => pick_srid_according_to_policy(self.srid))
-      else
-        self_cs = self.coord_seq.to_a
-        self_cs.push(self_cs[0])
+      return Geos.create_linear_ring(coord_seq, srid: pick_srid_according_to_policy(srid)) if closed?
 
-        Geos.create_linear_ring(self_cs, :srid => pick_srid_according_to_policy(self.srid))
-      end
+      self_cs = coord_seq.to_a
+      self_cs.push(self_cs[0])
+
+      Geos.create_linear_ring(self_cs, srid: pick_srid_according_to_policy(srid))
     end
 
     def to_polygon
-      self.to_linear_ring.to_polygon
+      to_linear_ring.to_polygon
     end
   end
 end

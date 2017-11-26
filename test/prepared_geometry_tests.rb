@@ -24,7 +24,7 @@ class PreparedGeometryTests < Minitest::Test
       [ LINESTRING_C, LINESTRING_A ],
       [ LINESTRING_D, LINESTRING_A ],
       [ POLYGON_A, POLYGON_B ],
-      [ POLYGON_A, POINT_C ],
+      [ POLYGON_A, POINT_C ]
     ].each_with_index do |(geom_a, geom_b), i|
       geom_a = read(geom_a).to_prepared
       geom_b = read(geom_b)
@@ -112,4 +112,3 @@ class PreparedGeometryTests < Minitest::Test
     end
   end
 end
-

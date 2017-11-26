@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = [
     'README.rdoc'
   ]
-  s.files = `git ls-files`.split($\)
+  s.files = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
   s.executables = s.files.grep(%r{^bin/}).map { |f| File.basename(f) }
   s.test_files = s.files.grep(%r{^(test|spec|features)/})
   s.homepage = 'http://github.com/dark-panda/ffi-geos'

@@ -23,19 +23,15 @@ module Geos
     end
 
     def read(wkb, options = {})
-      cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle_pointer, self.ptr, wkb, wkb.bytesize), {
-        :srid => options[:srid]
-      })
+      cast_geometry_ptr(FFIGeos.GEOSWKBReader_read_r(Geos.current_handle_pointer, ptr, wkb, wkb.bytesize), srid: options[:srid])
     rescue Geos::GEOSException => e
-      raise ParseError.new(e)
+      raise ParseError, e
     end
 
     def read_hex(wkb, options = {})
-      cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle_pointer, self.ptr, wkb, wkb.bytesize), {
-        :srid => options[:srid]
-      })
+      cast_geometry_ptr(FFIGeos.GEOSWKBReader_readHEX_r(Geos.current_handle_pointer, ptr, wkb, wkb.bytesize), srid: options[:srid])
     rescue Geos::GEOSException => e
-      raise ParseError.new(e)
+      raise ParseError, e
     end
 
     def self.release(ptr) #:nodoc:

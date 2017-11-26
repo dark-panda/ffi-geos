@@ -5,41 +5,41 @@ module Geos
     if FFIGeos.respond_to?(:GEOSGeomGetX_r)
       def get_x
         double_ptr = FFI::MemoryPointer.new(:double)
-        FFIGeos.GEOSGeomGetX_r(Geos.current_handle_pointer, self.ptr, double_ptr)
+        FFIGeos.GEOSGeomGetX_r(Geos.current_handle_pointer, ptr, double_ptr)
         double_ptr.read_double
       end
     else
       def get_x
-        self.coord_seq.get_x(0)
+        coord_seq.get_x(0)
       end
     end
-    alias_method :x, :get_x
+    alias x get_x
 
     if FFIGeos.respond_to?(:GEOSGeomGetY_r)
       def get_y
         double_ptr = FFI::MemoryPointer.new(:double)
-        FFIGeos.GEOSGeomGetY_r(Geos.current_handle_pointer, self.ptr, double_ptr)
+        FFIGeos.GEOSGeomGetY_r(Geos.current_handle_pointer, ptr, double_ptr)
         double_ptr.read_double
       end
     else
       def get_y
-        self.coord_seq.get_y(0)
+        coord_seq.get_y(0)
       end
     end
-    alias_method :y, :get_y
+    alias y get_y
 
     if FFIGeos.respond_to?(:GEOSGeomGetZ_r)
       def get_z
         double_ptr = FFI::MemoryPointer.new(:double)
-        FFIGeos.GEOSGeomGetZ_r(Geos.current_handle_pointer, self.ptr, double_ptr)
+        FFIGeos.GEOSGeomGetZ_r(Geos.current_handle_pointer, ptr, double_ptr)
         double_ptr.read_double
       end
     else
       def get_z
-        self.coord_seq.get_z(0)
+        coord_seq.get_z(0)
       end
     end
-    alias_method :z, :get_z
+    alias z get_z
 
     def area
       0
@@ -60,7 +60,7 @@ module Geos
     def normalize!
       self
     end
-    alias_method :normalize, :normalize!
+    alias normalize normalize!
 
     %w{
       convex_hull
@@ -69,13 +69,13 @@ module Geos
       envelope
       topology_preserve_simplify
     }.each do |method|
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def #{method}(*args)
-          self.dup.tap { |ret|
+          dup.tap do |ret|
             ret.srid = pick_srid_according_to_policy(ret.srid)
-          }
+          end
         end
-      EOF
+      RUBY
     end
   end
 end

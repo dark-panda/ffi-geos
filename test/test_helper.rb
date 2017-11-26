@@ -31,10 +31,7 @@ else
 end
 
 puts "ffi-geos version #{Geos::VERSION}" if defined?(Geos::VERSION)
-
-if defined?(Geos::FFIGeos)
-  puts "Using #{Geos::FFIGeos.geos_library_path}"
-end
+puts "Using #{Geos::FFIGeos.geos_library_path}" if defined?(Geos::FFIGeos)
 
 module TestHelper
   TOLERANCE = 0.0000000000001
@@ -85,14 +82,14 @@ module TestHelper
   end
 
   {
-    :empty => 'to be empty',
-    :valid => 'to be valid',
-    :simple => 'to be simple',
-    :ring => 'to be ring',
-    :closed => 'to be closed',
-    :has_z => 'to have z dimension'
+    empty: 'to be empty',
+    valid: 'to be valid',
+    simple: 'to be simple',
+    ring: 'to be ring',
+    closed: 'to be closed',
+    has_z: 'to have z dimension'
   }.each do |t, m|
-    self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+    class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
       def assert_geom_#{t}(geom)
         assert(geom.#{t}?, "Expected geom #{m}")
       end
@@ -100,7 +97,7 @@ module TestHelper
       def refute_geom_#{t}(geom)
         assert(!geom.#{t}?, "Did not expect geom #{m}")
       end
-    EOF
+    RUBY
   end
 
   def assert_geom_eql_exact(geom, result, tolerance = TOLERANCE)
@@ -110,10 +107,7 @@ module TestHelper
   def simple_tester(method, expected, geom, *args)
     geom = geom_from_geom_or_wkt(geom)
     result = geom.send(method, *args)
-
-    if result.is_a?(Geos::Geometry)
-      result = write(result)
-    end
+    result = write(result) if result.is_a?(Geos::Geometry)
 
     assert_equal(expected, result)
   end
@@ -158,4 +152,3 @@ end
 if RUBY_VERSION >= '1.9'
   Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)
 end
-

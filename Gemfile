@@ -18,6 +18,6 @@ if RUBY_VERSION >= '1.9'
   gem 'simplecov'
 end
 
-if File.exists?('Gemfile.local')
+if File.exist?('Gemfile.local')
   instance_eval File.read('Gemfile.local')
 end

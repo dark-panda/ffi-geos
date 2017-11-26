@@ -32,7 +32,7 @@ module Geos
 
         @params = {}
         VALID_PARAMETERS.each do |param|
-          self.send("#{param}=", params[param])
+          send("#{param}=", params[param])
         end
       end
 
@@ -43,43 +43,33 @@ module Geos
       def endcap=(value)
         check_enum_value(Geos::BufferCapStyles, value)
 
-        if bool_result(FFIGeos.GEOSBufferParams_setEndCapStyle_r(Geos.current_handle_pointer, ptr, value))
-          @params[:endcap] = symbol_for_enum(Geos::BufferCapStyles, value)
-        end
+        @params[:endcap] = symbol_for_enum(Geos::BufferCapStyles, value) if bool_result(FFIGeos.GEOSBufferParams_setEndCapStyle_r(Geos.current_handle_pointer, ptr, value))
       end
 
       def join=(value)
         check_enum_value(Geos::BufferJoinStyles, value)
 
-        if bool_result(FFIGeos.GEOSBufferParams_setJoinStyle_r(Geos.current_handle_pointer, ptr, value))
-          @params[:join] = symbol_for_enum(Geos::BufferJoinStyles, value)
-        end
+        @params[:join] = symbol_for_enum(Geos::BufferJoinStyles, value) if bool_result(FFIGeos.GEOSBufferParams_setJoinStyle_r(Geos.current_handle_pointer, ptr, value))
       end
 
       def mitre_limit=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setMitreLimit_r(Geos.current_handle_pointer, ptr, value))
-          @params[:mitre_limit] = value
-        end
+        @params[:mitre_limit] = value if bool_result(FFIGeos.GEOSBufferParams_setMitreLimit_r(Geos.current_handle_pointer, ptr, value))
       end
 
       def quad_segs=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setQuadrantSegments_r(Geos.current_handle_pointer, ptr, value))
-          @params[:quad_segs] = value
-        end
+        @params[:quad_segs] = value if bool_result(FFIGeos.GEOSBufferParams_setQuadrantSegments_r(Geos.current_handle_pointer, ptr, value))
       end
 
       def single_sided=(value)
-        if bool_result(FFIGeos.GEOSBufferParams_setSingleSided_r(Geos.current_handle_pointer, ptr, Geos::Tools.bool_to_int(value)))
-          @params[:single_sided] = value
-        end
+        @params[:single_sided] = value if bool_result(FFIGeos.GEOSBufferParams_setSingleSided_r(Geos.current_handle_pointer, ptr, Geos::Tools.bool_to_int(value)))
       end
 
       VALID_PARAMETERS.each do |param|
-        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def #{param}
             @params[:#{param}]
           end
-        EOF
+        RUBY
       end
     else
       attr_accessor(*VALID_PARAMETERS)
@@ -88,7 +78,7 @@ module Geos
         params = Geos::Constants::BUFFER_PARAM_DEFAULTS.merge(params)
 
         VALID_PARAMETERS.each do |param|
-          self.send("#{param}=", params[param])
+          send("#{param}=", params[param])
         end
       end
     end

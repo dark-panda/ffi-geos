@@ -11,7 +11,7 @@ module Geos
 
     class AlreadyBuiltError < Geos::Error
       def initialize(*)
-        super("STRtree has already been built")
+        super('STRtree has already been built')
       end
     end
 
@@ -32,13 +32,13 @@ module Geos
           args
         end
 
-        geoms_and_objects.each do |geom, obj|
+        geoms_and_objects.each do |geom, _obj|
           check_geometry(geom)
         end
       end
 
       if capacity <= 0
-        raise ArgumentError.new("STRtree capacity must be greater than 0")
+        raise ArgumentError, 'STRtree capacity must be greater than 0'
       end
 
       ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle_pointer, capacity)
@@ -54,10 +54,10 @@ module Geos
       @storage_key = 0
       @built = false
 
-      if geoms_and_objects
-        geoms_and_objects.each do |geom, obj|
-          self.insert(geom, obj)
-        end
+      return unless geoms_and_objects
+
+      geoms_and_objects.each do |geom, obj|
+        insert(geom, obj)
       end
     end
 
@@ -79,23 +79,21 @@ module Geos
     private :next_key
 
     def insert(geom, item = nil)
-      if self.built?
-        raise AlreadyBuiltError.new
-      else
-        check_geometry(geom)
+      raise AlreadyBuiltError if built?
 
-        key = next_key
-        key_ptr = FFI::MemoryPointer.new(:pointer)
-        key_ptr.write_int(key)
+      check_geometry(geom)
 
-        @storage[key] = {
-          :item => item,
-          :geometry => geom
-        }
-        @ptrs[key] = key_ptr
+      key = next_key
+      key_ptr = FFI::MemoryPointer.new(:pointer)
+      key_ptr.write_int(key)
 
-        FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle_pointer, self.ptr, geom.ptr, key_ptr)
-      end
+      @storage[key] = {
+        item: item,
+        geometry: geom
+      }
+      @ptrs[key] = key_ptr
+
+      FFIGeos.GEOSSTRtree_insert_r(Geos.current_handle_pointer, ptr, geom.ptr, key_ptr)
     end
 
     def remove(geom, item)
@@ -105,15 +103,13 @@ module Geos
         storage[0]
       end
 
-      if key
-        key_ptr = @ptrs[key]
-        result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle_pointer, self.ptr, geom.ptr, key_ptr)
-        built!
+      return unless key
 
-        if result == 1
-          @storage.delete(key)
-        end
-      end
+      key_ptr = @ptrs[key]
+      result = FFIGeos.GEOSSTRtree_remove_r(Geos.current_handle_pointer, ptr, geom.ptr, key_ptr)
+      built!
+
+      @storage.delete(key) if result == 1
     end
 
     def query_all(geom)
@@ -127,14 +123,12 @@ module Geos
         storage = @storage[key]
         retval << storage
 
-        if block_given?
-          yield(storage)
-        end
+        yield(storage) if block_given?
       }
 
       FFIGeos.GEOSSTRtree_query_r(
         Geos.current_handle_pointer,
-        self.ptr,
+        ptr,
         geom.ptr,
         callback,
         nil
@@ -144,12 +138,12 @@ module Geos
     end
 
     def query(geom, ret = :item)
-      self.query_all(geom).collect { |storage|
+      query_all(geom).collect { |storage|
         item = if ret.is_a?(Array)
           storage.inject({}) do |memo, k|
-            memo.tap {
+            memo.tap do
               memo[k] = storage[k]
-            }
+            end
           end
         elsif ret == :all
           storage
@@ -157,27 +151,23 @@ module Geos
           storage[ret]
         end
 
-        item.tap {
-          if block_given?
-            yield(item)
-          end
-        }
+        item.tap do
+          yield(item) if block_given?
+        end
       }.compact
     end
 
     def query_geometries(geom)
-      self.query_all(geom).collect { |storage|
-        storage[:geometry].tap { |val|
-          if block_given?
-            yield(val)
-          end
-        }
+      query_all(geom).collect { |storage|
+        storage[:geometry].tap do |val|
+          yield(val) if block_given?
+        end
       }.compact
     end
-    alias_method :query_geoms, :query_geometries
+    alias query_geoms query_geometries
 
     def iterate
-      @storage.values.each do |v|
+      @storage.each_value do |v|
         yield(v)
       end
     end
@@ -204,7 +194,7 @@ module Geos
 
         key_ptr = FFIGeos.GEOSSTRtree_nearest_generic_r(
           Geos.current_handle_pointer,
-          self.ptr,
+          ptr,
           geom.ptr,
           geom.envelope.ptr,
           callback,
@@ -218,7 +208,7 @@ module Geos
         item = nearest_generic(geom)
         item[:geometry] if item
       end
-      alias_method :nearest_geometry, :nearest
+      alias nearest_geometry nearest
 
       def nearest_item(geom)
         item = nearest_generic(geom)

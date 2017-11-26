@@ -3,13 +3,13 @@
 module Geos
   class NullPointerError < Geos::Error
     def initialize(*)
-      super("Tried to create a Geometry from a NULL pointer!")
+      super('Tried to create a Geometry from a NULL pointer!')
     end
   end
 
   class InvalidGeometryTypeError < Geos::Error
     def initialize(*)
-      super("Invalid geometry type")
+      super('Invalid geometry type')
     end
   end
 
@@ -24,12 +24,10 @@ module Geos
 
     def cast_geometry_ptr(geom_ptr, options = {})
       options = {
-        :auto_free => true
+        auto_free: true
       }.merge(options)
 
-      if geom_ptr.null?
-        raise Geos::NullPointerError.new
-      end
+      raise Geos::NullPointerError if geom_ptr.null?
 
       klass = case FFIGeos.GEOSGeomTypeId_r(Geos.current_handle_pointer, geom_ptr)
         when GEOS_POINT
@@ -52,7 +50,7 @@ module Geos
           raise Geos::InvalidGeometryTypeError.new
       end
 
-      klass.new(geom_ptr, options).tap { |ret|
+      klass.new(geom_ptr, options).tap do |ret|
         if options[:srid]
           ret.srid = options[:srid] || 0
         elsif options[:srid_copy]
@@ -62,11 +60,11 @@ module Geos
             options[:srid_copy] || 0
           end
         end
-      }
+      end
     end
 
     def check_geometry(geom)
-      raise TypeError.new("Expected Geos::Geometry") unless geom.is_a?(Geos::Geometry)
+      raise TypeError, 'Expected Geos::Geometry' unless geom.is_a?(Geos::Geometry)
     end
 
     def pick_srid_from_geoms(srid_a, srid_b, policy = Geos.srid_copy_policy)
@@ -80,7 +78,7 @@ module Geos
         when :strict
           raise Geos::MixedSRIDsError.new(srid_a, srid_b)
         else
-          raise ArgumentError.new("Unexpected policy value: #{policy}")
+          raise ArgumentError, "Unexpected policy value: #{policy}"
       end
     end
 
@@ -96,12 +94,12 @@ module Geos
 
     def bool_result(result)
       case result
-      when 1
-        true
-      when 0
-        false
-      else
-        raise Geos::UnexpectedBooleanResultError.new(result)
+        when 1
+          true
+        when 0
+          false
+        else
+          raise Geos::UnexpectedBooleanResultError, result
       end
     end
 
@@ -115,7 +113,7 @@ module Geos
 
     def check_enum_value(enum, value)
       enum[value] or
-        raise TypeError.new("Couldn't find valid #{enum.tag} value: #{value}")
+        raise TypeError, "Couldn't find valid #{enum.tag} value: #{value}"
     end
 
     def symbol_for_enum(enum, value)

@@ -26,9 +26,9 @@ module Geos
         # up in unexpected ways while interrupts are firing.
         def register(method_or_block = nil, &block)
           if method_or_block.nil? && !block_given?
-            raise ArgumentError.new("Expected either a method or a block for Geos::Interrupt.register")
+            raise ArgumentError, 'Expected either a method or a block for Geos::Interrupt.register'
           elsif !method_or_block.nil? && block_given?
-            raise ArgumentError.new("Cannot use both a method and a block for Geos::Interrupt.register")
+            raise ArgumentError, 'Cannot use both a method and a block for Geos::Interrupt.register'
           else
             retval = @current_interrupt_callback
 
@@ -71,4 +71,3 @@ module Geos
     end
   end
 end
-

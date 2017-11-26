@@ -120,8 +120,6 @@ class WkbWriterTests < Minitest::Test
     )
   end
 
-
-
   def test_2d_little_endian_with_3d_input
     wkb_tester(
       '010100000000000000000018400000000000001C40',
@@ -143,8 +141,6 @@ class WkbWriterTests < Minitest::Test
       true
     )
   end
-
-
 
   def test_2d_big_endian_with_3d_input
     wkb_tester(
@@ -313,8 +309,6 @@ class WkbWriterTests < Minitest::Test
     )
   end
 
-
-
   def test_2d_little_endian_with_3d_input_binary
     wkb_tester(
       '010100000000000000000018400000000000001C40',
@@ -439,9 +433,8 @@ class WkbWriterTests < Minitest::Test
     }
 
     tester[
-      "\x01\x01\x00\x00\x20\xE6\x10\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40", {
-        :include_srid => true
-      }
+      "\x01\x01\x00\x00\x20\xE6\x10\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40",
+      include_srid: true
     ]
 
     tester[
@@ -455,9 +448,9 @@ class WkbWriterTests < Minitest::Test
     geom = read('POINT(1 2 3)')
     geom.srid = 4326
 
-    assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom, {
-      :include_srid => true
-    }))
+    assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom,
+      include_srid: true
+    ))
 
     assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
   end

@@ -23,7 +23,7 @@ class ToolsTests < Minitest::Test
   def test_bool_to_int
     assert_equal(1, Geos::Tools.bool_to_int(1))
     assert_equal(1, Geos::Tools.bool_to_int(true))
-    assert_equal(1, Geos::Tools.bool_to_int(""))
+    assert_equal(1, Geos::Tools.bool_to_int(''))
     assert_equal(1, Geos::Tools.bool_to_int(0))
     assert_equal(0, Geos::Tools.bool_to_int(false))
     assert_equal(0, Geos::Tools.bool_to_int(nil))
@@ -90,4 +90,3 @@ class ToolsTests < Minitest::Test
     assert_equal(:round, Geos::Tools.symbol_for_enum(Geos::BufferCapStyles, 1))
   end
 end
-

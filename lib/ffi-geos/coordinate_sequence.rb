@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Geos
-
   # A CoordinateSequence is a list of coordinates in a Geometry.
   class CoordinateSequence
     class ParseError < Geos::ParseError
@@ -18,22 +17,22 @@ module Geos
       end
 
       def [](idx)
-        parent.get_ordinate(idx, self.dimension)
+        parent.get_ordinate(idx, dimension)
       end
 
       def []=(idx, value)
-        parent.set_ordinate(idx, self.dimension, value)
+        parent.set_ordinate(idx, dimension, value)
       end
 
       def each
         if block_given?
           parent.length.times do |n|
-            yield parent.get_ordinate(n, self.dimension)
+            yield parent.get_ordinate(n, dimension)
           end
           self
         else
           parent.length.times.collect { |n|
-            parent.get_ordinate(n, self.dimension)
+            parent.get_ordinate(n, dimension)
           }.to_enum
         end
       end
@@ -72,9 +71,9 @@ module Geos
           if lengths.empty?
             [ 0, 0 ]
           elsif lengths.length != 1
-            raise ParseError.new("Different sized points found in Array")
+            raise ParseError, 'Different sized points found in Array'
           elsif !lengths.first.between?(1, 3)
-            raise ParseError.new("Expected points to contain 1-3 elements")
+            raise ParseError, 'Expected points to contain 1-3 elements'
           else
             [ points.length, points.first.length ]
           end
@@ -82,7 +81,7 @@ module Geos
           args.first.values_at(:size, :dimensions)
         else
           if !args.length.between?(0, 2)
-            raise ArgumentError.new("wrong number of arguments (#{args.length} for 0-2)")
+            raise ArgumentError, "wrong number of arguments (#{args.length} for 0-2)"
           else
             [ args[0], args[1] ]
           end
@@ -106,11 +105,11 @@ module Geos
       @y = CoordinateAccessor.new(self, 1)
       @z = CoordinateAccessor.new(self, 2)
 
-      if points
-        points.each_with_index do |point, idx|
-          point.each_with_index do |val, dim|
-            self.set_ordinate(idx, dim, val)
-          end
+      return unless points
+
+      points.each_with_index do |point, idx|
+        point.each_with_index do |val, dim|
+          set_ordinate(idx, dim, val)
         end
       end
     end
@@ -134,13 +133,13 @@ module Geos
     # 2-dimensional CoordinateSequences.
     def each
       if block_given?
-        self.length.times do |n|
-          yield self.build_coordinate(n)
+        length.times do |n|
+          yield build_coordinate(n)
         end
         self
       else
-        self.length.times.collect { |n|
-          self.build_coordinate(n)
+        length.times.collect { |n|
+          build_coordinate(n)
         }.to_enum
       end
     end
@@ -148,82 +147,82 @@ module Geos
     def [](*args)
       if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
         i = args.first
-        ary = [ self.get_x(i), self.get_y(i) ]
-        ary << self.get_z(i) if self.has_z?
+        ary = [ get_x(i), get_y(i) ]
+        ary << get_z(i) if has_z?
         ary
       else
-        self.to_a[*args]
+        to_a[*args]
       end
     end
-    alias_method :slice, :[]
+    alias slice []
 
     def has_z?
-      self.dimensions == 3
+      dimensions == 3
     end
 
     # Sets the x value of a coordinate. Can also be set via #x[]=.
     def set_x(idx, val)
-      self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle_pointer, self.ptr, idx, val.to_f)
+      check_bounds(idx)
+      FFIGeos.GEOSCoordSeq_setX_r(Geos.current_handle_pointer, ptr, idx, val.to_f)
     end
 
     # Sets the y value of a coordinate. Can also be set via #y[]=.
     def set_y(idx, val)
-      self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle_pointer, self.ptr, idx, val.to_f)
+      check_bounds(idx)
+      FFIGeos.GEOSCoordSeq_setY_r(Geos.current_handle_pointer, ptr, idx, val.to_f)
     end
 
     # Sets the z value of a coordinate. Can also be set via #z[]=.
     def set_z(idx, val)
-      self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle_pointer, self.ptr, idx, val.to_f)
+      check_bounds(idx)
+      FFIGeos.GEOSCoordSeq_setZ_r(Geos.current_handle_pointer, ptr, idx, val.to_f)
     end
 
     def set_ordinate(idx, dim, val)
-      self.check_bounds(idx)
-      FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle_pointer, self.ptr, idx, dim, val.to_f)
+      check_bounds(idx)
+      FFIGeos.GEOSCoordSeq_setOrdinate_r(Geos.current_handle_pointer, ptr, idx, dim, val.to_f)
     end
 
     # Gets the x value of a coordinate. Can also be retrieved via #x[].
     def get_x(idx)
-      self.check_bounds(idx)
+      check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle_pointer, self.ptr, idx, double_ptr)
+      FFIGeos.GEOSCoordSeq_getX_r(Geos.current_handle_pointer, ptr, idx, double_ptr)
       double_ptr.read_double
     end
 
     # Gets the y value of a coordinate. Can also be retrieved via #y[].
     def get_y(idx)
-      self.check_bounds(idx)
+      check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle_pointer, self.ptr, idx, double_ptr)
+      FFIGeos.GEOSCoordSeq_getY_r(Geos.current_handle_pointer, ptr, idx, double_ptr)
       double_ptr.read_double
     end
 
     # Gets the z value of a coordinate. Can also be retrieved via #z[].
     def get_z(idx)
-      self.check_bounds(idx)
+      check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle_pointer, self.ptr, idx, double_ptr)
+      FFIGeos.GEOSCoordSeq_getZ_r(Geos.current_handle_pointer, ptr, idx, double_ptr)
       double_ptr.read_double
     end
 
     def get_ordinate(idx, dim)
-      self.check_bounds(idx)
+      check_bounds(idx)
       double_ptr = FFI::MemoryPointer.new(:double)
-      FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle_pointer, self.ptr, idx, dim, double_ptr)
+      FFIGeos.GEOSCoordSeq_getOrdinate_r(Geos.current_handle_pointer, ptr, idx, dim, double_ptr)
       double_ptr.read_double
     end
 
     def length
       int_ptr = FFI::MemoryPointer.new(:int)
-      FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle_pointer, self.ptr, int_ptr)
+      FFIGeos.GEOSCoordSeq_getSize_r(Geos.current_handle_pointer, ptr, int_ptr)
       int_ptr.read_int
     end
-    alias_method :size, :length
+    alias size length
 
     def empty?
-      self.length == 0
+      length.zero?
     end
 
     def dimensions
@@ -231,47 +230,45 @@ module Geos
         @dimensions
       else
         int_ptr = FFI::MemoryPointer.new(:int)
-        FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle_pointer, self.ptr, int_ptr)
+        FFIGeos.GEOSCoordSeq_getDimensions_r(Geos.current_handle_pointer, ptr, int_ptr)
         @dimensions = int_ptr.read_int
       end
     end
 
     def to_point(options = {})
-      Geos.create_point(self, :srid => options[:srid])
+      Geos.create_point(self, srid: options[:srid])
     end
 
     def to_linear_ring(options = {})
-      Geos.create_linear_ring(self, :srid => options[:srid])
+      Geos.create_linear_ring(self, srid: options[:srid])
     end
 
     def to_line_string(options = {})
-      Geos.create_line_string(self, :srid => options[:srid])
+      Geos.create_line_string(self, srid: options[:srid])
     end
 
     def to_polygon(options = {})
-      Geos.create_polygon(self, :srid => options[:srid])
+      Geos.create_polygon(self, srid: options[:srid])
     end
 
     def to_s
-      self.entries.collect { |entry|
+      entries.collect { |entry|
         entry.join(' ')
       }.join(', ')
     end
 
     protected
 
-    def check_bounds(idx) #:nodoc:
-      if idx < 0 || idx >= self.length
-        raise Geos::IndexBoundsError.new("Index out of bounds")
+      def check_bounds(idx) #:nodoc:
+        raise Geos::IndexBoundsError, 'Index out of bounds' if idx.negative? || idx >= length
       end
-    end
 
-    def build_coordinate(n) #:nodoc:
-      [
-        self.get_x(n),
-        (self.dimensions >= 2 ? self.get_y(n) : nil),
-        (self.dimensions >= 3 ? self.get_z(n) : nil)
-      ].compact
-    end
+      def build_coordinate(n) #:nodoc:
+        [
+          get_x(n),
+          (dimensions >= 2 ? get_y(n) : nil),
+          (dimensions >= 3 ? get_z(n) : nil)
+        ].compact
+      end
   end
 end

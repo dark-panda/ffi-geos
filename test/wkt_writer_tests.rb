@@ -10,7 +10,7 @@ class WktWriterTests < Minitest::Test
     wkt = write(geom)
 
     x, y = if wkt =~ /^POINT\s\((\d+\.\d+)\s*(\d+\.\d+)\)$/
-      [ $1.to_f, $2.to_f ]
+      [ Regexp.last_match[1].to_f, Regexp.last_match[2].to_f ]
     end
 
     assert_in_delta(12.3456789, x, TOLERANCE)
@@ -116,18 +116,14 @@ class WktWriterTests < Minitest::Test
     @writer.rounding_precision = 2
 
     geom = read('POINT(1 2 3)')
-    assert_equal('POINT (1 2)', write(geom, {
-      :trim => true
-    }))
+    assert_equal('POINT (1 2)', write(geom, trim: true))
 
-    assert_equal('POINT (1.0000 2.0000)', write(geom, {
-      :rounding_precision => 4
-    }))
+    assert_equal('POINT (1.0000 2.0000)', write(geom, rounding_precision: 4))
 
-    assert_equal('POINT Z (1 2 3)', write(geom, {
-      :output_dimensions => 3,
-      :trim => true
-    }))
+    assert_equal('POINT Z (1 2 3)', write(geom,
+      output_dimensions: 3,
+      trim: true
+    ))
 
     assert_equal('POINT (1.00 2.00)', write(geom))
   end
