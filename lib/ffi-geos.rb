@@ -752,6 +752,16 @@ module Geos
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
       ],
+
+      GEOSFrechetDistance_r: [
+        # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, (double *) distance
+        :int, :pointer, :pointer, :pointer, :pointer
+      ],
+
+      GEOSFrechetDistanceDensify_r: [
+        # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, densifyFrac, (double *) distance
+        :int, :pointer, :pointer, :pointer, :double, :pointer
+      ],
       #### /Geometry functions ####
 
       #### STRtree functions ####

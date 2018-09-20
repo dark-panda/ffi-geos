@@ -655,5 +655,21 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSReverse_r(Geos.current_handle_pointer, ptr))
       end
     end
+
+    if FFIGeos.respond_to?(:GEOSFrechetDistance_r)
+      def frechet_distance(geom, densify_frac = nil)
+        check_geometry(geom)
+
+        double_ptr = FFI::MemoryPointer.new(:double)
+
+        if densify_frac
+          FFIGeos.GEOSFrechetDistanceDensify_r(Geos.current_handle_pointer, ptr, geom.ptr, densify_frac, double_ptr)
+        else
+          FFIGeos.GEOSFrechetDistance_r(Geos.current_handle_pointer, ptr, geom.ptr, double_ptr)
+        end
+
+        double_ptr.read_double
+      end
+    end
   end
 end
