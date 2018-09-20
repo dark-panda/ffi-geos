@@ -649,5 +649,11 @@ module Geos
         cast_geometry_ptr(FFIGeos.GEOSMinimumWidth_r(Geos.current_handle_pointer, ptr))
       end
     end
+
+    if FFIGeos.respond_to?(:GEOSReverse_r)
+      def reverse
+        cast_geometry_ptr(FFIGeos.GEOSReverse_r(Geos.current_handle_pointer, ptr))
+      end
+    end
   end
 end
