@@ -18,3 +18,6 @@ Metrics/LineLength:
   Description: 'Limit lines to 80 characters.'
   StyleGuide: '#80-character-limits'
   Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false

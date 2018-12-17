@@ -174,20 +174,3 @@ end
 if RUBY_VERSION >= '1.9'
   Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)
 end
-
-if !Fixnum.method_defined?(:negative?)
-  class Fixnum
-    def negative?
-      self < 0
-    end
-  end
-end
-
-if !Fixnum.method_defined?(:positive?)
-  class Fixnum
-    def positive?
-      self > 0
-    end
-  end
-end
-

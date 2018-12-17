@@ -548,7 +548,7 @@ module Geos
     protected
 
       def check_bounds(idx) #:nodoc:
-        raise Geos::IndexBoundsError, 'Index out of bounds' if idx.negative? || idx >= length
+        raise Geos::IndexBoundsError, 'Index out of bounds' if idx < 0 || idx >= length
       end
 
       def build_coordinate(n) #:nodoc:

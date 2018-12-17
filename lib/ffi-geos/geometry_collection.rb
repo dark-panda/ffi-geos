@@ -19,7 +19,7 @@ module Geos
     end
 
     def get_geometry_n(n)
-      if n.negative? || n >= num_geometries
+      if n < 0 || n >= num_geometries
         nil
       else
         cast_geometry_ptr(FFIGeos.GEOSGetGeometryN_r(Geos.current_handle_pointer, ptr, n), auto_free: false)

@@ -7,7 +7,7 @@ module Geos
     end
 
     def interior_ring_n(n)
-      raise Geos::IndexBoundsError if n.negative? || n >= num_interior_rings
+      raise Geos::IndexBoundsError if n < 0 || n >= num_interior_rings
 
       cast_geometry_ptr(
         FFIGeos.GEOSGetInteriorRingN_r(Geos.current_handle_pointer, ptr, n),
