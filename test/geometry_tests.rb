@@ -133,7 +133,7 @@ class GeometryTests < Minitest::Test
   def test_difference
     comparison_tester(
       :difference,
-      'GEOMETRYCOLLECTION EMPTY',
+      EMPTY_GEOMETRY,
       'POINT(0 0)',
       'POINT(0 0)'
     )
@@ -154,7 +154,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :difference,
-      'GEOMETRYCOLLECTION EMPTY',
+      EMPTY_GEOMETRY,
       'POINT(5 0)',
       'LINESTRING(0 0, 10 0)'
     )
@@ -206,7 +206,7 @@ class GeometryTests < Minitest::Test
     %w{ sym_difference symmetric_difference }.each do |method|
       comparison_tester(
         method,
-        'GEOMETRYCOLLECTION EMPTY',
+        EMPTY_GEOMETRY,
         'POINT(0 0)',
         'POINT(0 0)'
       )
@@ -1240,7 +1240,12 @@ class GeometryTests < Minitest::Test
     ]
 
     tester[
-      '5.0 5.0 NaN, 8.0 8.0 NaN',
+      if Geos::GEOS_VERSION > '3.8'
+        '5.0 5.0, 8.0 8.0'
+      else
+        '5.0 5.0 NaN, 8.0 8.0 NaN'
+      end,
+
       'POLYGON((1 1, 1 5, 5 5, 5 1, 1 1))',
       'POLYGON((8 8, 9 9, 9 10, 8 8))'
     ]

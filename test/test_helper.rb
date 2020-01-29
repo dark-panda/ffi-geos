@@ -36,6 +36,12 @@ puts "Using #{Geos::FFIGeos.geos_library_path}" if defined?(Geos::FFIGeos)
 module TestHelper
   TOLERANCE = 0.0000000000001
 
+  EMPTY_GEOMETRY = if Geos::GEOS_VERSION > '3.8'
+    'POINT EMPTY'
+  else
+    'GEOMETRYCOLLECTION EMPTY'
+  end
+
   def self.included(base)
     base.class_eval do
       attr_reader :reader, :reader_hex, :writer
