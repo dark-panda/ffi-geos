@@ -1356,6 +1356,14 @@ class GeometryTests < Minitest::Test
     assert_equal('POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))', write(geom.build_area))
   end
 
+  def test_make_valid
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:make_valid)
+
+    geom = read('POLYGON((0 0, 1 1, 0 1, 1 0, 0 0))')
+
+    assert_equal('MULTIPOLYGON (((0 0, 0.5 0.5, 1 0, 0 0)), ((0.5 0.5, 0 1, 1 1, 0.5 0.5)))', write(geom.make_valid))
+  end
+
   def test_shared_paths
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:shared_paths)
 

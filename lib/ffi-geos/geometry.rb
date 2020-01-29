@@ -561,6 +561,13 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSMakeValid_r)
+      # Added in GEOS 3.8+
+      def make_valid
+        cast_geometry_ptr(FFIGeos.GEOSMakeValid_r(Geos.current_handle_pointer, ptr))
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSDelaunayTriangulation_r)
       # :call-seq:
       #   delaunay_triangulation(options = {})

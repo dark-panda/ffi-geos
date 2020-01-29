@@ -212,6 +212,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSMakeValid_r: [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
+
       GEOSPolygonizer_getCutEdges_r: [
         # *geom, *handle, **geoms, ngeoms
         :pointer, :pointer, :pointer, :uint
