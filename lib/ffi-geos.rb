@@ -1225,7 +1225,7 @@ module Geos
 
   class << self
     def version
-      @version ||= FFIGeos.GEOSversion
+      @version ||= FFIGeos.GEOSversion.strip
     end
 
     def jts_port
