@@ -467,6 +467,17 @@ module Geos
       double_ptr.read_double
     end
 
+    if FFIGeos.respond_to?(:GEOSDistanceIndexed_r)
+      # Available in GEOS 3.7+.
+      def distance_indexed(geom)
+        check_geometry(geom)
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSDistanceIndexed_r(Geos.current_handle_pointer, ptr, geom.ptr, double_ptr)
+        double_ptr.read_double
+      end
+      alias_method :indexed_distance, :distance_indexed
+    end
+
     def hausdorff_distance(geom, densify_frac = nil)
       check_geometry(geom)
 

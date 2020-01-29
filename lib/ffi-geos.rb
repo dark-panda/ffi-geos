@@ -668,6 +668,11 @@ module Geos
         :int, :pointer, :pointer, :pointer, :pointer
       ],
 
+      GEOSDistanceIndexed_r: [
+        # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, (double *) distance
+        :int, :pointer, :pointer, :pointer, :pointer
+      ],
+
       GEOSHausdorffDistance_r: [
         # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, (double *) distance
         :int, :pointer, :pointer, :pointer, :pointer

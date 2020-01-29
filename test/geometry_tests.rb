@@ -1154,6 +1154,16 @@ class GeometryTests < Minitest::Test
     simple_tester(:distance, 2.0, geom, read('LINESTRING (3 0 , 10 0)'))
   end
 
+  def test_distance_indexed
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:distance_indexed)
+
+    geom_a = read('POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))')
+    geom_b = read('POLYGON ((20 30, 10 10, 13 14, 7 8, 20 30))')
+
+    assert_in_delta(9.219544457292887, geom_a.distance_indexed(geom_b), TOLERANCE)
+    assert_in_delta(9.219544457292887, geom_b.distance_indexed(geom_a), TOLERANCE)
+  end
+
   def test_hausdorff_distance
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
 
