@@ -457,6 +457,11 @@ module Geos
         :pointer, :pointer, :pointer, :pointer
       ],
 
+      GEOSCoverageUnion_r: [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
+
       GEOSUnaryUnion_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer

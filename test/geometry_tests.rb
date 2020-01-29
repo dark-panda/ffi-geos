@@ -383,6 +383,19 @@ class GeometryTests < Minitest::Test
     )
   end
 
+  def test_coverage_union
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:coverage_union)
+
+    simple_tester(
+      :union_cascaded,
+      'POLYGON ((0 0, 0 1, 1 1, 2 1, 2 0, 1 0, 0 0))',
+      'MULTIPOLYGON(
+        ((0 0, 0 1, 1 1, 1 0, 0 0)),
+        ((1 0, 1 1, 2 1, 2 0, 1 0))
+      ))'
+    )
+  end
+
   def test_unary_union
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:unary_union)
 

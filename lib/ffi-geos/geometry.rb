@@ -176,6 +176,13 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSUnionCascaded_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end
 
+    if FFIGeos.respond_to?(:GEOSCoverageUnion_r)
+      # Added in GEOS 3.8+
+      def coverage_union
+        cast_geometry_ptr(FFIGeos.GEOSCoverageUnion_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSUnaryUnion_r)
       # Available in GEOS 3.3+
       def unary_union
