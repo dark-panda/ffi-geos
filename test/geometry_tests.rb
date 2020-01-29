@@ -1256,6 +1256,23 @@ class GeometryTests < Minitest::Test
     )
   end
 
+  def test_polygonize_valid
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_valid)
+
+    geom_a = read(
+      'GEOMETRYCOLLECTION(
+        LINESTRING (100 100, 100 300, 300 300, 300 100, 100 100),
+        LINESTRING (150 150, 150 250, 250 250, 250 150, 150 150)
+      )'
+    )
+
+    polygonized = geom_a.polygonize_valid
+    assert_equal(
+      'POLYGON ((100 100, 100 300, 300 300, 300 100, 100 100), (150 150, 250 150, 250 250, 150 250, 150 150))',
+      write(polygonized.snap_to_grid(0.1))
+    )
+  end
+
   def test_polygonize_cut_edges
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_cut_edges)
 

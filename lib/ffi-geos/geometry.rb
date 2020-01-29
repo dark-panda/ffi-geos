@@ -545,6 +545,15 @@ module Geos
       ary.write_array_of_pointer([ ptr ])
 
       cast_geometry_ptr(FFIGeos.GEOSPolygonize_r(Geos.current_handle_pointer, ary, 1), srid_copy: srid).to_a
+
+    if FFIGeos.respond_to?(:GEOSPolygonize_valid_r)
+      # Added in GEOS 3.8+
+      def polygonize_valid
+        ary = FFI::MemoryPointer.new(:pointer)
+        ary.write_array_of_pointer([ ptr ])
+
+        cast_geometry_ptr(FFIGeos.GEOSPolygonize_valid_r(Geos.current_handle_pointer, ary, 1), srid_copy: srid)
+      end
     end
 
     def polygonize_cut_edges
