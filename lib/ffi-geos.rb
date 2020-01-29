@@ -328,6 +328,11 @@ module Geos
         # 0 on exception, *handle, *coord_seq, (uint *) size
         :int, :pointer, :pointer, :pointer
       ],
+
+      GEOSCoordSeq_isCCW_r: [
+        # 0 on exception, *handle, *coord_seq, (char *) value
+        :int, :pointer, :pointer, :pointer
+      ],
       #### /CoordinateSequence functions ####
 
       #### Geometry functions ####

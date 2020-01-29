@@ -235,6 +235,16 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSCoordSeq_isCCW_r)
+      # Available in GEOS 3.7+.
+      def counter_clockwise?
+        char_ptr = FFI::MemoryPointer.new(:char)
+        FFIGeos.GEOSCoordSeq_isCCW_r(Geos.current_handle_pointer, ptr, char_ptr)
+        Tools.bool_result(char_ptr.read_char)
+      end
+      alias_method :ccw?, :counter_clockwise?
+    end
+
     def to_point(options = {})
       Geos.create_point(self, srid: options[:srid])
     end

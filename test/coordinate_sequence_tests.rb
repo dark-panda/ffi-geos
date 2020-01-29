@@ -43,6 +43,28 @@ class CoordinateSequenceTests < Minitest::Test
     assert_equal(2, @cs.dimensions)
   end
 
+  def test_counter_clockwise
+    skip unless ENV['FORCE_TESTS'] || Geos::CoordinateSequence.method_defined?(:counter_clockwise?)
+
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 1, 0 ],
+      [ 1, 1 ],
+      [ 0, 0 ]
+    ])
+
+    assert(cs.counter_clockwise?)
+
+    cs = Geos::CoordinateSequence.new([
+      [ 0, 0 ],
+      [ 1, 1 ],
+      [ 1, 0 ],
+      [ 0, 0 ]
+    ])
+
+    refute(cs.counter_clockwise?)
+  end
+
   def test_check_bounds
     assert_raises(Geos::IndexBoundsError) { @cs.set_x(10, 0.1) }
     assert_raises(Geos::IndexBoundsError) { @cs.set_x(-1, 0.1) }
