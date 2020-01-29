@@ -53,9 +53,7 @@ module Geos
     end
 
     def normalize!
-      if FFIGeos.GEOSNormalize_r(Geos.current_handle_pointer, ptr) == -1
-        raise Geos::Geometry::CouldntNormalizeError, self.class
-      end
+      raise Geos::Geometry::CouldntNormalizeError, self.class if FFIGeos.GEOSNormalize_r(Geos.current_handle_pointer, ptr) == -1
 
       self
     end
@@ -163,12 +161,10 @@ module Geos
       if geom
         check_geometry(geom)
         cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      elsif respond_to?(:unary_union)
+        unary_union
       else
-        if respond_to?(:unary_union)
-          unary_union
-        else
-          union_cascaded
-        end
+        union_cascaded
       end
     end
 
@@ -317,9 +313,9 @@ module Geos
           *T****FF*
           ***T**FF*
           ****T*FF*
-        }.detect do |pattern|
+        }.detect { |pattern|
           relate_pattern(geom, pattern)
-        end
+        }
       end
     end
 
@@ -339,9 +335,9 @@ module Geos
           *TF**F***
           **FT*F***
           **F*TF***
-        }.detect do |pattern|
+        }.detect { |pattern|
           relate_pattern(geom, pattern)
-        end
+        }
       end
     end
 
@@ -490,7 +486,7 @@ module Geos
         FFIGeos.GEOSDistanceIndexed_r(Geos.current_handle_pointer, ptr, geom.ptr, double_ptr)
         double_ptr.read_double
       end
-      alias_method :indexed_distance, :distance_indexed
+      alias indexed_distance distance_indexed
     end
 
     def hausdorff_distance(geom, densify_frac = nil)
@@ -560,7 +556,7 @@ module Geos
         raise ArgumentError unless geom.is_a?(Geos::Geometry)
       end
 
-      ary = [ ptr ].concat(geoms.collect(&:ptr))
+      ary = [ptr].concat(geoms.collect(&:ptr))
       ary_ptr = FFI::MemoryPointer.new(:pointer, ary.length)
       ary_ptr.write_array_of_pointer(ary)
 
@@ -571,7 +567,7 @@ module Geos
       # Added in GEOS 3.8+
       def polygonize_valid
         ary = FFI::MemoryPointer.new(:pointer)
-        ary.write_array_of_pointer([ ptr ])
+        ary.write_array_of_pointer([ptr])
 
         cast_geometry_ptr(FFIGeos.GEOSPolygonize_valid_r(Geos.current_handle_pointer, ary, 1), srid_copy: srid)
       end
@@ -579,7 +575,7 @@ module Geos
 
     def polygonize_cut_edges
       ary = FFI::MemoryPointer.new(:pointer)
-      ary.write_array_of_pointer([ ptr ])
+      ary.write_array_of_pointer([ptr])
 
       cast_geometry_ptr(FFIGeos.GEOSPolygonizer_getCutEdges_r(Geos.current_handle_pointer, ary, 1), srid_copy: srid).to_a
     end

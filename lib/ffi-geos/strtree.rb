@@ -37,9 +37,7 @@ module Geos
         end
       end
 
-      if capacity <= 0
-        raise ArgumentError, 'STRtree capacity must be greater than 0'
-      end
+      raise ArgumentError, 'STRtree capacity must be greater than 0' if capacity <= 0
 
       ptr = FFIGeos.GEOSSTRtree_create_r(Geos.current_handle_pointer, capacity)
 
@@ -99,7 +97,7 @@ module Geos
     def remove(geom, item)
       check_geometry(geom)
 
-      key = if storage = @storage.detect { |k, v| v[:item] == item }
+      key = if storage = @storage.detect { |_k, v| v[:item] == item }
         storage[0]
       end
 
@@ -180,7 +178,7 @@ module Geos
 
         return nil if @storage.empty?
 
-        callback = proc { |item, _item2, distance_ptr|
+        callback = proc { |item, _item_2, distance_ptr|
           key = item.read_int
           geom_from_storage = @storage[key][:geometry]
 

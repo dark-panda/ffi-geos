@@ -17,14 +17,14 @@ class PreparedGeometryTests < Minitest::Test
 
   def relationship_tester(method, *expected)
     [
-      [ POINT_A, POINT_A ],
-      [ POINT_A, LINESTRING_A ],
-      [ POINT_B, LINESTRING_A ],
-      [ LINESTRING_B, LINESTRING_A ],
-      [ LINESTRING_C, LINESTRING_A ],
-      [ LINESTRING_D, LINESTRING_A ],
-      [ POLYGON_A, POLYGON_B ],
-      [ POLYGON_A, POINT_C ]
+      [POINT_A, POINT_A],
+      [POINT_A, LINESTRING_A],
+      [POINT_B, LINESTRING_A],
+      [LINESTRING_B, LINESTRING_A],
+      [LINESTRING_C, LINESTRING_A],
+      [LINESTRING_D, LINESTRING_A],
+      [POLYGON_A, POLYGON_B],
+      [POLYGON_A, POINT_C]
     ].each_with_index do |(geom_a, geom_b), i|
       geom_a = read(geom_a).to_prepared
       geom_b = read(geom_b)

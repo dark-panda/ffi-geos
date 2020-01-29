@@ -52,11 +52,11 @@ module Geos
     def self.search_paths
       @search_paths ||= begin
         if ENV['GEOS_LIBRARY_PATH']
-          [ ENV['GEOS_LIBRARY_PATH'] ]
+          [ENV['GEOS_LIBRARY_PATH']]
         elsif FFI::Platform::IS_WINDOWS
           ENV['PATH'].split(File::PATH_SEPARATOR)
         else
-          [ '/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu' ]
+          ['/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu']
         end
       end
     end
@@ -65,9 +65,9 @@ module Geos
       if ENV['GEOS_LIBRARY_PATH'] && File.file?(ENV['GEOS_LIBRARY_PATH'])
         ENV['GEOS_LIBRARY_PATH']
       else
-        Dir.glob(search_paths.map { |path|
+        Dir.glob(search_paths.map do |path|
           File.expand_path(File.join(path, "#{lib}.#{FFI::Platform::LIBSUFFIX}{,.?}"))
-        }).first
+        end).first
       end
     end
 
@@ -81,7 +81,7 @@ module Geos
     # For backwards compatibility with older ffi-geos versions where this
     # used to return an Array.
     def self.geos_library_paths
-      [ geos_library_path ]
+      [geos_library_path]
     end
 
     extend ::FFI::Library
@@ -150,10 +150,10 @@ module Geos
         :pointer,
 
         # notice callback
-        callback([ :string, :string ], :void),
+        callback([:string, :string], :void),
 
         # error callback
-        callback([ :string, :string ], :void)
+        callback([:string, :string], :void)
       ],
 
       finishGEOS_r: [
@@ -163,16 +163,16 @@ module Geos
       # / deprecated in GEOS 3.5.0+
 
       # GEOS 3.5.0+
-      GEOS_init_r: [ :pointer ],
+      GEOS_init_r: [:pointer],
 
       GEOSContext_setNoticeMessageHandler_r: [
         # void, *handle, callback, *void
-        :void, :pointer, callback([ :string, :string ], :void), :pointer
+        :void, :pointer, callback([:string, :string], :void), :pointer
       ],
 
       GEOSContext_setErrorMessageHandler_r: [
         # void, *handle, callback, *void
-        :void, :pointer, callback([ :string, :string ], :void), :pointer
+        :void, :pointer, callback([:string, :string], :void), :pointer
       ],
 
       GEOS_finish_r: [
@@ -832,12 +832,12 @@ module Geos
 
       GEOSSTRtree_query_r: [
         # void, *handle, *tree, *geom, void query_callback((void *) item, (void *) user_data), (void *) user_data
-        :void, :pointer, :pointer, :pointer, callback([ :pointer, :pointer ], :void), :pointer
+        :void, :pointer, :pointer, :pointer, callback([:pointer, :pointer], :void), :pointer
       ],
 
       GEOSSTRtree_iterate_r: [
         # void, *handle, *tree, void query_callback((void *) item, (void *) user_data), (void *) user_data
-        :void, :pointer, :pointer, callback([ :pointer, :pointer ], :void), :pointer
+        :void, :pointer, :pointer, callback([:pointer, :pointer], :void), :pointer
       ],
 
       GEOSSTRtree_remove_r: [
@@ -852,7 +852,7 @@ module Geos
 
       GEOSSTRtree_nearest_generic_r: [
         # *void, *handle, *tree, *item, *item_envelope, int distance_callback(*item_1, *item_2, *double, void *user_data), *user_data
-        :pointer, :pointer, :pointer, :pointer, :pointer, callback([ :pointer, :pointer, :pointer, :pointer ], :int), :pointer
+        :pointer, :pointer, :pointer, :pointer, :pointer, callback([:pointer, :pointer, :pointer, :pointer], :int), :pointer
       ],
       #### /STRtree functions ####
 
@@ -1160,13 +1160,11 @@ module Geos
       def notice_handler=(method_or_block)
         @notice_handler = method_or_block
         FFIGeos.GEOSContext_setNoticeMessageHandler_r(@ptr, @notice_handler, nil)
-        @notice_handler
       end
 
       def error_handler=(method_or_block)
         @error_handler = method_or_block
         FFIGeos.GEOSContext_setErrorMessageHandler_r(@ptr, @error_handler, nil)
-        @error_handler
       end
 
       def notice_handler(&block)
@@ -1203,13 +1201,9 @@ module Geos
         FFIGeos.finishGEOS_r(ptr)
       end
 
-      def notice_handler
-        @notice_handler
-      end
+      attr_reader :notice_handler
 
-      def error_handler
-        @error_handler
-      end
+      attr_reader :error_handler
     end
 
     private
@@ -1336,28 +1330,28 @@ module Geos
       GEOS_CAPI_VERSION,
       GEOS_CAPI_VERSION_MAJOR, GEOS_CAPI_VERSION_MINOR, GEOS_CAPI_VERSION_PATCH,
       GEOS_SVN_REVISION =
-        if !(versions = Geos.version.scan(/^
-          ((\d+)\.(\d+)\.(\d+)((?:dev|rc|beta|alpha)\d*)?)
-          -CAPI-
-          ((\d+)\.(\d+)\.(\d+))
-          (?:\s+r?(\h+))?
-        $/x)).empty?
-          versions = versions[0]
-          [
-            versions[0],
-            versions[1].to_i,
-            versions[2].to_i,
-            versions[3].to_i,
-            versions[4],
-            versions[5],
-            versions[6].to_i,
-            versions[7].to_i,
-            versions[8].to_i,
-            (versions[9].to_i if versions[9])
-          ]
-        else
-          [ '0.0.0', 0, 0, 0, nil, '0.0.0', 0, 0, 0 ]
-        end
+      if !(versions = Geos.version.scan(/^
+        ((\d+)\.(\d+)\.(\d+)((?:dev|rc|beta|alpha)\d*)?)
+        -CAPI-
+        ((\d+)\.(\d+)\.(\d+))
+        (?:\s+r?(\h+))?
+      $/x)).empty?
+        versions = versions[0]
+        [
+          versions[0],
+          versions[1].to_i,
+          versions[2].to_i,
+          versions[3].to_i,
+          versions[4],
+          versions[5],
+          versions[6].to_i,
+          versions[7].to_i,
+          versions[8].to_i,
+          versions[9]&.to_i
+        ]
+      else
+        ['0.0.0', 0, 0, 0, nil, '0.0.0', 0, 0, 0]
+      end
     GEOS_CAPI_FIRST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i
     GEOS_CAPI_LAST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i + GEOS_CAPI_VERSION_MINOR.to_i
   end

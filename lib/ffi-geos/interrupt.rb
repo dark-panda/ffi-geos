@@ -25,23 +25,20 @@ module Geos
         # collector may not play nicely with GEOS and objects may get cleaned
         # up in unexpected ways while interrupts are firing.
         def register(method_or_block = nil, &block)
-          if method_or_block.nil? && !block_given?
-            raise ArgumentError, 'Expected either a method or a block for Geos::Interrupt.register'
-          elsif !method_or_block.nil? && block_given?
-            raise ArgumentError, 'Cannot use both a method and a block for Geos::Interrupt.register'
-          else
-            retval = @current_interrupt_callback
+          raise ArgumentError, 'Expected either a method or a block for Geos::Interrupt.register' if method_or_block.nil? && !block_given?
+          raise ArgumentError, 'Cannot use both a method and a block for Geos::Interrupt.register' if !method_or_block.nil? && block_given?
 
-            @current_interrupt_callback = if method_or_block
-              FFIGeos.GEOS_interruptRegisterCallback(method_or_block)
-              method_or_block
-            elsif block_given?
-              FFIGeos.GEOS_interruptRegisterCallback(block)
-              block
-            end
+          retval = @current_interrupt_callback
 
-            retval
+          @current_interrupt_callback = if method_or_block
+            FFIGeos.GEOS_interruptRegisterCallback(method_or_block)
+            method_or_block
+          elsif block_given?
+            FFIGeos.GEOS_interruptRegisterCallback(block)
+            block
           end
+
+          retval
         end
 
         # Interrupt the current operation. This method should generally be

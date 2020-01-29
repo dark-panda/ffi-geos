@@ -200,8 +200,8 @@ class GeometryCollectionTests < Minitest::Test
 
   def test_snap_to_grid_with_illegal_result
     assert_raises(Geos::InvalidGeometryError) do
-      read('GEOMETRYCOLLECTION (POINT (0 2), LINESTRING (0 1, 0 11), POLYGON ((0 1, 0 1, 0 6, 0 6, 0 1)))').
-        snap_to_grid(1)
+      read('GEOMETRYCOLLECTION (POINT (0 2), LINESTRING (0 1, 0 11), POLYGON ((0 1, 0 1, 0 6, 0 6, 0 1)))')
+        .snap_to_grid(1)
     end
   end
 
@@ -214,29 +214,25 @@ class GeometryCollectionTests < Minitest::Test
       'GEOMETRYCOLLECTION (POINT (29 11), LINESTRING (30 10, 20 20), POLYGON ((30 10, 30 15, 25 15, 25 10, 30 10)))',
       wkt,
       Math::PI / 2,
-      [ 10.0, 20.0 ]
-     )
+      [10.0, 20.0])
 
     affine_tester(:rotate,
       'GEOMETRYCOLLECTION (POINT (-2 0), LINESTRING (-3 1, 7 -9), POLYGON ((-3 1, -3 -4, 2 -4, 2 1, -3 1)))',
       wkt,
       -Math::PI / 2,
-      [ -1.0, 2.0 ]
-    )
+      [-1.0, 2.0])
 
     affine_tester(:rotate,
       'GEOMETRYCOLLECTION (POINT (19 1), LINESTRING (20 0, 10 10), POLYGON ((20 0, 20 5, 15 5, 15 0, 20 0)))',
       wkt,
       Math::PI / 2,
-      read('POINT(10 10)')
-    )
+      read('POINT(10 10)'))
 
     affine_tester(:rotate,
       'GEOMETRYCOLLECTION (POINT (-0.5 0.5), LINESTRING (0.5 -0.5, -9.5 9.5), POLYGON ((0.5 -0.5, 0.5 4.5, -4.5 4.5, -4.5 -0.5, 0.5 -0.5)))',
       wkt,
       Math::PI / 2,
-      read('LINESTRING(0 0, 1 0)')
-    )
+      read('LINESTRING(0 0, 1 0)'))
   end
 
   def test_rotate_x
@@ -248,26 +244,22 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:rotate_x,
       'GEOMETRYCOLLECTION Z (POINT Z (1 -1 -1), LINESTRING Z (1 -1 -1, 10 -10 -10), POLYGON Z ((0 0 0, 5 0 0, 5 -5 0, 0 -5 0, 0 0 0)))',
       wkt,
-      Math::PI
-    )
+      Math::PI)
 
     affine_tester(:rotate_x,
       'GEOMETRYCOLLECTION Z (POINT Z (1 -1 1), LINESTRING Z (1 -1 1, 10 -10 10), POLYGON Z ((0 0 0, 5 0 0, 5 0 5, 0 0 5, 0 0 0)))',
       wkt,
-      Math::PI / 2
-    )
+      Math::PI / 2)
 
     affine_tester(:rotate_x,
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 -1), LINESTRING Z (1 1 -1, 10 10 -10), POLYGON Z ((0 0 0, 5 0 0, 5 0 -5, 0 0 -5, 0 0 0)))',
       wkt,
-      Math::PI + Math::PI / 2
-    )
+      Math::PI + Math::PI / 2)
 
     affine_tester(:rotate_x,
       wkt,
       wkt,
-      Math::PI * 2
-    )
+      Math::PI * 2)
   end
 
   def test_rotate_y
@@ -279,26 +271,22 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:rotate_y,
       'GEOMETRYCOLLECTION Z (POINT Z (-1 1 -1), LINESTRING Z (-1 1 -1, -10 10 -10), POLYGON Z ((0 0 0, -5 0 0, -5 5 0, 0 5 0, 0 0 0)))',
       wkt,
-      Math::PI
-    )
+      Math::PI)
 
     affine_tester(:rotate_y,
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 -1), LINESTRING Z (1 1 -1, 10 10 -10), POLYGON Z ((0 0 0, 0 0 -5, 0 5 -5, 0 5 0, 0 0 0)))',
       wkt,
-      Math::PI / 2
-    )
+      Math::PI / 2)
 
     affine_tester(:rotate_y,
       'GEOMETRYCOLLECTION Z (POINT Z (-1 1 1), LINESTRING Z (-1 1 1, -10 10 10), POLYGON Z ((0 0 0, 0 0 5, 0 5 5, 0 5 0, 0 0 0)))',
       wkt,
-      Math::PI + Math::PI / 2
-    )
+      Math::PI + Math::PI / 2)
 
     affine_tester(:rotate_y,
       wkt,
       wkt,
-      Math::PI * 2
-    )
+      Math::PI * 2)
   end
 
   def test_rotate_z
@@ -309,26 +297,22 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:rotate_z,
       'GEOMETRYCOLLECTION (POINT (-1 -1), LINESTRING (0 0, -10 -10), POLYGON ((0 0, -5 0, -5 -5, 0 -5, 0 0)))',
       wkt,
-      Math::PI
-    )
+      Math::PI)
 
     affine_tester(:rotate_z,
       'GEOMETRYCOLLECTION (POINT (-1 1), LINESTRING (0 0, -10 10), POLYGON ((0 0, 0 5, -5 5, -5 0, 0 0)))',
       wkt,
-      Math::PI / 2
-    )
+      Math::PI / 2)
 
     affine_tester(:rotate_z,
       'GEOMETRYCOLLECTION (POINT (1 -1), LINESTRING (0 0, 10 -10), POLYGON ((0 0, 0 -5, 5 -5, 5 0, 0 0)))',
       wkt,
-      Math::PI + Math::PI / 2
-    )
+      Math::PI + Math::PI / 2)
 
     affine_tester(:rotate_z,
       wkt,
       wkt,
-      Math::PI * 2
-    )
+      Math::PI * 2)
   end
 
   def test_scale
@@ -336,15 +320,13 @@ class GeometryCollectionTests < Minitest::Test
       'GEOMETRYCOLLECTION (POINT (5 5), LINESTRING (0 0, 50 50), POLYGON ((0 0, 25 0, 25 25, 0 25, 0 0)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
       5,
-      5
-    )
+      5)
 
     affine_tester(:scale,
       'GEOMETRYCOLLECTION (POINT (3 2), LINESTRING (0 0, 30 20), POLYGON ((0 0, 15 0, 15 10, 0 10, 0 0)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
       3,
-      2
-    )
+      2)
 
     writer.output_dimensions = 3
     affine_tester(:scale,
@@ -352,33 +334,29 @@ class GeometryCollectionTests < Minitest::Test
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 1), LINESTRING Z (1 1 1, 10 10 10), POLYGON Z ((0 0 0, 5 0 0, 5 5 0, 0 5 0, 0 0 0)))',
       4,
       2,
-      -8
-    )
+      -8)
   end
 
   def test_scale_hash
     affine_tester(:scale,
       'GEOMETRYCOLLECTION (POINT (5 5), LINESTRING (0 0, 50 50), POLYGON ((0 0, 25 0, 25 25, 0 25, 0 0)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
-      :x => 5,
-      :y => 5
-    )
+      x: 5,
+      y: 5)
 
     affine_tester(:scale,
       'GEOMETRYCOLLECTION (POINT (3 2), LINESTRING (0 0, 30 20), POLYGON ((0 0, 15 0, 15 10, 0 10, 0 0)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
-      :x => 3,
-      :y => 2
-    )
+      x: 3,
+      y: 2)
 
     writer.output_dimensions = 3
     affine_tester(:scale,
       'GEOMETRYCOLLECTION Z (POINT Z (4 2 -8), LINESTRING Z (4 2 -8, 40 20 -80), POLYGON Z ((0 0 0, 20 0 0, 20 10 0, 0 10 0, 0 0 0)))',
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 1), LINESTRING Z (1 1 1, 10 10 10), POLYGON Z ((0 0 0, 5 0 0, 5 5 0, 0 5 0, 0 0 0)))',
-      :x => 4,
-      :y => 2,
-      :z => -8
-    )
+      x: 4,
+      y: 2,
+      z: -8)
   end
 
   def test_trans_scale
@@ -445,28 +423,26 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:trans_scale,
       'GEOMETRYCOLLECTION (POINT (2 2), LINESTRING (1 1, 11 11), POLYGON ((1 1, 6 1, 6 6, 1 6, 1 1)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
-      :delta_x => 1, :delta_y => 1, :x_factor => 1, :y_factor => 1)
+      delta_x: 1, delta_y: 1, x_factor: 1, y_factor: 1)
 
     writer.output_dimensions = 3
     affine_tester(:trans_scale,
       'GEOMETRYCOLLECTION Z (POINT Z (15 28 1), LINESTRING Z (15 28 1, 60 91 10), POLYGON Z ((10 21 0, 35 21 0, 35 56 0, 10 56 0, 10 21 0)))',
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 1), LINESTRING Z (1 1 1, 10 10 10), POLYGON Z ((0 0 0, 5 0 0, 5 5 0, 0 5 0, 0 0 0)))',
-      :delta_x => 2, :delta_y => 3, :x_factor => 5, :y_factor => 7)
+      delta_x: 2, delta_y: 3, x_factor: 5, y_factor: 7)
 
     affine_tester(:trans_scale,
       'GEOMETRYCOLLECTION Z (POINT Z (3 1 1), LINESTRING Z (3 1 1, 12 10 10), POLYGON Z ((2 0 0, 7 0 0, 7 5 0, 2 5 0, 2 0 0)))',
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 1), LINESTRING Z (1 1 1, 10 10 10), POLYGON Z ((0 0 0, 5 0 0, 5 5 0, 0 5 0, 0 0 0)))',
-      :delta_x => 2, :z_factor => 2)
+      delta_x: 2, z_factor: 2)
   end
-
 
   def test_translate
     affine_tester(:translate,
       'GEOMETRYCOLLECTION (POINT (6 13), LINESTRING (5 12, 15 22), POLYGON ((5 12, 10 12, 10 17, 5 17, 5 12)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
       5,
-      12
-    )
+      12)
 
     writer.output_dimensions = 3
     affine_tester(:translate,
@@ -474,25 +450,22 @@ class GeometryCollectionTests < Minitest::Test
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 1), LINESTRING Z (1 1 1, 10 10 10), POLYGON Z ((0 0 0, 5 0 0, 5 5 0, 0 5 0, 0 0 0)))',
       -3,
       -7,
-      3
-    )
+      3)
   end
 
   def test_translate_hash
     affine_tester(:translate,
       'GEOMETRYCOLLECTION (POINT (6 13), LINESTRING (5 12, 15 22), POLYGON ((5 12, 10 12, 10 17, 5 17, 5 12)))',
       'GEOMETRYCOLLECTION (POINT (1 1), LINESTRING (0 0, 10 10), POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0)))',
-      :x => 5,
-      :y => 12
-    )
+      x: 5,
+      y: 12)
 
     writer.output_dimensions = 3
     affine_tester(:translate,
       'GEOMETRYCOLLECTION Z (POINT Z (-2 -6 4), LINESTRING Z (-2 -6 4, 7 3 13), POLYGON Z ((-3 -7 3, 2 -7 3, 2 -2 3, -3 -2 3, -3 -7 3)))',
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 1), LINESTRING Z (1 1 1, 10 10 10), POLYGON Z ((0 0 0, 5 0 0, 5 5 0, 0 5 0, 0 0 0)))',
-      :x => -3,
-      :y => -7,
-      :z => 3
-    )
+      x: -3,
+      y: -7,
+      z: 3)
   end
 end

@@ -79,31 +79,31 @@ module Geos
     end
 
     def dump_points(cur_path = [])
-      cur_path.push(self.dup)
+      cur_path.push(dup)
     end
 
     %w{ max min }.each do |op|
       %w{ x y }.each do |dimension|
-        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+        class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def #{dimension}_#{op}
-            unless self.empty?
-              self.#{dimension}
+            unless empty?
+              #{dimension}
             end
           end
-        EOF
+        RUBY
       end
 
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def z_#{op}
-          unless self.empty?
-            if self.has_z?
-              self.z
+          unless empty?
+            if has_z?
+              z
             else
               0
             end
           end
         end
-      EOF
+      RUBY
     end
 
     %w{
@@ -117,21 +117,21 @@ module Geos
       trans_scale
       translate
     }.each do |m|
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def #{m}!(*args)
-          unless self.empty?
-            self.coord_seq.#{m}!(*args)
+          unless empty?
+            coord_seq.#{m}!(*args)
           end
 
           self
         end
 
         def #{m}(*args)
-          ret = self.dup.#{m}!(*args)
-          ret.srid = pick_srid_according_to_policy(self.srid)
+          ret = dup.#{m}!(*args)
+          ret.srid = pick_srid_according_to_policy(srid)
           ret
         end
-      EOF
+      RUBY
     end
   end
 end

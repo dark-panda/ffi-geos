@@ -9,9 +9,7 @@ class WktWriterTests < Minitest::Test
     geom = read('POINT(12.3456789 98.7654321)')
     wkt = write(geom)
 
-    x, y = if wkt =~ /^POINT\s\((\d+\.\d+)\s*(\d+\.\d+)\)$/
-      [ Regexp.last_match[1].to_f, Regexp.last_match[2].to_f ]
-    end
+    x, y = ([Regexp.last_match[1].to_f, Regexp.last_match[2].to_f] if wkt =~ /^POINT\s\((\d+\.\d+)\s*(\d+\.\d+)\)$/)
 
     assert_in_delta(12.3456789, x, TOLERANCE)
     assert_in_delta(98.7654321, y, TOLERANCE)
@@ -122,8 +120,7 @@ class WktWriterTests < Minitest::Test
 
     assert_equal('POINT Z (1 2 3)', write(geom,
       output_dimensions: 3,
-      trim: true
-    ))
+      trim: true))
 
     assert_equal('POINT (1.00 2.00)', write(geom))
   end

@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 
 guard 'minitest', test_folders: 'test', test_file_patterns: '*_tests.rb' do
-  watch(%r|^test/(.+)_tests\.rb|)
+  watch(%r{^test/(.+)_tests\.rb})
 
   watch(%r{^lib/(.*/)?([^/]+)\.rb$}) do |m|
     "test/#{m[2]}_tests.rb"
@@ -11,6 +12,4 @@ guard 'minitest', test_folders: 'test', test_file_patterns: '*_tests.rb' do
   end
 end
 
-if File.exist?('Guardfile.local')
-  instance_eval File.read('Guardfile.local')
-end
+instance_eval File.read('Guardfile.local') if File.exist?('Guardfile.local')

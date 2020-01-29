@@ -29,7 +29,7 @@ module Geos
     end
 
     def set_options(options) #:nodoc:
-      [ :trim, :old_3d, :rounding_precision, :output_dimensions ].each do |k|
+      [:trim, :old_3d, :rounding_precision, :output_dimensions].each do |k|
         send("#{k}=", options[k]) if respond_to?("#{k}=") && options.key?(k)
       end
     end
@@ -67,9 +67,7 @@ module Geos
       # Available in GEOS 3.3+.
       def rounding_precision=(r)
         r = r.to_i
-        if r > 255
-          raise ArgumentError, 'Rounding precision cannot be greater than 255'
-        end
+        raise ArgumentError, 'Rounding precision cannot be greater than 255' if r > 255
 
         @rounding_precision = r
         FFIGeos.GEOSWKTWriter_setRoundingPrecision_r(Geos.current_handle_pointer, ptr, @rounding_precision)
@@ -88,9 +86,8 @@ module Geos
       # Available in GEOS 3.3+.
       def output_dimensions=(dim)
         dim = dim.to_i
-        if dim < 2 || dim > 3
-          raise ArgumentError, 'Output dimensions must be either 2 or 3'
-        end
+        raise ArgumentError, 'Output dimensions must be either 2 or 3' if dim < 2 || dim > 3
+
         FFIGeos.GEOSWKTWriter_setOutputDimension_r(Geos.current_handle_pointer, ptr, dim)
       end
     end

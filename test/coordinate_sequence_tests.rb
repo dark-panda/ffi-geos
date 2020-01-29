@@ -47,19 +47,19 @@ class CoordinateSequenceTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || Geos::CoordinateSequence.method_defined?(:counter_clockwise?)
 
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 1, 0 ],
-      [ 1, 1 ],
-      [ 0, 0 ]
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 0]
     ])
 
     assert(cs.counter_clockwise?)
 
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 1, 1 ],
-      [ 1, 0 ],
-      [ 0, 0 ]
+      [0, 0],
+      [1, 1],
+      [1, 0],
+      [0, 0]
     ])
 
     refute(cs.counter_clockwise?)
@@ -127,11 +127,11 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_read_from_array
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 1, 1 ],
-      [ 2, 2 ],
-      [ 3, 3 ],
-      [ 4, 4 ]
+      [0, 0],
+      [1, 1],
+      [2, 2],
+      [3, 3],
+      [4, 4]
     ])
 
     assert_equal(2, cs.dimensions)
@@ -139,30 +139,30 @@ class CoordinateSequenceTests < Minitest::Test
 
     assert_raises(Geos::CoordinateSequence::ParseError) do
       cs = Geos::CoordinateSequence.new([
-        [ 1, 2 ],
-        [ 1, 2, 3 ]
+        [1, 2],
+        [1, 2, 3]
       ])
     end
 
     assert_raises(Geos::CoordinateSequence::ParseError) do
       cs = Geos::CoordinateSequence.new([
-        [ 1, 2, 3, 4 ]
+        [1, 2, 3, 4]
       ])
     end
   end
 
   def test_to_point
-    cs = Geos::CoordinateSequence.new([ 5, 7 ])
+    cs = Geos::CoordinateSequence.new([5, 7])
     assert_equal('POINT (5 7)', write(cs.to_point, trim: true))
   end
 
   def test_to_to_linear_ring
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 0, 5 ],
-      [ 5, 5 ],
-      [ 5, 0 ],
-      [ 0, 0 ]
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0],
+      [0, 0]
     ])
 
     assert_equal('LINEARRING (0 0, 0 5, 5 5, 5 0, 0 0)', write(cs.to_linear_ring, trim: true))
@@ -172,7 +172,7 @@ class CoordinateSequenceTests < Minitest::Test
     cs = Geos::CoordinateSequence.new
     assert_geom_empty(cs)
 
-    cs = Geos::CoordinateSequence.new([ 4, 1 ])
+    cs = Geos::CoordinateSequence.new([4, 1])
     refute_geom_empty(cs)
   end
 
@@ -184,10 +184,10 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_to_line_string
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 0, 5 ],
-      [ 5, 5 ],
-      [ 5, 0 ]
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0]
     ])
 
     assert_equal('LINESTRING (0 0, 0 5, 5 5, 5 0)', write(cs.to_line_string, trim: true))
@@ -201,11 +201,11 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_to_polygon
     cs = Geos::CoordinateSequence.new([
-      [ 0, 0 ],
-      [ 0, 5 ],
-      [ 5, 5 ],
-      [ 5, 0 ],
-      [ 0, 0 ]
+      [0, 0],
+      [0, 5],
+      [5, 5],
+      [5, 0],
+      [0, 0]
     ])
 
     assert_equal('POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))', write(cs.to_polygon, trim: true))
@@ -304,8 +304,8 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_array_like_access
     cs = Geos::CoordinateSequence.new([
-      [ 0, 1 ],
-      [ 2, 3 ]
+      [0, 1],
+      [2, 3]
     ])
 
     assert_equal(0, cs[0][0])
@@ -314,7 +314,7 @@ class CoordinateSequenceTests < Minitest::Test
     assert_equal(3, cs[1][1])
 
     cs = Geos::CoordinateSequence.new([
-      [ 4, 5, 6 ]
+      [4, 5, 6]
     ])
 
     assert_equal(4, cs[0][0])
@@ -324,9 +324,9 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_slice
     cs = Geos::CoordinateSequence.new([
-      [ 0, 1 ],
-      [ 2, 3 ],
-      [ 4, 5 ]
+      [0, 1],
+      [2, 3],
+      [4, 5]
     ])
 
     assert_equal([[0, 1], [2, 3]], cs.slice(0..1))
@@ -335,21 +335,21 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   def test_proxy_clone
-    cs = Geos::CoordinateSequence.new([ 10, 20 ])
-    cs2 = cs.clone
+    cs = Geos::CoordinateSequence.new([10, 20])
+    cs_2 = cs.clone
 
     cs.x[0] = 100
 
     assert_equal(100, cs.x[0])
-    assert_equal(10, cs2.x[0])
+    assert_equal(10, cs_2.x[0])
 
-    refute_equal(cs.x, cs2.x)
-    refute_equal(cs.y, cs2.y)
+    refute_equal(cs.x, cs_2.x)
+    refute_equal(cs.y, cs_2.y)
   end
 
   def test_has_z
-    assert_geom_has_z(Geos::CoordinateSequence.new([ 0, 1, 2 ]))
-    refute_geom_has_z(Geos::CoordinateSequence.new([ 0, 1 ]))
+    assert_geom_has_z(Geos::CoordinateSequence.new([0, 1, 2]))
+    refute_geom_has_z(Geos::CoordinateSequence.new([0, 1]))
     refute_geom_has_z(Geos::CoordinateSequence.new(1, 2))
     assert_geom_has_z(Geos::CoordinateSequence.new(1, 3))
     assert_geom_has_z(read('POINT (0 0 0)').coord_seq)
@@ -357,38 +357,38 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   def test_x_max
-    cs = Geos::CoordinateSequence.new([ -10, -15 ], [ 0, 5 ], [ 10, 20 ])
+    cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
     assert_equal(10, cs.x_max)
   end
 
   def test_x_min
-    cs = Geos::CoordinateSequence.new([ -10, -15 ], [ 0, 5 ], [ 10, 20 ])
+    cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
     assert_equal(-10, cs.x_min)
   end
 
   def test_y_max
-    cs = Geos::CoordinateSequence.new([ -10, -15 ], [ 0, 5 ], [ 10, 20 ])
+    cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
     assert_equal(20, cs.y_max)
   end
 
   def test_y_min
-    cs = Geos::CoordinateSequence.new([ -10, -15 ], [ 0, 5 ], [ 10, 20 ])
+    cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
     assert_equal(-15, cs.y_min)
   end
 
   def test_z_max
-    cs = Geos::CoordinateSequence.new([ -10, -15 ], [ 0, 5 ], [ 10, 20 ])
-    assert(cs.z_max.nan?, " Expected NaN")
+    cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
+    assert(cs.z_max.nan?, ' Expected NaN')
 
-    cs = Geos::CoordinateSequence.new([ -10, -15, -20 ], [ 0, 5, 10 ], [ 10, 20, 30 ])
+    cs = Geos::CoordinateSequence.new([-10, -15, -20], [0, 5, 10], [10, 20, 30])
     assert_equal(30, cs.z_max)
   end
 
   def test_z_min
-    cs = Geos::CoordinateSequence.new([ -10, -15 ], [ 0, 5 ], [ 10, 20 ])
-    assert(cs.z_min.nan?, " Expected NaN")
+    cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
+    assert(cs.z_min.nan?, ' Expected NaN')
 
-    cs = Geos::CoordinateSequence.new([ -10, -15, -20 ], [ 0, 5, 10 ], [ 10, 20, 30 ])
+    cs = Geos::CoordinateSequence.new([-10, -15, -20], [0, 5, 10], [10, 20, 30])
     assert_equal(-20, cs.z_min)
   end
 
@@ -406,9 +406,9 @@ class CoordinateSequenceTests < Minitest::Test
     ]
 
     coordinates = [
-      [ -10.123456789, -15.123456789 ],
-      [ 0.123456789, 5.123456789 ],
-      [ 10.123456789, 20.123456789 ]
+      [-10.123456789, -15.123456789],
+      [0.123456789, 5.123456789],
+      [10.123456789, 20.123456789]
     ]
 
     9.times do |i|
@@ -429,54 +429,54 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_snap_to_grid_with_hash
     cs = Geos::CoordinateSequence.new(
-      [ 10, 10 ],
-      [ 20, 20 ],
-      [ 30, 30 ]
+      [10, 10],
+      [20, 20],
+      [30, 30]
     )
-    cs.snap_to_grid!(:size_x => 1, :size_y => 1, :offset_x => 12.5, :offset_y => 12.5)
+    cs.snap_to_grid!(size_x: 1, size_y: 1, offset_x: 12.5, offset_y: 12.5)
 
     assert_equal([
-      [ 9.5, 9.5 ],
-      [ 20.5, 20.5 ],
-      [ 30.5, 30.5 ]
+      [9.5, 9.5],
+      [20.5, 20.5],
+      [30.5, 30.5]
     ], cs.to_a)
   end
 
   def test_snap_to_grid_with_geometry_origin
     cs = Geos::CoordinateSequence.new(
-      [ 10, 10 ],
-      [ 20, 20 ],
-      [ 30, 30 ]
+      [10, 10],
+      [20, 20],
+      [30, 30]
     )
-    cs.snap_to_grid!(:size => 1, :offset => read('LINESTRING (0 0, 25 25)'))
+    cs.snap_to_grid!(size: 1, offset: read('LINESTRING (0 0, 25 25)'))
 
     assert_equal([
-      [ 9.5, 9.5 ],
-      [ 20.5, 20.5 ],
-      [ 30.5, 30.5 ]
+      [9.5, 9.5],
+      [20.5, 20.5],
+      [30.5, 30.5]
     ], cs.to_a)
   end
 
   def test_snap_to_grid_with_z
     cs = Geos::CoordinateSequence.new(
-      [ 10, 10, 10 ],
-      [ 20, 20, 20 ],
-      [ 30, 30, 30 ]
+      [10, 10, 10],
+      [20, 20, 20],
+      [30, 30, 30]
     )
     cs.snap_to_grid!(
-      :size_x => 1,
-      :size_y => 1,
-      :size_z => 1,
+      size_x: 1,
+      size_y: 1,
+      size_z: 1,
 
-      :offset_x => 12.5,
-      :offset_y => 12.5,
-      :offset_z => 12.5
+      offset_x: 12.5,
+      offset_y: 12.5,
+      offset_z: 12.5
     )
 
     assert_equal([
-      [ 9.5, 9.5, 9.5 ],
-      [ 20.5, 20.5, 20.5 ],
-      [ 30.5, 30.5, 30.5 ]
+      [9.5, 9.5, 9.5],
+      [20.5, 20.5, 20.5],
+      [30.5, 30.5, 30.5]
     ], cs.to_a)
   end
 
@@ -508,10 +508,10 @@ class CoordinateSequenceTests < Minitest::Test
     assert_equal(expected, cs.to_a)
 
     cs = Geos::CoordinateSequence.new(coords)
-    cs2 = cs.snap_to_grid
+    cs_2 = cs.snap_to_grid
 
     assert_equal(coords, cs.to_a)
-    assert_equal(expected, cs2.to_a)
+    assert_equal(expected, cs_2.to_a)
   end
 
   undef :affine_tester
@@ -524,83 +524,83 @@ class CoordinateSequenceTests < Minitest::Test
     end
 
     cs = Geos::CoordinateSequence.new(coords)
-    cs2 = cs.send(method, *args)
+    cs_2 = cs.send(method, *args)
 
     expected.length.times do |i|
       assert_in_delta(coords[i], cs.get_ordinate(0, i), TOLERANCE)
-      assert_in_delta(expected[i], cs2.get_ordinate(0, i), TOLERANCE)
+      assert_in_delta(expected[i], cs_2.get_ordinate(0, i), TOLERANCE)
     end
   end
 
   def test_rotate
-    affine_tester(:rotate, [ 29.0, 11.0 ], [ 1, 1 ], Math::PI / 2, [ 10.0, 20.0 ])
-    affine_tester(:rotate, [ -2.0, 0.0 ], [ 1, 1 ], -Math::PI / 2, [ -1.0, 2.0 ])
-    affine_tester(:rotate, [ 19.0, 1.0 ], [ 1, 1 ], Math::PI / 2, read('POINT(10 10)'))
-    affine_tester(:rotate, [ -0.5, 0.5 ], [ 1, 1 ], Math::PI / 2, read('LINESTRING(0 0, 1 0)'))
+    affine_tester(:rotate, [29.0, 11.0], [1, 1], Math::PI / 2, [10.0, 20.0])
+    affine_tester(:rotate, [-2.0, 0.0], [1, 1], -Math::PI / 2, [-1.0, 2.0])
+    affine_tester(:rotate, [19.0, 1.0], [1, 1], Math::PI / 2, read('POINT(10 10)'))
+    affine_tester(:rotate, [-0.5, 0.5], [1, 1], Math::PI / 2, read('LINESTRING(0 0, 1 0)'))
   end
 
   def test_rotate_x
-    affine_tester(:rotate_x, [ 1, -1, -1 ], [ 1, 1, 1 ], Math::PI)
-    affine_tester(:rotate_x, [ 1, -1, 1 ], [ 1, 1, 1 ], Math::PI / 2)
-    affine_tester(:rotate_x, [ 1, 1, -1 ], [ 1, 1, 1 ], Math::PI + Math::PI / 2)
-    affine_tester(:rotate_x, [ 1, 1, 1 ], [ 1, 1, 1 ], Math::PI * 2)
+    affine_tester(:rotate_x, [1, -1, -1], [1, 1, 1], Math::PI)
+    affine_tester(:rotate_x, [1, -1, 1], [1, 1, 1], Math::PI / 2)
+    affine_tester(:rotate_x, [1, 1, -1], [1, 1, 1], Math::PI + Math::PI / 2)
+    affine_tester(:rotate_x, [1, 1, 1], [1, 1, 1], Math::PI * 2)
   end
 
   def test_rotate_y
-    affine_tester(:rotate_y, [ -1, 1, -1 ], [ 1, 1, 1 ], Math::PI)
-    affine_tester(:rotate_y, [ 1, 1, -1 ], [ 1, 1, 1 ], Math::PI / 2)
-    affine_tester(:rotate_y, [ -1, 1, 1 ], [ 1, 1, 1 ], Math::PI + Math::PI / 2)
-    affine_tester(:rotate_y, [ 1, 1, 1 ], [ 1, 1, 1 ], Math::PI * 2)
+    affine_tester(:rotate_y, [-1, 1, -1], [1, 1, 1], Math::PI)
+    affine_tester(:rotate_y, [1, 1, -1], [1, 1, 1], Math::PI / 2)
+    affine_tester(:rotate_y, [-1, 1, 1], [1, 1, 1], Math::PI + Math::PI / 2)
+    affine_tester(:rotate_y, [1, 1, 1], [1, 1, 1], Math::PI * 2)
   end
 
   def test_rotate_z
-    affine_tester(:rotate_z, [ -1, -1 ], [ 1, 1 ], Math::PI)
-    affine_tester(:rotate_z, [ -1, 1 ], [ 1, 1 ], Math::PI / 2)
-    affine_tester(:rotate_z, [ 1, -1 ], [ 1, 1 ], Math::PI + Math::PI / 2)
-    affine_tester(:rotate_z, [ 1, 1 ], [ 1, 1 ], Math::PI * 2)
+    affine_tester(:rotate_z, [-1, -1], [1, 1], Math::PI)
+    affine_tester(:rotate_z, [-1, 1], [1, 1], Math::PI / 2)
+    affine_tester(:rotate_z, [1, -1], [1, 1], Math::PI + Math::PI / 2)
+    affine_tester(:rotate_z, [1, 1], [1, 1], Math::PI * 2)
   end
 
   def test_scale
-    affine_tester(:scale, [ 5, 5 ], [ 1, 1 ], 5, 5)
-    affine_tester(:scale, [ 3, 2 ], [ 1, 1 ], 3, 2)
-    affine_tester(:scale, [ 40, 40, 40 ], [ 10, 20, -5 ], 4, 2, -8)
+    affine_tester(:scale, [5, 5], [1, 1], 5, 5)
+    affine_tester(:scale, [3, 2], [1, 1], 3, 2)
+    affine_tester(:scale, [40, 40, 40], [10, 20, -5], 4, 2, -8)
   end
 
   def test_scale_hash
-    affine_tester(:scale, [ 5, 5 ], [ 1, 1 ], :x => 5, :y => 5)
-    affine_tester(:scale, [ 3, 2 ], [ 1, 1 ], :x => 3, :y => 2)
-    affine_tester(:scale, [ 40, 40, 40 ], [ 10, 20, -5 ], :x => 4, :y => 2, :z => -8)
+    affine_tester(:scale, [5, 5], [1, 1], x: 5, y: 5)
+    affine_tester(:scale, [3, 2], [1, 1], x: 3, y: 2)
+    affine_tester(:scale, [40, 40, 40], [10, 20, -5], x: 4, y: 2, z: -8)
   end
 
   def test_trans_scale
-    affine_tester(:trans_scale, [ 2, 2 ], [ 1, 1 ], 1, 1, 1, 1)
-    affine_tester(:trans_scale, [ 3, 3 ], [ 2, 2 ], 1, 1, 1, 1)
-    affine_tester(:trans_scale, [ 0, 0 ], [ 1, 1 ], -1, -1, -1, -1)
-    affine_tester(:trans_scale, [ 1, 2 ], [ 1, 1 ], 0, 1, 1, 1)
-    affine_tester(:trans_scale, [ 2, 1 ], [ 1, 1 ], 1, 0, 1, 1)
-    affine_tester(:trans_scale, [ 0, 2 ], [ 1, 1 ], 1, 1, 0, 1)
-    affine_tester(:trans_scale, [ 2, 0 ], [ 1, 1 ], 1, 1, 1, 0)
-    affine_tester(:trans_scale, [ 3, 2 ], [ 1, 1 ], 2, 1, 1, 1)
-    affine_tester(:trans_scale, [ 2, 3 ], [ 1, 1 ], 1, 2, 1, 1)
-    affine_tester(:trans_scale, [ 4, 2 ], [ 1, 1 ], 1, 1, 2, 1)
-    affine_tester(:trans_scale, [ 2, 4 ], [ 1, 1 ], 1, 1, 1, 2)
-    affine_tester(:trans_scale, [ 15, 28 ], [ 1, 1 ], 2, 3, 5, 7)
-    affine_tester(:trans_scale, [ 15, 28, 1 ], [ 1, 1, 1 ], 2, 3, 5, 7)
+    affine_tester(:trans_scale, [2, 2], [1, 1], 1, 1, 1, 1)
+    affine_tester(:trans_scale, [3, 3], [2, 2], 1, 1, 1, 1)
+    affine_tester(:trans_scale, [0, 0], [1, 1], -1, -1, -1, -1)
+    affine_tester(:trans_scale, [1, 2], [1, 1], 0, 1, 1, 1)
+    affine_tester(:trans_scale, [2, 1], [1, 1], 1, 0, 1, 1)
+    affine_tester(:trans_scale, [0, 2], [1, 1], 1, 1, 0, 1)
+    affine_tester(:trans_scale, [2, 0], [1, 1], 1, 1, 1, 0)
+    affine_tester(:trans_scale, [3, 2], [1, 1], 2, 1, 1, 1)
+    affine_tester(:trans_scale, [2, 3], [1, 1], 1, 2, 1, 1)
+    affine_tester(:trans_scale, [4, 2], [1, 1], 1, 1, 2, 1)
+    affine_tester(:trans_scale, [2, 4], [1, 1], 1, 1, 1, 2)
+    affine_tester(:trans_scale, [15, 28], [1, 1], 2, 3, 5, 7)
+    affine_tester(:trans_scale, [15, 28, 1], [1, 1, 1], 2, 3, 5, 7)
   end
 
   def test_trans_scale_hash
-    affine_tester(:trans_scale, [ 2, 2 ], [ 1, 1 ], :delta_x => 1, :delta_y => 1, :x_factor => 1, :y_factor => 1)
-    affine_tester(:trans_scale, [ 15, 28, 1 ], [ 1, 1, 1 ], :delta_x => 2, :delta_y => 3, :x_factor => 5, :y_factor => 7)
-    affine_tester(:trans_scale, [ 3, 1, 1 ], [ 1, 1, 1 ], :delta_x => 2, :z_factor => 2)
+    affine_tester(:trans_scale, [2, 2], [1, 1], delta_x: 1, delta_y: 1, x_factor: 1, y_factor: 1)
+    affine_tester(:trans_scale, [15, 28, 1], [1, 1, 1], delta_x: 2, delta_y: 3, x_factor: 5, y_factor: 7)
+    affine_tester(:trans_scale, [3, 1, 1], [1, 1, 1], delta_x: 2, z_factor: 2)
   end
 
   def test_translate
-    affine_tester(:translate, [ 5, 12 ], [ 0, 0 ], 5, 12)
-    affine_tester(:translate, [ -3, -7, 3 ], [ 0, 0, 0 ], -3, -7, 3)
+    affine_tester(:translate, [5, 12], [0, 0], 5, 12)
+    affine_tester(:translate, [-3, -7, 3], [0, 0, 0], -3, -7, 3)
   end
 
   def test_translate_hash
-    affine_tester(:translate, [ 5, 12 ], [ 0, 0 ], :x => 5, :y => 12)
-    affine_tester(:translate, [ -3, -7, 3 ], [ 0, 0, 0 ], :x => -3, :y => -7, :z => 3)
+    affine_tester(:translate, [5, 12], [0, 0], x: 5, y: 12)
+    affine_tester(:translate, [-3, -7, 3], [0, 0, 0], x: -3, y: -7, z: 3)
   end
 end

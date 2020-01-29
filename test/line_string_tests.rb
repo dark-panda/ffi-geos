@@ -250,8 +250,8 @@ class LineStringTests < Minitest::Test
 
     wkt = 'LINESTRING (0 0, 10 10)'
 
-    affine_tester(:rotate, 'LINESTRING (30 10, 20 20)', wkt, Math::PI / 2, [ 10.0, 20.0 ])
-    affine_tester(:rotate, 'LINESTRING (-3 1, 7 -9)', wkt, -Math::PI / 2, [ -1.0, 2.0 ])
+    affine_tester(:rotate, 'LINESTRING (30 10, 20 20)', wkt, Math::PI / 2, [10.0, 20.0])
+    affine_tester(:rotate, 'LINESTRING (-3 1, 7 -9)', wkt, -Math::PI / 2, [-1.0, 2.0])
     affine_tester(:rotate, 'LINESTRING (2 2, -8 -8)', wkt, Math::PI, read('POINT(1 1)'))
     affine_tester(:rotate, 'LINESTRING (0.5 -0.5, -9.5 9.5)', wkt, Math::PI / 2, read('LINESTRING(0 0, 1 0)'))
   end
@@ -300,11 +300,11 @@ class LineStringTests < Minitest::Test
   end
 
   def test_scale_hash
-    affine_tester(:scale, 'LINESTRING (5 5, 50 50)', 'LINESTRING (1 1, 10 10)', :x => 5, :y => 5)
-    affine_tester(:scale, 'LINESTRING (3 2, 30 20)', 'LINESTRING (1 1, 10 10)', :x => 3, :y => 2)
+    affine_tester(:scale, 'LINESTRING (5 5, 50 50)', 'LINESTRING (1 1, 10 10)', x: 5, y: 5)
+    affine_tester(:scale, 'LINESTRING (3 2, 30 20)', 'LINESTRING (1 1, 10 10)', x: 3, y: 2)
 
     writer.output_dimensions = 3
-    affine_tester(:scale, 'LINESTRING Z (40 40 40, 80 80 80)', 'LINESTRING Z (10 20 -5, 20 40 -10)', :x => 4, :y => 2, :z => -8)
+    affine_tester(:scale, 'LINESTRING Z (40 40 40, 80 80 80)', 'LINESTRING Z (10 20 -5, 20 40 -10)', x: 4, y: 2, z: -8)
   end
 
   def test_trans_scale
@@ -326,11 +326,11 @@ class LineStringTests < Minitest::Test
   end
 
   def test_trans_scale_hash
-    affine_tester(:trans_scale, 'LINESTRING (2 2, 11 11)', 'LINESTRING (1 1, 10 10)', :delta_x => 1, :delta_y => 1, :x_factor => 1, :y_factor => 1)
+    affine_tester(:trans_scale, 'LINESTRING (2 2, 11 11)', 'LINESTRING (1 1, 10 10)', delta_x: 1, delta_y: 1, x_factor: 1, y_factor: 1)
 
     writer.output_dimensions = 3
-    affine_tester(:trans_scale, 'LINESTRING Z (15 28 1, 60 91 10)', 'LINESTRING Z (1 1 1, 10 10 10)', :delta_x => 2, :delta_y => 3, :x_factor => 5, :y_factor => 7)
-    affine_tester(:trans_scale, 'LINESTRING Z (3 1 1, 12 10 10)', 'LINESTRING Z (1 1 1, 10 10 10)', :delta_x => 2, :z_factor => 2)
+    affine_tester(:trans_scale, 'LINESTRING Z (15 28 1, 60 91 10)', 'LINESTRING Z (1 1 1, 10 10 10)', delta_x: 2, delta_y: 3, x_factor: 5, y_factor: 7)
+    affine_tester(:trans_scale, 'LINESTRING Z (3 1 1, 12 10 10)', 'LINESTRING Z (1 1 1, 10 10 10)', delta_x: 2, z_factor: 2)
   end
 
   def test_translate
@@ -341,10 +341,10 @@ class LineStringTests < Minitest::Test
   end
 
   def test_translate_hash
-    affine_tester(:translate, 'LINESTRING (5 12, 15 22)', 'LINESTRING (0 0, 10 10)', :x => 5, :y => 12)
+    affine_tester(:translate, 'LINESTRING (5 12, 15 22)', 'LINESTRING (0 0, 10 10)', x: 5, y: 12)
 
     writer.output_dimensions = 3
-    affine_tester(:translate, 'LINESTRING Z (-3 -7 3, 7 3 13)', 'LINESTRING Z (0 0 0, 10 10 10)', :x => -3, :y => -7, :z => 3)
+    affine_tester(:translate, 'LINESTRING Z (-3 -7 3, 7 3 13)', 'LINESTRING Z (0 0 0, 10 10 10)', x: -3, y: -7, z: 3)
   end
 
   def test_line_interpolate_point

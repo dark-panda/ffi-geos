@@ -7,7 +7,7 @@ module Geos
     end
 
     def interior_ring_n(n)
-      raise Geos::IndexBoundsError if n < 0 || n >= num_interior_rings
+      raise Geos::IndexBoundsError if n.negative? || n >= num_interior_rings
 
       cast_geometry_ptr(
         FFIGeos.GEOSGetInteriorRingN_r(Geos.current_handle_pointer, ptr, n),
@@ -34,7 +34,7 @@ module Geos
     end
 
     def dump_points(cur_path = [])
-      points = [ exterior_ring.dump_points ]
+      points = [exterior_ring.dump_points]
 
       interior_rings.each do |ring|
         points.push(ring.dump_points)
@@ -44,25 +44,25 @@ module Geos
     end
 
     def snap_to_grid!(*args)
-      if !self.empty?
+      unless empty?
         exterior_ring = self.exterior_ring.coord_seq.snap_to_grid!(*args)
 
-        if exterior_ring.length == 0
-          @ptr = Geos.create_empty_polygon(:srid => self.srid).ptr
+        if exterior_ring.empty?
+          @ptr = Geos.create_empty_polygon(srid: srid).ptr
         elsif exterior_ring.length < 4
-          raise Geos::InvalidGeometryError.new("snap_to_grid! produced an invalid number of points in exterior ring - found #{exterior_ring.length} - must be 0 or >= 4")
+          raise Geos::InvalidGeometryError, "snap_to_grid! produced an invalid number of points in exterior ring - found #{exterior_ring.length} - must be 0 or >= 4"
         else
           interior_rings = []
 
-          self.num_interior_rings.times { |i|
-            interior_ring = self.interior_ring_n(i).coord_seq.snap_to_grid!(*args)
+          num_interior_rings.times do |i|
+            interior_ring = interior_ring_n(i).coord_seq.snap_to_grid!(*args)
 
             interior_rings << interior_ring unless interior_ring.length < 4
-          }
+          end
 
           interior_rings.compact!
 
-          polygon = Geos.create_polygon(exterior_ring, interior_rings, :srid => self.srid)
+          polygon = Geos.create_polygon(exterior_ring, interior_rings, srid: srid)
           @ptr = polygon.ptr
         end
       end
@@ -71,8 +71,8 @@ module Geos
     end
 
     def snap_to_grid(*args)
-      ret = self.dup.snap_to_grid!(*args)
-      ret.srid = pick_srid_according_to_policy(self.srid)
+      ret = dup.snap_to_grid!(*args)
+      ret.srid = pick_srid_according_to_policy(srid)
       ret
     end
 
@@ -81,7 +81,7 @@ module Geos
         native_method = "GEOSGeom_get#{dimension.upcase}#{op[0].upcase}#{op[1..-1]}_r"
 
         if FFIGeos.respond_to?(native_method)
-          self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
             def #{dimension}_#{op}
               return if empty?
 
@@ -89,29 +89,29 @@ module Geos
               FFIGeos.#{native_method}(Geos.current_handle_pointer, ptr, double_ptr)
               double_ptr.read_double
             end
-          EOF
+          RUBY
         else
-          self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
             def #{dimension}_#{op}
-              unless self.empty?
-                self.envelope.exterior_ring.#{dimension}_#{op}
+              unless empty?
+                envelope.exterior_ring.#{dimension}_#{op}
               end
             end
-          EOF
+          RUBY
         end
       end
 
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def z_#{op}
-          unless self.empty?
-            if self.has_z?
-              self.exterior_ring.z_#{op}
+          unless empty?
+            if has_z?
+              exterior_ring.z_#{op}
             else
               0
             end
           end
         end
-      EOF
+      RUBY
     end
 
     %w{
@@ -124,21 +124,21 @@ module Geos
       trans_scale
       translate
     }.each do |m|
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def #{m}!(*args)
-          self.exterior_ring.coord_seq.#{m}!(*args)
-          self.interior_rings.each do |ring|
+          exterior_ring.coord_seq.#{m}!(*args)
+          interior_rings.each do |ring|
             ring.coord_seq.#{m}!(*args)
           end
           self
         end
 
         def #{m}(*args)
-          ret = self.dup.#{m}!(*args)
-          ret.srid = pick_srid_according_to_policy(self.srid)
+          ret = dup.#{m}!(*args)
+          ret.srid = pick_srid_according_to_policy(srid)
           ret
         end
-      EOF
+      RUBY
     end
   end
 end

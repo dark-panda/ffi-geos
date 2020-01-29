@@ -673,7 +673,7 @@ class GeometryTests < Minitest::Test
       tests.each do |test|
         expected, method, args = test
         if ENV['FORCE_TESTS'] || geom_a.respond_to?(method)
-          value = geom_a.send(method, *([ geom_b ] + Array(args)))
+          value = geom_a.send(method, *([geom_b] + Array(args)))
           assert_equal(expected, value)
         end
       end
@@ -975,7 +975,7 @@ class GeometryTests < Minitest::Test
   def test_interior_rings
     array_tester(
       :interior_rings,
-      [ 'LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)' ],
+      ['LINEARRING (11 11, 11 12, 12 12, 12 11, 11 11)'],
       'POLYGON(
         (10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11)
@@ -1191,9 +1191,9 @@ class GeometryTests < Minitest::Test
   def test_hausdorff_distance
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
 
-    tester = lambda { |expected, g1, g2|
-      geom_1 = read(g1)
-      geom_2 = read(g2)
+    tester = lambda { |expected, g_1, g_2|
+      geom_1 = read(g_1)
+      geom_2 = read(g_2)
       assert_in_delta(expected, geom_1.hausdorff_distance(geom_2), TOLERANCE)
     }
 
@@ -1207,9 +1207,9 @@ class GeometryTests < Minitest::Test
   def test_hausdorff_distance_with_densify_fract
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:hausdorff_distance)
 
-    tester = lambda { |expected, g1, g2|
-      geom_1 = read(g1)
-      geom_2 = read(g2)
+    tester = lambda { |expected, g_1, g_2|
+      geom_1 = read(g_1)
+      geom_2 = read(g_2)
       assert_in_delta(expected, geom_1.hausdorff_distance(geom_2, 0.001), TOLERANCE)
     }
 
@@ -1223,9 +1223,9 @@ class GeometryTests < Minitest::Test
   def test_nearest_points
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:nearest_points)
 
-    tester = lambda { |expected, g1, g2|
-      geom_1 = read(g1)
-      geom_2 = read(g2)
+    tester = lambda { |expected, g_1, g_2|
+      geom_1 = read(g_1)
+      geom_2 = read(g_2)
 
       cs = geom_1.nearest_points(geom_2)
       result = cs.to_s if cs
@@ -1245,7 +1245,6 @@ class GeometryTests < Minitest::Test
       else
         '5.0 5.0 NaN, 8.0 8.0 NaN'
       end,
-
       'POLYGON((1 1, 1 5, 5 5, 5 1, 1 1))',
       'POLYGON((8 8, 9 9, 9 10, 8 8))'
     ]
@@ -1597,7 +1596,7 @@ class GeometryTests < Minitest::Test
     assert_raises(Geos::MixedSRIDsError) do
       Geos.srid_copy_policy = :strict
       geom_c = geom.intersection(geom_b)
-      assert_equal(231231, geom_c.srid)
+      assert_equal(231_231, geom_c.srid)
     end
   ensure
     Geos.srid_copy_policy = :default
@@ -1713,7 +1712,7 @@ class GeometryTests < Minitest::Test
 
     # Allows a tolerance for the first argument
     @writer.rounding_precision = 3
-    tester['GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))', "MULTIPOINT ((150 210), (210 270), (150 220), (220 210), (215 269))", 10]
+    tester['GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))', 'MULTIPOINT ((150 210), (210 270), (150 220), (220 210), (215 269))', 10]
   end
 
   def test_precision

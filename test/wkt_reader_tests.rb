@@ -20,7 +20,6 @@ class WktReaderTests < Minitest::Test
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
-
       'POINT(0 0)',
       'POINT(0 0 0)',
       'POINT Z(0 0 0)',

@@ -69,28 +69,26 @@ module Geos
           lengths = points.collect(&:length).uniq
 
           if lengths.empty?
-            [ 0, 0 ]
+            [0, 0]
           elsif lengths.length != 1
             raise ParseError, 'Different sized points found in Array'
           elsif !lengths.first.between?(1, 3)
             raise ParseError, 'Expected points to contain 1-3 elements'
           else
-            [ points.length, points.first.length ]
+            [points.length, points.first.length]
           end
         elsif args.first.is_a?(Hash)
           args.first.values_at(:size, :dimensions)
+        elsif !args.length.between?(0, 2)
+          raise ArgumentError, "wrong number of arguments (#{args.length} for 0-2)"
         else
-          if !args.length.between?(0, 2)
-            raise ArgumentError, "wrong number of arguments (#{args.length} for 0-2)"
-          else
-            [ args[0], args[1] ]
-          end
+          [args[0], args[1]]
         end
 
         size ||= 0
         dimensions ||= 0
 
-        [ FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle_pointer, size, dimensions), true ]
+        [FFIGeos.GEOSCoordSeq_create_r(Geos.current_handle_pointer, size, dimensions), true]
       end
 
       @ptr = FFI::AutoPointer.new(
@@ -147,7 +145,7 @@ module Geos
     def [](*args)
       if args.length == 1 && args.first.is_a?(Numeric) && args.first >= 0
         i = args.first
-        ary = [ get_x(i), get_y(i) ]
+        ary = [get_x(i), get_y(i)]
         ary << get_z(i) if has_z?
         ary
       else
@@ -242,7 +240,7 @@ module Geos
         FFIGeos.GEOSCoordSeq_isCCW_r(Geos.current_handle_pointer, ptr, char_ptr)
         Tools.bool_result(char_ptr.read_char)
       end
-      alias_method :ccw?, :counter_clockwise?
+      alias ccw? counter_clockwise?
     end
 
     def to_point(options = {})
@@ -268,11 +266,11 @@ module Geos
     end
 
     %w{ x y z }.each do |m|
-      class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def #{m}_max
           ret = nil
-          self.length.times do |i|
-            value = self.get_#{m}(i)
+          length.times do |i|
+            value = get_#{m}(i)
             ret = value if !ret || value >= ret
           end
           ret
@@ -280,23 +278,23 @@ module Geos
 
         def #{m}_min
           ret = nil
-          self.length.times do |i|
-            value = self.get_#{m}(i)
+          length.times do |i|
+            value = get_#{m}(i)
             ret = value if !ret || value <= ret
           end
           ret
         end
-      EOF
+      RUBY
     end
 
     def snap_to_grid!(*args)
       grid = {
-        :offset_x => 0, # 1
-        :offset_y => 0, # 2
-        :offset_z => 0, # -
-        :size_x => 0, # 3
-        :size_y => 0, # 4
-        :size_z => 0 # -
+        offset_x: 0, # 1
+        offset_y: 0, # 2
+        offset_z: 0, # -
+        size_x: 0, # 3
+        size_y: 0, # 4
+        size_z: 0 # -
       }
 
       if args.length == 1 && args[0].is_a?(Numeric)
@@ -305,9 +303,7 @@ module Geos
         grid.merge!(args[0])
       end
 
-      if grid[:size]
-        grid[:size_x] = grid[:size_y] = grid[:size_z] = grid[:size]
-      end
+      grid[:size_x] = grid[:size_y] = grid[:size_z] = grid[:size] if grid[:size]
 
       if grid[:offset]
         case grid[:offset]
@@ -320,55 +316,51 @@ module Geos
           when Array
             grid[:offset_x], grid[:offset_y], grid[:offset_z] = grid[:offset]
           else
-            raise ArgumentError.new("Expected :offset option to be a Geos::Point")
+            raise ArgumentError, 'Expected :offset option to be a Geos::Point'
         end
       end
 
-      self.length.times do |i|
-        if grid[:size_x] != 0
-          self.x[i] = ((self.x[i] - grid[:offset_x]) / grid[:size_x]).round * grid[:size_x] + grid[:offset_x]
-        end
+      length.times do |i|
+        x[i] = ((x[i] - grid[:offset_x]) / grid[:size_x]).round * grid[:size_x] + grid[:offset_x] if grid[:size_x] != 0
 
-        if grid[:size_y] != 0
-          self.y[i] = ((self.y[i] - grid[:offset_y]) / grid[:size_y]).round * grid[:size_y] + grid[:offset_y]
-        end
+        y[i] = ((y[i] - grid[:offset_y]) / grid[:size_y]).round * grid[:size_y] + grid[:offset_y] if grid[:size_y] != 0
 
-        if self.has_z? && grid[:size_z] != 0
-          self.z[i] = ((self.z[i] - grid[:offset_z]) / grid[:size_z]).round * grid[:size_z] + grid[:offset_z]
-        end
+        z[i] = ((z[i] - grid[:offset_z]) / grid[:size_z]).round * grid[:size_z] + grid[:offset_z] if has_z? && grid[:size_z] != 0
       end
 
-      cs = self.remove_duplicate_coords
+      cs = remove_duplicate_coords
       @ptr = cs.ptr
 
       self
     end
 
     def snap_to_grid(*args)
-      self.dup.snap_to_grid!(*args)
+      dup.snap_to_grid!(*args)
     end
 
     def remove_duplicate_coords
-      Geos::CoordinateSequence.new(self.to_a.inject([]) { |memo, v|
+      Geos::CoordinateSequence.new(to_a.each_with_object([]) do |v, memo|
         memo << v unless memo.last == v
-        memo
-      })
+      end)
     end
 
     def affine!(options)
       options.default = 0.0
 
-      if self.has_z?
-        self.length.times do |i|
-          x, y, z = self.x[i], self.y[i], self.z[i]
+      if has_z?
+        length.times do |i|
+          x = self.x[i]
+          y = self.y[i]
+          z = self.z[i]
 
           self.x[i] = options[:afac] * x + options[:bfac] * y + options[:cfac] * z + options[:xoff]
           self.y[i] = options[:dfac] * x + options[:efac] * y + options[:ffac] * z + options[:yoff]
           self.z[i] = options[:gfac] * x + options[:hfac] * y + options[:ifac] * z + options[:zoff]
         end
       else
-        self.length.times do |i|
-          x, y = self.x[i], self.y[i]
+        length.times do |i|
+          x = self.x[i]
+          y = self.y[i]
 
           self.x[i] = options[:afac] * x + options[:bfac] * y + options[:xoff]
           self.y[i] = options[:dfac] * x + options[:efac] * y + options[:yoff]
@@ -379,88 +371,88 @@ module Geos
     end
 
     def affine(options)
-      self.dup.affine!(options)
+      dup.affine!(options)
     end
 
-    def rotate!(radians, origin = [ 0.0, 0.0 ])
+    def rotate!(radians, origin = [0.0, 0.0])
       origin = case origin
         when Array
           origin
         when Geos::Geometry
           center = origin.centroid
-          [ center.x, center.y ]
+          [center.x, center.y]
         else
-          raise ArgumentError.new("Expected an Array or a Geos::Geometry for the origin")
+          raise ArgumentError, 'Expected an Array or a Geos::Geometry for the origin'
       end
 
-      self.affine!({
-        :afac => Math.cos(radians),
-        :bfac => -Math.sin(radians),
-        :cfac => 0,
-        :dfac => Math.sin(radians),
-        :efac => Math.cos(radians),
-        :ffac => 0,
-        :gfac => 0,
-        :hfac => 0,
-        :ifac => 1,
-        :xoff => origin[0] - Math.cos(radians) * origin[0] + Math.sin(radians) * origin[1],
-        :yoff => origin[1] - Math.sin(radians) * origin[0] - Math.cos(radians) * origin[1],
-        :zoff => 0
-      })
+      affine!(
+        afac: Math.cos(radians),
+        bfac: -Math.sin(radians),
+        cfac: 0,
+        dfac: Math.sin(radians),
+        efac: Math.cos(radians),
+        ffac: 0,
+        gfac: 0,
+        hfac: 0,
+        ifac: 1,
+        xoff: origin[0] - Math.cos(radians) * origin[0] + Math.sin(radians) * origin[1],
+        yoff: origin[1] - Math.sin(radians) * origin[0] - Math.cos(radians) * origin[1],
+        zoff: 0
+      )
     end
 
-    def rotate(radians, origin = [ 0.0, 0.0 ])
-      self.dup.rotate!(radians, origin)
+    def rotate(radians, origin = [0.0, 0.0])
+      dup.rotate!(radians, origin)
     end
 
     def rotate_x!(radians)
-      self.affine!({
-        :afac => 1,
-        :bfac => 0,
-        :cfac => 0,
-        :dfac => 0,
-        :efac => Math.cos(radians),
-        :ffac => -Math.sin(radians),
-        :gfac => 0,
-        :hfac => Math.sin(radians),
-        :ifac => Math.cos(radians),
-        :xoff => 0,
-        :yoff => 0,
-        :zoff => 0
-      })
+      affine!(
+        afac: 1,
+        bfac: 0,
+        cfac: 0,
+        dfac: 0,
+        efac: Math.cos(radians),
+        ffac: -Math.sin(radians),
+        gfac: 0,
+        hfac: Math.sin(radians),
+        ifac: Math.cos(radians),
+        xoff: 0,
+        yoff: 0,
+        zoff: 0
+      )
     end
 
     def rotate_x(radians)
-      self.dup.rotate_x!(radians)
+      dup.rotate_x!(radians)
     end
 
     def rotate_y!(radians)
-      self.affine!({
-        :afac => Math.cos(radians),
-        :bfac => 0,
-        :cfac => Math.sin(radians),
-        :dfac => 0,
-        :efac => 1,
-        :ffac => 0,
-        :gfac => -Math.sin(radians),
-        :hfac => 0,
-        :ifac => Math.cos(radians),
-        :xoff => 0,
-        :yoff => 0,
-        :zoff => 0
-      })
+      affine!(
+        afac: Math.cos(radians),
+        bfac: 0,
+        cfac: Math.sin(radians),
+        dfac: 0,
+        efac: 1,
+        ffac: 0,
+        gfac: -Math.sin(radians),
+        hfac: 0,
+        ifac: Math.cos(radians),
+        xoff: 0,
+        yoff: 0,
+        zoff: 0
+      )
     end
 
     def rotate_y(radians)
-      self.dup.rotate_y!(radians)
+      dup.rotate_y!(radians)
     end
 
     def rotate_z!(radians)
-      self.rotate!(radians)
+      rotate!(radians)
     end
 
     def rotate_z(radians)
-      self.dup.rotate!(radians)
+      dup.rotate!(radians)
     end
 
     def scale!(*args)
@@ -469,27 +461,27 @@ module Geos
       elsif args.length.between?(1, 3)
         args.values_at(0...3)
       else
-        raise ArgumentError.new("Wrong number of arguments #{args.length} for 1-3")
+        raise ArgumentError, "Wrong number of arguments #{args.length} for 1-3"
       end
 
-      self.affine!({
-        :afac => x || 1,
-        :bfac => 0,
-        :cfac => 0,
-        :dfac => 0,
-        :efac => y || 1,
-        :ffac => 0,
-        :gfac => 0,
-        :hfac => 0,
-        :ifac => z || 1,
-        :xoff => 0,
-        :yoff => 0,
-        :zoff => 0
-      })
+      affine!(
+        afac: x || 1,
+        bfac: 0,
+        cfac: 0,
+        dfac: 0,
+        efac: y || 1,
+        ffac: 0,
+        gfac: 0,
+        hfac: 0,
+        ifac: z || 1,
+        xoff: 0,
+        yoff: 0,
+        zoff: 0
+      )
     end
 
     def scale(*args)
-      self.dup.scale!(*args)
+      dup.scale!(*args)
     end
 
     def trans_scale!(*args)
@@ -498,7 +490,7 @@ module Geos
       elsif args.length.between?(1, 4)
         args.values_at(0...4)
       else
-        raise ArgumentError.new("Wrong number of arguments #{args.length} for 1-4")
+        raise ArgumentError, "Wrong number of arguments #{args.length} for 1-4"
       end
 
       x_factor ||= 1
@@ -506,24 +498,24 @@ module Geos
       delta_x ||= 0
       delta_y ||= 0
 
-      self.affine!({
-        :afac => x_factor,
-        :bfac => 0,
-        :cfac => 0,
-        :dfac => 0,
-        :efac => y_factor,
-        :ffac => 0,
-        :gfac => 0,
-        :hfac => 0,
-        :ifac => 1,
-        :xoff => delta_x * x_factor,
-        :yoff => delta_y * y_factor,
-        :zoff => 0
-      })
+      affine!(
+        afac: x_factor,
+        bfac: 0,
+        cfac: 0,
+        dfac: 0,
+        efac: y_factor,
+        ffac: 0,
+        gfac: 0,
+        hfac: 0,
+        ifac: 1,
+        xoff: delta_x * x_factor,
+        yoff: delta_y * y_factor,
+        zoff: 0
+      )
     end
 
     def trans_scale(*args)
-      self.dup.trans_scale!(*args)
+      dup.trans_scale!(*args)
     end
 
     def translate!(*args)
@@ -532,33 +524,33 @@ module Geos
       elsif args.length.between?(1, 3)
         args.values_at(0...3)
       else
-        raise ArgumentError.new("Wrong number of arguments #{args.length} for 1-3")
+        raise ArgumentError, "Wrong number of arguments #{args.length} for 1-3"
       end
 
-      self.affine!({
-        :afac => 1,
-        :bfac => 0,
-        :cfac => 0,
-        :dfac => 0,
-        :efac => 1,
-        :ffac => 0,
-        :gfac => 0,
-        :hfac => 0,
-        :ifac => 1,
-        :xoff => x || 0,
-        :yoff => y || 0,
-        :zoff => z || 1
-      })
+      affine!(
+        afac: 1,
+        bfac: 0,
+        cfac: 0,
+        dfac: 0,
+        efac: 1,
+        ffac: 0,
+        gfac: 0,
+        hfac: 0,
+        ifac: 1,
+        xoff: x || 0,
+        yoff: y || 0,
+        zoff: z || 1
+      )
     end
 
     def translate(*args)
-      self.dup.translate!(*args)
+      dup.translate!(*args)
     end
 
     protected
 
       def check_bounds(idx) #:nodoc:
-        raise Geos::IndexBoundsError, 'Index out of bounds' if idx < 0 || idx >= length
+        raise Geos::IndexBoundsError, 'Index out of bounds' if idx.negative? || idx >= length
       end
 
       def build_coordinate(n) #:nodoc:

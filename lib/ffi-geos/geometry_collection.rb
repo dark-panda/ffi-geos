@@ -19,7 +19,7 @@ module Geos
     end
 
     def get_geometry_n(n)
-      if n < 0 || n >= num_geometries
+      if n.negative? || n >= num_geometries
         nil
       else
         cast_geometry_ptr(FFIGeos.GEOSGetGeometryN_r(Geos.current_handle_pointer, ptr, n), auto_free: false)
@@ -81,7 +81,7 @@ module Geos
       trans_scale
       translate
     }.each do |m|
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def #{m}!(*args)
           unless self.empty?
             self.num_geometries.times do |i|
@@ -97,7 +97,7 @@ module Geos
           ret.srid = pick_srid_according_to_policy(self.srid)
           ret
         end
-      EOF
+      RUBY
     end
   end
 end

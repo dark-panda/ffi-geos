@@ -448,9 +448,11 @@ class WkbWriterTests < Minitest::Test
     geom = read('POINT(1 2 3)')
     geom.srid = 4326
 
-    assert_equal('0101000020E6100000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom,
-      include_srid: true
-    ))
+    assert_equal('0101000020E6100000000000000000F03F0000000000000040',
+      @wkb_writer.write_hex(
+        geom,
+        include_srid: true
+      ))
 
     assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
   end

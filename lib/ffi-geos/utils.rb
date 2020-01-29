@@ -43,9 +43,7 @@ module Geos
           raise ArgumentError, "Wrong number of arguments (#{args.length} for 1-3)"
         end
 
-        if cs.length != 1
-          raise ArgumentError, 'IllegalArgumentException: Point coordinate list must contain a single element'
-        end
+        raise ArgumentError, 'IllegalArgumentException: Point coordinate list must contain a single element' if cs.length != 1
 
         cs_dup = cs.dup
         cs_dup.ptr.autorelease = false
@@ -56,9 +54,7 @@ module Geos
       def create_line_string(cs, options = {})
         cs = cs_from_cs_or_geom(cs)
 
-        if cs.length <= 1 && cs.length != 0
-          raise ArgumentError, 'IllegalArgumentException: point array must contain 0 or >1 elements'
-        end
+        raise ArgumentError, 'IllegalArgumentException: point array must contain 0 or >1 elements' if cs.length <= 1 && !cs.empty?
 
         cs_dup = cs.dup
         cs_dup.ptr.autorelease = false
@@ -69,9 +65,7 @@ module Geos
       def create_linear_ring(cs, options = {})
         cs = cs_from_cs_or_geom(cs)
 
-        if cs.length <= 1 && cs.length != 0
-          raise ArgumentError, 'IllegalArgumentException: point array must contain 0 or >1 elements'
-        end
+        raise ArgumentError, 'IllegalArgumentException: point array must contain 0 or >1 elements' if cs.length <= 1 && !cs.empty?
 
         cs.ptr.autorelease = false
 
@@ -154,9 +148,7 @@ module Geos
         options = extract_options!(args)
 
         geoms = Array(args).flatten.tap do |i|
-          if i.detect { |g| !g.is_a?(klass) }
-            raise TypeError, "Expected geoms Array to contain #{klass} objects"
-          end
+          raise TypeError, "Expected geoms Array to contain #{klass} objects" if i.detect { |g| !g.is_a?(klass) }
         end
 
         geoms_dups = geoms.map(&:dup)

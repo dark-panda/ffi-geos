@@ -39,7 +39,7 @@ class InterruptTests < Minitest::Test
 
       begin
         buffer = geom.buffer(1, 8)
-      rescue => e
+      rescue StandardError => e
         # no-op
       ensure
         assert_match(/^InterruptedException/, e.message)
@@ -62,7 +62,7 @@ class InterruptTests < Minitest::Test
 
       begin
         buffer = geom.buffer(1, 8)
-      rescue => e
+      rescue StandardError => e
         # no-op
       ensure
         assert_match(/^InterruptedException/, e.message)
@@ -87,7 +87,7 @@ class InterruptTests < Minitest::Test
 
       begin
         buffer = geom.buffer(1, 8)
-      rescue => e
+      rescue StandardError => e
         # no-op
       ensure
         assert_match(/^InterruptedException/, e.message)
@@ -114,7 +114,7 @@ class InterruptTests < Minitest::Test
       prc_1 = proc {
         interrupt_called
         called << :prc_1
-        prev.call if prev
+        prev&.call
       }
 
       Geos::Interrupt.register(prc_0)
@@ -122,13 +122,13 @@ class InterruptTests < Minitest::Test
 
       begin
         buffer = geom.buffer(1, 8)
-      rescue => e
+      rescue StandardError => e
         # no-op
       ensure
         assert_match(/^InterruptedException/, e.message)
         assert_nil(buffer)
         assert_interrupt_called(1)
-        assert_equal([ :prc_1, :prc_0 ], called)
+        assert_equal([:prc_1, :prc_0], called)
       end
     end
   end
@@ -160,7 +160,7 @@ class InterruptTests < Minitest::Test
 
     begin
       buffer = geom.buffer(1, 8)
-    rescue => e
+    rescue StandardError => e
       assert_match(/^InterruptedException/, e.message)
       assert_nil(buffer)
     end

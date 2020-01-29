@@ -47,7 +47,7 @@ module Geos
         when GEOS_GEOMETRYCOLLECTION
           GeometryCollection
         else
-          raise Geos::InvalidGeometryTypeError.new
+          raise Geos::InvalidGeometryTypeError
       end
 
       klass.new(geom_ptr, options).tap do |ret|

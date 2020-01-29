@@ -163,8 +163,8 @@ class PointTests < Minitest::Test
 
     wkt = 'POINT (1 1)'
 
-    affine_tester(:rotate, 'POINT (29 11)', wkt, Math::PI / 2, [ 10.0, 20.0 ])
-    affine_tester(:rotate, 'POINT (-2 0)', wkt, -Math::PI / 2, [ -1.0, 2.0 ])
+    affine_tester(:rotate, 'POINT (29 11)', wkt, Math::PI / 2, [10.0, 20.0])
+    affine_tester(:rotate, 'POINT (-2 0)', wkt, -Math::PI / 2, [-1.0, 2.0])
     affine_tester(:rotate, 'POINT (19 1)', wkt, Math::PI / 2, read('POINT(10 10)'))
     affine_tester(:rotate, 'POINT (-0.5 0.5)', wkt, Math::PI / 2, read('LINESTRING(0 0, 1 0)'))
   end

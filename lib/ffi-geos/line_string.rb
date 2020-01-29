@@ -28,7 +28,7 @@ module Geos
     end
 
     def point_n(n)
-      raise Geos::IndexBoundsError if n < 0 || n >= num_points
+      raise Geos::IndexBoundsError if n.negative? || n >= num_points
 
       cast_geometry_ptr(FFIGeos.GEOSGeomGetPointN_r(Geos.current_handle_pointer, ptr, n), srid_copy: srid)
     end
@@ -45,14 +45,17 @@ module Geos
     def offset_curve(width, options = {})
       options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 
-      cast_geometry_ptr(FFIGeos.GEOSOffsetCurve_r(
-        Geos.current_handle_pointer,
-        ptr,
-        width,
-        options[:quad_segs],
-        options[:join],
-        options[:mitre_limit]
-      ), srid_copy: srid)
+      cast_geometry_ptr(
+        FFIGeos.GEOSOffsetCurve_r(
+          Geos.current_handle_pointer,
+          ptr,
+          width,
+          options[:quad_segs],
+          options[:join],
+          options[:mitre_limit]
+        ),
+        srid_copy: srid
+      )
     end
 
     if FFIGeos.respond_to?(:GEOSisClosed_r)
@@ -79,13 +82,13 @@ module Geos
     end
 
     def snap_to_grid!(*args)
-      if !self.empty?
-        cs = self.coord_seq.snap_to_grid!(*args)
+      unless empty?
+        cs = coord_seq.snap_to_grid!(*args)
 
-        if cs.length == 0
-          @ptr = Geos.create_empty_line_string(:srid => self.srid).ptr
+        if cs.empty?
+          @ptr = Geos.create_empty_line_string(srid: srid).ptr
         elsif cs.length <= 1
-          raise Geos::InvalidGeometryError.new("snap_to_grid! produced an invalid number of points in for a LineString - found #{cs.length} - must be 0 or > 1")
+          raise Geos::InvalidGeometryError, "snap_to_grid! produced an invalid number of points in for a LineString - found #{cs.length} - must be 0 or > 1"
         else
           @ptr = Geos.create_line_string(cs).ptr
         end
@@ -95,41 +98,39 @@ module Geos
     end
 
     def snap_to_grid(*args)
-      ret = self.dup.snap_to_grid!(*args)
-      ret.srid = pick_srid_according_to_policy(self.srid)
+      ret = dup.snap_to_grid!(*args)
+      ret.srid = pick_srid_according_to_policy(srid)
       ret
     end
 
     def line_interpolate_point(fraction)
-      if !fraction.between?(0, 1)
-        raise ArgumentError.new("fraction must be between 0 and 1")
-      end
+      raise ArgumentError, 'fraction must be between 0 and 1' unless fraction.between?(0, 1)
 
       case fraction
         when 0
-          self.start_point
+          start_point
         when 1
-          self.end_point
+          end_point
         else
           length = self.length
           total_length = 0
-          segs = self.num_points - 1
+          segs = num_points - 1
 
           segs.times do |i|
-            p1 = self[i]
-            p2 = self[i + 1]
+            p_1 = self[i]
+            p_2 = self[i + 1]
 
-            seg_length = p1.distance(p2) / length
+            seg_length = p_1.distance(p_2) / length
 
             if fraction < total_length + seg_length
-              dseg = (fraction - total_length) / seg_length;
+              dseg = (fraction - total_length) / seg_length
 
               args = []
-              args << p1.x + ((p2.x - p1.x) * dseg)
-              args << p1.y + ((p2.y - p1.y) * dseg)
-              args << p1.z + ((p2.z - p1.z) * dseg) if self.has_z?
+              args << p_1.x + ((p_2.x - p_1.x) * dseg)
+              args << p_1.y + ((p_2.y - p_1.y) * dseg)
+              args << p_1.z + ((p_2.z - p_1.z) * dseg) if has_z?
 
-              args << { :srid => pick_srid_according_to_policy(self.srid) } unless self.srid == 0
+              args << { srid: pick_srid_according_to_policy(srid) } unless srid.zero?
 
               return Geos.create_point(*args)
             end
@@ -138,17 +139,17 @@ module Geos
           end
 
           # if all else fails...
-          self.end_point
+          end_point
       end
     end
-    alias_method :interpolate_point, :line_interpolate_point
+    alias interpolate_point line_interpolate_point
 
     %w{ max min }.each do |op|
       %w{ x y }.each do |dimension|
         native_method = "GEOSGeom_get#{dimension.upcase}#{op[0].upcase}#{op[1..-1]}_r"
 
         if FFIGeos.respond_to?(native_method)
-          self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
             def #{dimension}_#{op}
               return if empty?
 
@@ -156,19 +157,19 @@ module Geos
               FFIGeos.#{native_method}(Geos.current_handle_pointer, ptr, double_ptr)
               double_ptr.read_double
             end
-          EOF
+          RUBY
         else
-          self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
             def #{dimension}_#{op}
               unless self.empty?
                 self.coord_seq.#{dimension}_#{op}
               end
             end
-          EOF
+          RUBY
         end
       end
 
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def z_#{op}
           unless self.empty?
             if self.has_z?
@@ -178,7 +179,7 @@ module Geos
             end
           end
         end
-      EOF
+      RUBY
     end
 
     %w{
@@ -191,7 +192,7 @@ module Geos
       trans_scale
       translate
     }.each do |m|
-      self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+      class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
         def #{m}!(*args)
           unless self.empty?
             self.coord_seq.#{m}!(*args)
@@ -205,7 +206,7 @@ module Geos
           ret.srid = pick_srid_according_to_policy(self.srid)
           ret
         end
-      EOF
+      RUBY
     end
   end
 end

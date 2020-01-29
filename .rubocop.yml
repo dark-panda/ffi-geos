@@ -63,6 +63,7 @@ AllCops:
     - 'tmp/**/*'
     - 'vendor/**/*'
     - '.git/**/*'
+    - 'stuff/**/*'
   # Default formatter will be used if no `-f/--format` option is given.
   DefaultFormatter: progress
   # Cop names are displayed in offense messages by default. Change behavior
@@ -1068,7 +1069,7 @@ Layout/SpaceAroundOperators:
   # with an operator on the previous or next line, not counting empty lines
   # or comment lines.
   AllowForAlignment: true
-  EnforcedStyleForExponentOperator: no_space
+  EnforcedStyleForExponentOperator: space
   SupportedStylesForExponentOperator:
     - space
     - no_space
@@ -2052,7 +2053,7 @@ Naming/MethodParameterName:
   VersionAdded: '0.53'
   VersionChanged: '0.77'
   # Parameter names may be equal to or greater than this value
-  MinNameLength: 3
+  MinNameLength: 1
   AllowNamesEndingInNumbers: true
   # Allowed names that will not register an offense
   AllowedNames:
@@ -2588,7 +2589,7 @@ Style/Dir:
 
 Style/Documentation:
   Description: 'Document classes and non-namespace modules.'
-  Enabled: true
+  Enabled: false
   VersionAdded: '0.9'
   Exclude:
     - 'spec/**/*'
@@ -3722,7 +3723,7 @@ Style/StructInheritance:
 Style/SymbolArray:
   Description: 'Use %i or %I for arrays of symbols.'
   StyleGuide: '#percent-i'
-  Enabled: true
+  Enabled: false
   VersionAdded: '0.9'
   VersionChanged: '0.49'
   EnforcedStyle: percent
@@ -3927,7 +3928,7 @@ Style/WhileUntilModifier:
 Style/WordArray:
   Description: 'Use %w or %W for arrays of words.'
   StyleGuide: '#percent-w'
-  Enabled: true
+  Enabled: false
   VersionAdded: '0.9'
   VersionChanged: '0.36'
   EnforcedStyle: percent

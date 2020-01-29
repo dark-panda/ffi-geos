@@ -8,7 +8,7 @@ class STRtreeTests < Minitest::Test
   def setup_tree
     @tree = Geos::STRtree.new(3)
     @item_1 = { item_1: :test }
-    @item_2 = [ :test ]
+    @item_2 = [:test]
     @item_3 = Object.new
 
     @geom_1 = read('LINESTRING(0 0, 10 10)')
@@ -183,9 +183,9 @@ class STRtreeTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree)
 
     tree = Geos::STRtree.new(
-      [ read('LINESTRING(0 0, 10 10)'), item_1 = { item_1: :test } ],
-      [ read('LINESTRING(20 20, 30 30)'), item_2 = [ :test ] ],
-      [ read('LINESTRING(20 20, 30 30)'), item_3 = Object.new ]
+      [read('LINESTRING(0 0, 10 10)'), item_1 = { item_1: :test }],
+      [read('LINESTRING(20 20, 30 30)'), item_2 = [:test]],
+      [read('LINESTRING(20 20, 30 30)'), item_3 = Object.new]
     )
 
     assert_equal([item_1],
@@ -346,7 +346,7 @@ class STRtreeTests < Minitest::Test
     geom_4 = read('POINT (3 8)')
 
     item_1 = { item_1: :test }
-    item_2 = [ :test ]
+    item_2 = [:test]
     item_3 = Object.new
 
     tree = Geos::STRtree.new(2)

@@ -1,4 +1,4 @@
-# encoding: BINARY; frozen_string_literal: true
+# frozen_string_literal: true
 
 if RUBY_VERSION >= '1.9'
   require 'simplecov'
@@ -151,11 +151,11 @@ module TestHelper
 
     case result
       when Geos::Geometry
-        result = [ write(result) ]
+        result = [write(result)]
       when Array
-        result = result.collect { |r|
+        result = result.collect do |r|
           write(r)
-        }
+        end
     end
 
     assert_equal(expected, result)
@@ -170,13 +170,11 @@ module TestHelper
     assert_equal(expected, write(geom))
 
     geom = read(wkt)
-    geom2 = geom.send(method, *args).snap_to_grid(0.1)
+    geom_2 = geom.send(method, *args).snap_to_grid(0.1)
 
     assert_equal(wkt, write(geom))
-    assert_equal(expected, write(geom2, :trim => true))
+    assert_equal(expected, write(geom_2, trim: true))
   end
 end
 
-if RUBY_VERSION >= '1.9'
-  Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)
-end
+Minitest::Reporters.use!(Minitest::Reporters::SpecReporter.new)

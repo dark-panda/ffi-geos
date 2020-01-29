@@ -57,9 +57,8 @@ module Geos
     end
 
     def output_dimensions=(dim)
-      if dim < 2 || dim > 3
-        raise ArgumentError, 'Output dimensions must be either 2 or 3'
-      end
+      raise ArgumentError, 'Output dimensions must be either 2 or 3' if dim < 2 || dim > 3
+
       FFIGeos.GEOSWKBWriter_setOutputDimension_r(Geos.current_handle_pointer, ptr, dim)
     end
 

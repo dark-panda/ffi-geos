@@ -79,8 +79,7 @@ class PolygonTests < Minitest::Test
 
   def test_snap_to_grid_with_illegal_result
     assert_raises(Geos::InvalidGeometryError) do
-      read('POLYGON ((1 1, 10 10, 10 10, 1 1))').
-        snap_to_grid
+      read('POLYGON ((1 1, 10 10, 10 10, 1 1))').snap_to_grid
     end
   end
 
@@ -110,13 +109,13 @@ class PolygonTests < Minitest::Test
       'POLYGON ((30 10, 30 15, 25 15, 25 10, 30 10))',
       wkt,
       Math::PI / 2,
-      [ 10.0, 20.0 ])
+      [10.0, 20.0])
 
     affine_tester(:rotate,
       'POLYGON ((-3 1, -3 -4, 2 -4, 2 1, -3 1))',
       wkt,
       -Math::PI / 2,
-      [ -1.0, 2.0 ])
+      [-1.0, 2.0])
 
     affine_tester(:rotate,
       'POLYGON ((2 2, -3 2, -3 -3, 2 -3, 2 2))',
