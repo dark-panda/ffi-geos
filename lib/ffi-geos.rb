@@ -478,6 +478,26 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSGeom_getXMin_r: [
+        # 0 on exception, *handle, (double *) value
+        :int, :pointer, :pointer, :pointer
+      ],
+
+      GEOSGeom_getXMax_r: [
+        # 0 on exception, *handle, (double *) value
+        :int, :pointer, :pointer, :pointer
+      ],
+
+      GEOSGeom_getYMin_r: [
+        # 0 on exception, *handle, (double *) value
+        :int, :pointer, :pointer, :pointer
+      ],
+
+      GEOSGeom_getYMax_r: [
+        # 0 on exception, *handle, (double *) value
+        :int, :pointer, :pointer, :pointer
+      ],
+
       GEOSSimplify_r: [
         # *geom, *handle, *geom, tolerance
         :pointer, :pointer, :pointer, :double

@@ -145,13 +145,27 @@ module Geos
 
     %w{ max min }.each do |op|
       %w{ x y }.each do |dimension|
-        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
-          def #{dimension}_#{op}
-            unless self.empty?
-              self.coord_seq.#{dimension}_#{op}
+        native_method = "GEOSGeom_get#{dimension.upcase}#{op[0].upcase}#{op[1..-1]}_r"
+
+        if FFIGeos.respond_to?(native_method)
+          self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+            def #{dimension}_#{op}
+              return if empty?
+
+              double_ptr = FFI::MemoryPointer.new(:double)
+              FFIGeos.#{native_method}(Geos.current_handle_pointer, ptr, double_ptr)
+              double_ptr.read_double
             end
-          end
-        EOF
+          EOF
+        else
+          self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
+            def #{dimension}_#{op}
+              unless self.empty?
+                self.coord_seq.#{dimension}_#{op}
+              end
+            end
+          EOF
+        end
       end
 
       self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)

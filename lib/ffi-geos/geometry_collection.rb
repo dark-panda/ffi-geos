@@ -46,13 +46,27 @@ module Geos
 
     %w{ x y z }.each do |dimension|
       %w{ max min }.each do |op|
-        self.class_eval(<<-EOF, __FILE__, __LINE__ + 1)
-          def #{dimension}_#{op}
-            unless self.empty?
-              self.collect(&:#{dimension}_#{op}).#{op}
+        native_method = "GEOSGeom_get#{dimension.upcase}#{op[0].upcase}#{op[1..-1]}_r"
+
+        if FFIGeos.respond_to?(native_method)
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+            def #{dimension}_#{op}
+              return if empty?
+
+              double_ptr = FFI::MemoryPointer.new(:double)
+              FFIGeos.#{native_method}(Geos.current_handle_pointer, ptr, double_ptr)
+              double_ptr.read_double
             end
-          end
-        EOF
+          RUBY
+        else
+          class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
+            def #{dimension}_#{op}
+              unless self.empty?
+                self.collect(&:#{dimension}_#{op}).#{op}
+              end
+            end
+          RUBY
+        end
       end
     end
 
