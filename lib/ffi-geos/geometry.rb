@@ -554,6 +554,13 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSPolygonizer_getCutEdges_r(Geos.current_handle_pointer, ary, 1), srid_copy: srid).to_a
     end
 
+    if FFIGeos.respond_to?(:GEOSBuildArea_r)
+      # Added in GEOS 3.8+
+      def build_area
+        cast_geometry_ptr(FFIGeos.GEOSBuildArea_r(Geos.current_handle_pointer, ptr))
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSDelaunayTriangulation_r)
       # :call-seq:
       #   delaunay_triangulation(options = {})
