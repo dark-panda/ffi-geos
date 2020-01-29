@@ -1,6 +1,7 @@
 cache: bundler
 sudo: false
 language: ruby
+dist: bionic
 rvm:
   - 2.7.0
   - 2.6.5
@@ -10,7 +11,7 @@ rvm:
 addons:
   apt:
     packages:
-      - libgeos-c1
+      - libgeos-c1v5
 before_install:
 - gem update --system
 - gem install bundler
