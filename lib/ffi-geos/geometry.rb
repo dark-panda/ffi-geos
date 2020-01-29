@@ -215,6 +215,14 @@ module Geos
     end
     alias center centroid
 
+    if FFIGeos.respond_to?(:GEOSMinimumBoundingCircle_r)
+      # Added in GEOS 3.8+. Does not yet support the radius or center
+      # arguments.
+      def minimum_bounding_circle
+        cast_geometry_ptr(FFIGeos.GEOSMinimumBoundingCircle_r(Geos.current_handle_pointer, ptr, nil, nil), srid_copy: srid)
+      end
+    end
+
     def envelope
       cast_geometry_ptr(FFIGeos.GEOSEnvelope_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end

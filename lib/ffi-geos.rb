@@ -493,6 +493,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSMinimumBoundingCircle_r: [
+        # *geom, *handle, *geom, *double radius, **geom center
+        :pointer, :pointer, :pointer, :pointer, :pointer
+      ],
+
       GEOSEnvelope_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
