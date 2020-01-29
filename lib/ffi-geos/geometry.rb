@@ -540,11 +540,17 @@ module Geos
       }
     end
 
-    def polygonize
-      ary = FFI::MemoryPointer.new(:pointer)
-      ary.write_array_of_pointer([ ptr ])
+    def polygonize(*geoms)
+      geoms.each do |geom|
+        raise ArgumentError unless geom.is_a?(Geos::Geometry)
+      end
 
-      cast_geometry_ptr(FFIGeos.GEOSPolygonize_r(Geos.current_handle_pointer, ary, 1), srid_copy: srid).to_a
+      ary = [ ptr ].concat(geoms.collect(&:ptr))
+      ary_ptr = FFI::MemoryPointer.new(:pointer, ary.length)
+      ary_ptr.write_array_of_pointer(ary)
+
+      cast_geometry_ptr(FFIGeos.GEOSPolygonize_r(Geos.current_handle_pointer, ary_ptr, ary.length), srid_copy: srid).to_a
+    end
 
     if FFIGeos.respond_to?(:GEOSPolygonize_valid_r)
       # Added in GEOS 3.8+
