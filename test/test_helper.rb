@@ -1,19 +1,17 @@
 # frozen_string_literal: true
 
-if RUBY_VERSION >= '1.9'
-  require 'simplecov'
+require 'simplecov'
 
-  SimpleCov.command_name('Unit Tests')
-  SimpleCov.merge_timeout(3600)
-  SimpleCov.start do
-    add_filter '/test/'
-    add_filter '/.bundle/'
-  end
+SimpleCov.command_name('Unit Tests')
+SimpleCov.merge_timeout(3600)
+SimpleCov.start do
+  add_filter '/test/'
+  add_filter '/.bundle/'
 end
 
 require 'rubygems'
 require 'minitest/autorun'
-require 'minitest/reporters' if RUBY_VERSION >= '1.9'
+require 'minitest/reporters'
 
 if ENV['USE_BINARY_GEOS']
   require 'geos'

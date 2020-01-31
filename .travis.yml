@@ -1,17 +1,34 @@
 cache: bundler
 sudo: false
 language: ruby
-dist: bionic
+dist: trusty
+
 rvm:
   - 2.7.0
   - 2.6.5
   - 2.5.7
   - 2.4.9
   - jruby-head
+
 addons:
   apt:
     packages:
-      - libgeos-c1v5
+      - libgeos-c1
+  sonarcloud:
+    organization: "dark-panda"
+    token:
+      secure: UiS3BU1SUSbIynvaup+3w9NNa85mH3lXSa+iCQx9luhp5Nc5Zg4xedycfGylCzpr6D6vRRH3gYefafitcvjS8LbhtNd2Z4oezp2T4fRt8W387HJ3wIcRkyOwBhmQqt/SiPiQr/rkDE9VomelLe7RSkelfAQQvpka5TMzc4wKYd4=
+
+git:
+  depth: false
+
 before_install:
-- gem update --system
-- gem install bundler
+  - gem update --system
+  - gem install bundler
+
+before_script:
+  - bundle exec rubocop --format=json > rubocop-report.json || true
+
+script:
+  - bundle exec rake test
+  - sonar-scanner
