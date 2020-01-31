@@ -333,7 +333,7 @@ class WkbWriterTests < Minitest::Test
 
   def test_2d_big_endian_with_3d_input_binary
     wkb_tester(
-      "\x00\x00\x00\x00\x01\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00",
+      [0, 0, 0, 0, 1, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0].pack('C*'),
       'POINT(6 7 8)',
       2,
       0,
@@ -345,7 +345,7 @@ class WkbWriterTests < Minitest::Test
 
   def test_2d_big_endian_with_3d_input_with_srid_binary
     wkb_tester(
-      "\x00\x20\x00\x00\x01\x00\x00\x00\x35\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00",
+      [0, 32, 0, 0, 1, 0, 0, 0, 53, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0].pack('C*'),
       'POINT(6 7 8)',
       2,
       0,
@@ -357,7 +357,7 @@ class WkbWriterTests < Minitest::Test
 
   def test_3d_little_endian_with_3d_input_binary
     wkb_tester(
-      "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
+      [1, 1, 0, 0, 128, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64, 0, 0, 0, 0, 0, 0, 32, 64].pack('C*'),
       'POINT(6 7 8)',
       3,
       1,
@@ -369,7 +369,7 @@ class WkbWriterTests < Minitest::Test
 
   def test_3d_big_endian_with_3d_input_binary
     wkb_tester(
-      "\x00\x80\x00\x00\x01\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00\x40\x20\x00\x00\x00\x00\x00\x00",
+      [0, 128, 0, 0, 1, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0, 64, 32, 0, 0, 0, 0, 0, 0].pack('C*'),
       'POINT(6 7 8)',
       3,
       0,
@@ -381,7 +381,7 @@ class WkbWriterTests < Minitest::Test
 
   def test_3d_big_endian_with_3d_input_with_srid_binary
     wkb_tester(
-      "\x00\xA0\x00\x00\x01\x00\x00\x00\x35\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00\x40\x20\x00\x00\x00\x00\x00\x00",
+      [0, 160, 0, 0, 1, 0, 0, 0, 53, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0, 64, 32, 0, 0, 0, 0, 0, 0].pack('C*'),
       'POINT(6 7 8)',
       3,
       0,
@@ -394,7 +394,7 @@ class WkbWriterTests < Minitest::Test
   def test_try_bad_byte_order_value_binary
     assert_raises(TypeError) do
       wkb_tester(
-        "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
+        [1, 1, 0, 0, 128, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64, 0, 0, 0, 0, 0, 0, 32, 64].pack('C*'),
         'POINT(6 7 8)',
         3,
         'gibberish',
@@ -406,7 +406,7 @@ class WkbWriterTests < Minitest::Test
 
     assert_raises(TypeError) do
       wkb_tester(
-        "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
+        [1, 1, 0, 0, 128, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64, 0, 0, 0, 0, 0, 0, 32, 64].pack('C*'),
         'POINT(6 7 8)',
         3,
         1000,
@@ -433,12 +433,12 @@ class WkbWriterTests < Minitest::Test
     }
 
     tester[
-      "\x01\x01\x00\x00\x20\xE6\x10\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40",
+      [1, 1, 0, 0, 32, 230, 16, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64].pack('C*'),
       include_srid: true
     ]
 
     tester[
-      "\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\xF0\x3F\x00\x00\x00\x00\x00\x00\x00\x40"
+      [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64].pack('C*')
     ]
   end
 

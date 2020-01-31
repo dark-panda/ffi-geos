@@ -105,7 +105,7 @@ class WkbReaderTests < Minitest::Test
   def test_2d_little_endian_binary
     wkb_tester(
       'POINT(6 7)',
-      "\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40",
+      [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -117,7 +117,7 @@ class WkbReaderTests < Minitest::Test
   def test_2d_big_endian_binary
     wkb_tester(
       'POINT (6 7)',
-      "\x00\x00\x00\x00\x01\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00",
+      [0, 0, 0, 0, 1, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -129,7 +129,7 @@ class WkbReaderTests < Minitest::Test
   def test_2d_little_endian_srid_binary
     wkb_tester(
       'POINT (6 7)',
-      "\x01\x01\x00\x00\x20\x2B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40",
+      [1, 1, 0, 0, 32, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -141,7 +141,7 @@ class WkbReaderTests < Minitest::Test
   def test_2d_big_endian_srid_binary
     wkb_tester(
       'POINT (6 7)',
-      "\x00\x20\x00\x00\x01\x00\x00\x00\x2B\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00",
+      [0, 32, 0, 0, 1, 0, 0, 0, 43, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -153,7 +153,7 @@ class WkbReaderTests < Minitest::Test
   def test_3d_little_endian_binary
     wkb_tester(
       'POINT Z (6 7 8)',
-      "\x01\x01\x00\x00\x80\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40\x00\x00\x00\x00\x00\x00\x20\x40",
+      [1, 1, 0, 0, 128, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64, 0, 0, 0, 0, 0, 0, 32, 64].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -165,7 +165,7 @@ class WkbReaderTests < Minitest::Test
   def test_3d_big_endian_binary
     wkb_tester(
       'POINT Z (6 7 8)',
-      "\x00\x80\x00\x00\x01\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00\x40\x20\x00\x00\x00\x00\x00\x00",
+      [0, 128, 0, 0, 1, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0, 64, 32, 0, 0, 0, 0, 0, 0].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -177,7 +177,7 @@ class WkbReaderTests < Minitest::Test
   def test_3d_big_endian_srid_binary
     wkb_tester(
       'POINT Z (6 7 8)',
-      "\x00\xA0\x00\x00\x01\x00\x00\x00\x35\x40\x18\x00\x00\x00\x00\x00\x00\x40\x1C\x00\x00\x00\x00\x00\x00\x40\x20\x00\x00\x00\x00\x00\x00",
+      [0, 160, 0, 0, 1, 0, 0, 0, 53, 64, 24, 0, 0, 0, 0, 0, 0, 64, 28, 0, 0, 0, 0, 0, 0, 64, 32, 0, 0, 0, 0, 0, 0].pack('C*'),
       Geos::GEOS_POINT,
       'Point',
       Geos::Point,
@@ -188,11 +188,11 @@ class WkbReaderTests < Minitest::Test
 
   def test_read_with_srid
     assert_equal(43,
-      @wkb_reader.read("\x01\x01\x00\x00\x20\x2B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40").srid)
+      @wkb_reader.read([1, 1, 0, 0, 32, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64].pack('C*')).srid)
 
     assert_equal(4326,
       @wkb_reader.read(
-        "\x01\x01\x00\x00\x20\x2B\x00\x00\x00\x00\x00\x00\x00\x00\x00\x18\x40\x00\x00\x00\x00\x00\x00\x1C\x40",
+        [1, 1, 0, 0, 32, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 64, 0, 0, 0, 0, 0, 0, 28, 64].pack('C*'),
         srid: 4326
       ).srid)
   end
