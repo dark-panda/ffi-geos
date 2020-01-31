@@ -11,7 +11,7 @@ gem 'minitest-reporters'
 gem 'rake', '~> 10.0'
 gem 'rdoc', '~> 3.12'
 gem 'rubocop', require: false
-gem 'simplecov', require: false
+gem 'simplecov', '~> 0.17.0', require: false
 
 platforms :rbx do
   gem 'rubinius-developer_tools'
