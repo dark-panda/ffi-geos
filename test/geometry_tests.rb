@@ -1856,7 +1856,13 @@ class GeometryTests < Minitest::Test
     simple_tester(:reverse, 'POINT (3 5)', 'POINT (3 5)')
     simple_tester(:reverse, 'MULTIPOINT (100 100, 10 100, 30 100)', 'MULTIPOINT (100 100, 10 100, 30 100)')
     simple_tester(:reverse, 'LINESTRING (200 200, 200 100)', 'LINESTRING (200 100, 200 200)')
-    simple_tester(:reverse, 'MULTILINESTRING ((1 1, 2 2), (3 3, 4 4))', 'MULTILINESTRING ((4 4, 3 3), (2 2, 1 1))')
+
+    if Geos::GEOS_VERSION >= '3.8.1'
+      simple_tester(:reverse, 'MULTILINESTRING ((3 3, 4 4), (1 1, 2 2))', 'MULTILINESTRING ((4 4, 3 3), (2 2, 1 1))')
+    else
+      simple_tester(:reverse, 'MULTILINESTRING ((1 1, 2 2), (3 3, 4 4))', 'MULTILINESTRING ((4 4, 3 3), (2 2, 1 1))')
+    end
+
     simple_tester(:reverse, 'POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0), (1 1, 2 1, 2 2, 1 2, 1 1))', 'POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1))')
     simple_tester(:reverse, 'MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0), (1 1, 2 1, 2 2, 1 2, 1 1)), ((100 100, 100 200, 200 200, 100 100)))', 'MULTIPOLYGON (((0 0, 0 10, 10 10, 10 0, 0 0), (1 1, 1 2, 2 2, 2 1, 1 1)), ((100 100, 200 200, 100 200, 100 100)))')
     simple_tester(:reverse, 'GEOMETRYCOLLECTION (LINESTRING (1 1, 2 2), GEOMETRYCOLLECTION (LINESTRING (3 5, 2 9)))', 'GEOMETRYCOLLECTION (LINESTRING (2 2, 1 1), GEOMETRYCOLLECTION(LINESTRING (2 9, 3 5)))')
