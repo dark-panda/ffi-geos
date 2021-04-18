@@ -313,6 +313,7 @@ class STRtreeTests < Minitest::Test
 
   def test_nearest_with_only_empty_geometries
     skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip if Geos::GEOS_VERSION > '3.9.0'
 
     geom_1 = read('LINESTRING EMPTY')
     geom_2 = read('POINT (2 7)')
