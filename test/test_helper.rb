@@ -65,8 +65,8 @@ module TestHelper
     end
   end
 
-  def write(*args)
-    writer.write(*args)
+  def write(*args, **options)
+    writer.write(*args, **options)
   end
 
   def geom_from_geom_or_wkt(geom_or_wkt)
@@ -77,11 +77,11 @@ module TestHelper
     end
   end
 
-  def srid_copy_tester(method, expected, expected_srid, srid_policy, wkt, *args)
+  def srid_copy_tester(method, expected, expected_srid, srid_policy, wkt, *args, **options)
     geom = read(wkt)
     geom.srid = 4326
     Geos.srid_copy_policy = srid_policy
-    geom_b = geom.send(method, *args)
+    geom_b = geom.send(method, *args, **options)
     assert_equal(4326, geom.srid)
     assert_equal(expected_srid, geom_b.srid)
     assert_equal(expected, write(geom_b))
@@ -112,16 +112,16 @@ module TestHelper
     assert(geom.eql_exact?(result, tolerance), "Expected geom.eql_exact? to be within #{tolerance}")
   end
 
-  def snapped_tester(method, expected, geom, *args)
+  def snapped_tester(method, expected, geom, *args, **options)
     geom = geom_from_geom_or_wkt(geom)
 
-    result = geom.send(method, *args)
+    result = geom.send(method, *args, **options)
     assert_equal(expected, write(result.snap_to_grid(1)))
   end
 
-  def simple_tester(method, expected, geom, *args)
+  def simple_tester(method, expected, geom, *args, **options)
     geom = geom_from_geom_or_wkt(geom)
-    result = geom.send(method, *args)
+    result = geom.send(method, *args, **options)
     result = write(result) if result.is_a?(Geos::Geometry)
 
     if expected.nil?
@@ -131,29 +131,29 @@ module TestHelper
     end
   end
 
-  def simple_bang_tester(method, expected, wkt, *args)
+  def simple_bang_tester(method, expected, wkt, *args, **options)
     geom = read(wkt)
-    result = geom.send(method, *args)
+    result = geom.send(method, *args, **options)
 
     assert_equal(wkt, write(geom))
     assert_equal(expected, write(result))
 
     geom = read(wkt)
-    geom.send("#{method}!", *args)
+    geom.send("#{method}!", *args, **options)
 
     assert_equal(expected, write(geom))
   end
 
-  def comparison_tester(method, expected, geom_a, geom_b, *args)
-    geom_a = geom_from_geom_or_wkt(geom_a)
-    geom_b = geom_from_geom_or_wkt(geom_b)
+  def comparison_tester(method, expected, geom_a, geom_b, *args, **options)
+    geom_a = geom_from_geom_or_wkt(geom_a).normalize
+    geom_b = geom_from_geom_or_wkt(geom_b).normalize
 
-    simple_tester(method, expected, geom_a, geom_b, *args)
+    simple_tester(method, expected, geom_a, geom_b, *args, **options)
   end
 
-  def array_tester(method, expected, geom, *args)
+  def array_tester(method, expected, geom, *args, **options)
     geom = geom_from_geom_or_wkt(geom)
-    result = geom.send(method, *args)
+    result = geom.send(method, *args, **options)
 
     case result
       when Geos::Geometry
@@ -167,16 +167,16 @@ module TestHelper
     assert_equal(expected, result)
   end
 
-  def affine_tester(method, expected, wkt, *args)
+  def affine_tester(method, expected, wkt, *args, **options)
     writer.trim = true
 
     geom = read(wkt)
-    geom.send("#{method}!", *args).snap_to_grid!(0.1)
+    geom.send("#{method}!", *args, **options).snap_to_grid!(0.1)
 
     assert_equal(expected, write(geom))
 
     geom = read(wkt)
-    geom_2 = geom.send(method, *args).snap_to_grid(0.1)
+    geom_2 = geom.send(method, *args, **options).snap_to_grid(0.1)
 
     assert_equal(wkt, write(geom))
     assert_equal(expected, write(geom_2, trim: true))

@@ -83,9 +83,14 @@ module Geos
       CoordinateSequence.new(FFIGeos.GEOSGeom_getCoordSeq_r(Geos.current_handle_pointer, ptr), false, self)
     end
 
-    def intersection(geom)
+    def intersection(geom, precision: nil, **)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+
+      if precision
+        cast_geometry_ptr(FFIGeos.GEOSIntersectionPrec_r(Geos.current_handle_pointer, ptr, geom.ptr, precision), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      else
+        cast_geometry_ptr(FFIGeos.GEOSIntersection_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      end
     end
 
     if FFIGeos.respond_to?(:GEOSBufferWithParams_r)

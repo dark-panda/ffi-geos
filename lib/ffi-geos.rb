@@ -404,6 +404,11 @@ module Geos
         :pointer, :pointer, :pointer, :pointer
       ],
 
+      GEOSIntersectionPrec_r: [
+        # *geom, *handle, *geom_a, *geom_b, precision
+        :pointer, :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSBufferWithParams_r: [
         # *geom, *handle, *geom, *params, width
         :pointer, :pointer, :pointer, :pointer, :double
