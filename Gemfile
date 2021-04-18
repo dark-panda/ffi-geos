@@ -8,8 +8,8 @@ gem 'guard'
 gem 'guard-minitest'
 gem 'minitest'
 gem 'minitest-reporters'
-gem 'rake', '~> 10.0'
-gem 'rdoc', '~> 3.12'
+gem 'rake'
+gem 'rdoc'
 gem 'rubocop', require: false
 gem 'simplecov', '~> 0.17.0', require: false
 
