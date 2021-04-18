@@ -801,6 +801,11 @@ module Geos
         :pointer, :pointer, :pointer, :double
       ],
 
+      GEOSLargestEmptyCircle_r: [
+        # *geom, *handle, *geom, *geom, tolerance
+        :pointer, :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSMinimumWidth_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer

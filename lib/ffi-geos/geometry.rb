@@ -701,6 +701,12 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSLargestEmptyCircle_r)
+      def largest_empty_circle(precision, boundary: nil)
+        cast_geometry_ptr(FFIGeos.GEOSLargestEmptyCircle_r(Geos.current_handle_pointer, ptr, boundary ? boundary.ptr : nil, precision))
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSMinimumWidth_r)
       def minimum_width
         cast_geometry_ptr(FFIGeos.GEOSMinimumWidth_r(Geos.current_handle_pointer, ptr))
