@@ -796,6 +796,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSMaximumInscribedCircle_r: [
+        # *geom, *handle, *geom, tolerance
+        :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSMinimumWidth_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer

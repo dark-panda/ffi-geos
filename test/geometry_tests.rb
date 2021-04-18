@@ -1880,6 +1880,14 @@ class GeometryTests < Minitest::Test
     tester['LINESTRING EMPTY', 'POLYGON EMPTY']
   end
 
+  def test_maximum_inscribed_circle
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:maximum_inscribed_circle)
+
+    geom = read('POLYGON ((100 200, 200 200, 200 100, 100 100, 100 200))')
+    output = geom.maximum_inscribed_circle(0.001)
+    assert_equal('LINESTRING (150 150, 150 200)', write(output))
+  end
+
   def test_minimum_width
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:minimum_width)
 
