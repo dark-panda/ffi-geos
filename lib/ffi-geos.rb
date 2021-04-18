@@ -470,6 +470,11 @@ module Geos
         :pointer, :pointer, :pointer, :pointer
       ],
 
+      GEOSUnionPrec_r: [
+        # *geom, *handle, *geom_a, *geom_b, precision
+        :pointer, :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSCoverageUnion_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer

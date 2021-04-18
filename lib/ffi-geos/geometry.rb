@@ -172,10 +172,15 @@ module Geos
     # Calling without a geom argument is equivalent to calling unary_union when
     # using GEOS 3.3+ and is equivalent to calling union_cascaded in older
     # versions.
-    def union(geom = nil)
+    def union(geom = nil, precision: nil)
       if geom
         check_geometry(geom)
-        cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+
+        if precision
+          cast_geometry_ptr(FFIGeos.GEOSUnionPrec_r(Geos.current_handle_pointer, ptr, geom.ptr, precision), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+        else
+          cast_geometry_ptr(FFIGeos.GEOSUnion_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+        end
       elsif respond_to?(:unary_union)
         unary_union
       else

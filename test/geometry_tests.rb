@@ -452,6 +452,17 @@ class GeometryTests < Minitest::Test
     )
   end
 
+  def test_union_with_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSUnionPrec_r)
+
+    geom_a = read('POINT (1.9 8.2)')
+    geom_b = read('POINT (4.1 9.8)')
+
+    result = geom_a.union(geom_b, precision: 2)
+
+    assert_equal('MULTIPOINT (2 8, 4 10)', write(result))
+  end
+
   def test_union_cascaded
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:union_cascaded)
 
