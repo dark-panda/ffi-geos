@@ -507,6 +507,22 @@ class GeometryTests < Minitest::Test
     )
   end
 
+  def test_unary_union_with_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSUnaryUnionPrec_r)
+
+    simple_tester(
+      :unary_union,
+      'POLYGON ((0 0, 0 12, 9 12, 9 15, 15 15, 15 9, 12 9, 12 0, 0 0))',
+      'MULTIPOLYGON(
+        ((0 0, 1 0, 1 1, 0 1, 0 0)),
+        ((10 10, 10 14, 14 14, 14 10, 10 10),
+        (11 11, 11 12, 12 12, 12 11, 11 11)),
+        ((0 0, 11 0, 11 11, 0 11, 0 0))
+      ))',
+      3
+    )
+  end
+
   def test_node
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:node)
 

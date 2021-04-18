@@ -196,8 +196,12 @@ module Geos
 
     if FFIGeos.respond_to?(:GEOSUnaryUnion_r)
       # Available in GEOS 3.3+
-      def unary_union
-        cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
+      def unary_union(precision = nil)
+        if precision
+          cast_geometry_ptr(FFIGeos.GEOSUnaryUnionPrec_r(Geos.current_handle_pointer, ptr, precision), srid_copy: srid)
+        else
+          cast_geometry_ptr(FFIGeos.GEOSUnaryUnion_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
+        end
       end
     end
 

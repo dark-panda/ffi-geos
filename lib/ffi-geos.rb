@@ -480,6 +480,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSUnaryUnionPrec_r: [
+        # *geom, *handle, *geom, precision
+        :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSNode_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer
