@@ -40,6 +40,10 @@ module TestHelper
     'GEOMETRYCOLLECTION EMPTY'
   end
 
+  EMPTY_BLOCK = proc do
+    nil
+  end
+
   def self.included(base)
     base.class_eval do
       attr_reader :reader, :reader_hex, :writer
@@ -53,11 +57,11 @@ module TestHelper
     @writer = Geos::WktWriter.new
   end
 
-  def read(*args)
-    if args[0][0] != '0'
-      reader.read(*args)
+  def read(*args, **options)
+    if args[0][0] == '0'
+      reader_hex.read_hex(*args, **options)
     else
-      reader_hex.read_hex(*args)
+      reader.read(*args, **options)
     end
   end
 

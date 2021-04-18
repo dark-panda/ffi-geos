@@ -16,7 +16,7 @@ class GeometryCollectionTests < Minitest::Test
     geom = read('GEOMETRYCOLLECTION(POINT(0 0))')
     assert_kind_of(Enumerable, geom.each)
     assert_kind_of(Enumerable, geom.to_enum)
-    assert_equal(geom, geom.each {})
+    assert_equal(geom, geom.each(&EMPTY_BLOCK))
   end
 
   def test_geometry_collection_array
@@ -173,7 +173,8 @@ class GeometryCollectionTests < Minitest::Test
   end
 
   def test_snap_to_grid
-    wkt = 'GEOMETRYCOLLECTION (LINESTRING (-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0), POLYGON ((-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0)), POINT (10.12 10.12))'
+    wkt = 'GEOMETRYCOLLECTION (LINESTRING (-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0), ' \
+      'POLYGON ((-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0)), POINT (10.12 10.12))'
 
     expected = 'GEOMETRYCOLLECTION (LINESTRING (-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0), POLYGON ((-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0)), POINT (10 10))'
 

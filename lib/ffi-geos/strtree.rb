@@ -23,18 +23,19 @@ module Geos
       geoms_and_objects = nil # forward declaration
       capacity = 10
 
-      if args.first.is_a?(Integer)
-        capacity = args.first
-      elsif args.first.is_a?(Array)
-        geoms_and_objects = if args.first.first.is_a?(Array)
-          args.first
-        else
-          args
-        end
+      case args.first
+        when Integer
+          capacity = args.first
+        when Array
+          geoms_and_objects = if args.first.first.is_a?(Array)
+            args.first
+          else
+            args
+          end
 
-        geoms_and_objects.each do |geom, _obj|
-          check_geometry(geom)
-        end
+          geoms_and_objects.each do |geom, _obj|
+            check_geometry(geom)
+          end
       end
 
       raise ArgumentError, 'STRtree capacity must be greater than 0' if capacity <= 0
@@ -97,7 +98,7 @@ module Geos
     def remove(geom, item)
       check_geometry(geom)
 
-      key = if storage = @storage.detect { |_k, v| v[:item] == item }
+      key = if (storage = @storage.detect { |_k, v| v[:item] == item })
         storage[0]
       end
 
@@ -137,16 +138,17 @@ module Geos
 
     def query(geom, ret = :item)
       query_all(geom).collect { |storage|
-        item = if ret.is_a?(Array)
-          storage.inject({}) do |memo, k|
-            memo.tap do
-              memo[k] = storage[k]
+        item = case ret
+          when Array
+            storage.inject({}) do |memo, k|
+              memo.tap do
+                memo[k] = storage[k]
+              end
             end
-          end
-        elsif ret == :all
-          storage
-        else
-          storage[ret]
+          when :all
+            storage
+          else
+            storage[ret]
         end
 
         item.tap do
@@ -164,10 +166,8 @@ module Geos
     end
     alias query_geoms query_geometries
 
-    def iterate
-      @storage.each_value do |v|
-        yield(v)
-      end
+    def iterate(&block)
+      @storage.each_value(&block)
     end
 
     if FFIGeos.respond_to?(:GEOSSTRtree_nearest_generic_r)

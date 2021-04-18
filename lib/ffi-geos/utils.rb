@@ -30,17 +30,18 @@ module Geos
       def create_point(*args)
         options = extract_options!(args)
 
-        if args.length == 1
-          cs = args.first
-        elsif args.length == 2
-          cs = CoordinateSequence.new(1, 2)
-          cs.x[0] = args[0].to_f
-          cs.y[0] = args[1].to_f
-        elsif args.length == 3
-          cs = CoordinateSequence.new(1, 3)
-          cs.x[0], cs.y[0], cs.z[0] = args.map(&:to_f)
-        else
-          raise ArgumentError, "Wrong number of arguments (#{args.length} for 1-3)"
+        case args.length
+          when 1
+            cs = args.first
+          when 2
+            cs = CoordinateSequence.new(1, 2)
+            cs.x[0] = args[0].to_f
+            cs.y[0] = args[1].to_f
+          when 3
+            cs = CoordinateSequence.new(1, 3)
+            cs.x[0], cs.y[0], cs.z[0] = args.map(&:to_f)
+          else
+            raise ArgumentError, "Wrong number of arguments (#{args.length} for 1-3)"
         end
 
         raise ArgumentError, 'IllegalArgumentException: Point coordinate list must contain a single element' if cs.length != 1

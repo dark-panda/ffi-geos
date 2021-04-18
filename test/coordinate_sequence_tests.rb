@@ -284,7 +284,7 @@ class CoordinateSequenceTests < Minitest::Test
 
     assert_kind_of(Enumerable, cs.x.each)
     assert_kind_of(Enumerable, cs.x.to_enum)
-    assert_equal(cs.x, cs.x.each {})
+    assert_equal(cs.x, cs.x.each(&EMPTY_BLOCK))
   end
 
   def test_options_hash
@@ -299,7 +299,7 @@ class CoordinateSequenceTests < Minitest::Test
 
     assert_kind_of(Enumerable, cs.each)
     assert_kind_of(Enumerable, cs.to_enum)
-    assert_equal(cs, cs.each {})
+    assert_equal(cs, cs.each(&EMPTY_BLOCK))
   end
 
   def test_array_like_access

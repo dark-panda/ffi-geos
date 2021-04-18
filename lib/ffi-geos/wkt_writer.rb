@@ -2,10 +2,7 @@
 
 module Geos
   class WktWriter
-    attr_reader :ptr
-    attr_reader :old_3d
-    attr_reader :rounding_precision
-    attr_reader :trim
+    attr_reader :ptr, :old_3d, :rounding_precision, :trim
 
     def initialize(options = {})
       options = {

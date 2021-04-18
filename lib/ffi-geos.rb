@@ -50,7 +50,7 @@ module Geos
 
   module FFIGeos
     def self.search_paths
-      @search_paths ||= begin
+      @search_paths ||= \
         if ENV['GEOS_LIBRARY_PATH']
           [ENV['GEOS_LIBRARY_PATH']]
         elsif FFI::Platform::IS_WINDOWS
@@ -58,7 +58,6 @@ module Geos
         else
           ['/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386}-linux-gnu']
         end
-      end
     end
 
     def self.find_lib(lib)
@@ -72,10 +71,9 @@ module Geos
     end
 
     def self.geos_library_path
-      @geos_library_path ||= begin
+      @geos_library_path ||= \
         # On MingW the libraries have version numbers
         find_lib('{lib,}geos_c{,-?}')
-      end
     end
 
     # For backwards compatibility with older ffi-geos versions where this
