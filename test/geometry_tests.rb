@@ -336,6 +336,18 @@ class GeometryTests < Minitest::Test
     end
   end
 
+  def test_sym_difference_with_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSSymDifferencePrec_r)
+
+    comparison_tester(
+      :sym_difference,
+      'GEOMETRYCOLLECTION (POLYGON ((0 10, 6 10, 10 10, 10 0, 6 0, 0 0, 0 10)), LINESTRING (6 -10, 6 0))',
+      'POLYGON((0 0, 10 0, 10 10, 0 10, 0 0))',
+      'LINESTRING(5 -10, 5 10)',
+      precision: 2
+    )
+  end
+
   def test_boundary
     simple_tester(
       :boundary,

@@ -83,7 +83,7 @@ module Geos
       CoordinateSequence.new(FFIGeos.GEOSGeom_getCoordSeq_r(Geos.current_handle_pointer, ptr), false, self)
     end
 
-    def intersection(geom, precision: nil, **)
+    def intersection(geom, precision: nil)
       check_geometry(geom)
 
       if precision
@@ -154,9 +154,14 @@ module Geos
       end
     end
 
-    def sym_difference(geom)
+    def sym_difference(geom, precision: nil)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSSymDifference_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+
+      if precision
+        cast_geometry_ptr(FFIGeos.GEOSSymDifferencePrec_r(Geos.current_handle_pointer, ptr, geom.ptr, precision), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      else
+        cast_geometry_ptr(FFIGeos.GEOSSymDifference_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      end
     end
     alias symmetric_difference sym_difference
 
