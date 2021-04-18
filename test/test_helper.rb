@@ -124,7 +124,11 @@ module TestHelper
     result = geom.send(method, *args)
     result = write(result) if result.is_a?(Geos::Geometry)
 
-    assert_equal(expected, result)
+    if expected.nil?
+      assert_nil(result)
+    else
+      assert_equal(expected, result)
+    end
   end
 
   def simple_bang_tester(method, expected, wkt, *args)

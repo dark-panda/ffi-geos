@@ -1230,7 +1230,11 @@ class GeometryTests < Minitest::Test
       cs = geom_1.nearest_points(geom_2)
       result = cs.to_s if cs
 
-      assert_equal(expected, result)
+      if expected.nil?
+        assert_nil(result)
+      else
+        assert_equal(expected, result)
+      end
     }
 
     tester[
