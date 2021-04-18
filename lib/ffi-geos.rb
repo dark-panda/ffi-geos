@@ -445,6 +445,11 @@ module Geos
         :pointer, :pointer, :pointer, :pointer
       ],
 
+      GEOSDifferencePrec_r: [
+        # *geom, *handle, *geom_a, *geom_b, precision
+        :pointer, :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSSymDifference_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer

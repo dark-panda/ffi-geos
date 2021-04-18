@@ -238,6 +238,18 @@ class GeometryTests < Minitest::Test
     )
   end
 
+  def test_difference_with_precision
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSDifferencePrec_r)
+
+    comparison_tester(
+      :difference,
+      'MULTILINESTRING ((2 8, 4 8), (6 8, 10 8))',
+      'LINESTRING (2 8, 10 8)',
+      'LINESTRING (3.9 8.1, 6.1 7.9)',
+      precision: 2
+    )
+  end
+
   def test_sym_difference
     %w{ sym_difference symmetric_difference }.each do |method|
       comparison_tester(

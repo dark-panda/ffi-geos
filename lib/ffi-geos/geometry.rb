@@ -144,9 +144,14 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSConvexHull_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end
 
-    def difference(geom)
+    def difference(geom, precision: nil)
       check_geometry(geom)
-      cast_geometry_ptr(FFIGeos.GEOSDifference_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+
+      if precision
+        cast_geometry_ptr(FFIGeos.GEOSDifferencePrec_r(Geos.current_handle_pointer, ptr, geom.ptr, precision), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      else
+        cast_geometry_ptr(FFIGeos.GEOSDifference_r(Geos.current_handle_pointer, ptr, geom.ptr), srid_copy: pick_srid_from_geoms(srid, geom.srid))
+      end
     end
 
     def sym_difference(geom)
