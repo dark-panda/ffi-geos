@@ -60,7 +60,7 @@ module Geos
       end
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSSTRtree_destroy_r(Geos.current_handle_pointer, ptr)
     end
 

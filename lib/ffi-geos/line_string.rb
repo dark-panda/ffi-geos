@@ -126,9 +126,9 @@ module Geos
               dseg = (fraction - total_length) / seg_length
 
               args = []
-              args << p_1.x + ((p_2.x - p_1.x) * dseg)
-              args << p_1.y + ((p_2.y - p_1.y) * dseg)
-              args << p_1.z + ((p_2.z - p_1.z) * dseg) if has_z?
+              args << (p_1.x + ((p_2.x - p_1.x) * dseg))
+              args << (p_1.y + ((p_2.y - p_1.y) * dseg))
+              args << (p_1.z + ((p_2.z - p_1.z) * dseg)) if has_z?
 
               args << { srid: pick_srid_according_to_policy(srid) } unless srid.zero?
 

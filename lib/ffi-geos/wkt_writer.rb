@@ -21,11 +21,11 @@ module Geos
       set_options(options)
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSWKTWriter_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
-    def set_options(options) #:nodoc:
+    def set_options(options) # :nodoc:
       [:trim, :old_3d, :rounding_precision, :output_dimensions].each do |k|
         send("#{k}=", options[k]) if respond_to?("#{k}=") && options.key?(k)
       end

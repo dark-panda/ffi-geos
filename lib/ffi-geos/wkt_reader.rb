@@ -28,7 +28,7 @@ module Geos
       raise ParseError, e
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSWKTReader_destroy_r(Geos.current_handle_pointer, ptr)
     end
   end

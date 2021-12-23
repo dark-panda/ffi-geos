@@ -24,7 +24,7 @@ module Geos
       @ptr.autorelease = !!options[:auto_free]
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSPreparedGeom_destroy_r(Geos.current_handle_pointer, ptr)
     end
 

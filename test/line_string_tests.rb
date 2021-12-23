@@ -264,7 +264,7 @@ class LineStringTests < Minitest::Test
 
     affine_tester(:rotate_x, 'LINESTRING Z (1 -1 -1, 10 -10 -10)', wkt, Math::PI)
     affine_tester(:rotate_x, 'LINESTRING Z (1 -1 1, 10 -10 10)', wkt, Math::PI / 2)
-    affine_tester(:rotate_x, 'LINESTRING Z (1 1 -1, 10 10 -10)', wkt, Math::PI + Math::PI / 2)
+    affine_tester(:rotate_x, 'LINESTRING Z (1 1 -1, 10 10 -10)', wkt, Math::PI + (Math::PI / 2))
     affine_tester(:rotate_x, wkt, wkt, Math::PI * 2)
   end
 
@@ -276,7 +276,7 @@ class LineStringTests < Minitest::Test
 
     affine_tester(:rotate_y, 'LINESTRING Z (-1 1 -1, -10 10 -10)', wkt, Math::PI)
     affine_tester(:rotate_y, 'LINESTRING Z (1 1 -1, 10 10 -10)', wkt, Math::PI / 2)
-    affine_tester(:rotate_y, 'LINESTRING Z (-1 1 1, -10 10 10)', wkt, Math::PI + Math::PI / 2)
+    affine_tester(:rotate_y, 'LINESTRING Z (-1 1 1, -10 10 10)', wkt, Math::PI + (Math::PI / 2))
     affine_tester(:rotate_y, wkt, wkt, Math::PI * 2)
   end
 
@@ -287,7 +287,7 @@ class LineStringTests < Minitest::Test
 
     affine_tester(:rotate_z, 'LINESTRING (-1 -1, -10 -10)', wkt, Math::PI)
     affine_tester(:rotate_z, 'LINESTRING (-1 1, -10 10)', wkt, Math::PI / 2)
-    affine_tester(:rotate_z, 'LINESTRING (1 -1, 10 -10)', wkt, Math::PI + Math::PI / 2)
+    affine_tester(:rotate_z, 'LINESTRING (1 -1, 10 -10)', wkt, Math::PI + (Math::PI / 2))
     affine_tester(:rotate_z, wkt, wkt, Math::PI * 2)
   end
 

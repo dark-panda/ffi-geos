@@ -41,7 +41,7 @@ module TestHelper
   end
 
   EMPTY_BLOCK = proc do
-    nil
+    # no-op
   end
 
   def self.included(base)

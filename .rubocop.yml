@@ -80,6 +80,8 @@ AllCops:
   # When specifying style guide URLs, any paths and/or fragments will be
   # evaluated relative to the base URL.
   StyleGuideBaseURL: https://rubystyle.guide
+  # Documentation URLs will be constructed using the base URL.
+  DocumentationBaseURL: https://docs.rubocop.org/rubocop
   # Extra details are not displayed in offense messages by default. Change
   # behavior by overriding ExtraDetails, or by giving the
   # `-E/--extra-details` option.
@@ -132,7 +134,7 @@ AllCops:
   # What MRI version of the Ruby interpreter is the inspected code intended to
   # run on? (If there is more than one, set this to the lowest version.)
   # If a value is specified for TargetRubyVersion then it is used. Acceptable
-  # values are specificed as a float (i.e. 2.5); the teeny version of Ruby
+  # values are specified as a float (i.e. 3.0); the teeny version of Ruby
   # should not be included. If the project specifies a Ruby version in the
   # .tool-versions or .ruby-version files, Gemfile or gems.rb file, RuboCop will
   # try to determine the desired version of Ruby by inspecting the
@@ -140,7 +142,7 @@ AllCops:
   # or gems.locked file. (Although the Ruby version is specified in the Gemfile
   # or gems.rb file, RuboCop reads the final value from the lock file.) If the
   # Ruby version is still unresolved, RuboCop will use the oldest officially
-  # supported Ruby version (currently Ruby 2.4).
+  # supported Ruby version (currently Ruby 2.5).
   TargetRubyVersion: ~
   # Determines if a notification for extension libraries should be shown when
   # rubocop is run. Keys are the name of the extension, and values are an array
@@ -152,6 +154,7 @@ AllCops:
     rubocop-minitest: [minitest]
     rubocop-sequel: [sequel]
     rubocop-rake: [rake]
+    rubocop-graphql: [graphql]
 
 #################### Bundler ###############################
 
@@ -176,6 +179,34 @@ Bundler/GemComment:
   IgnoredGems: []
   OnlyFor: []
 
+Bundler/GemFilename:
+  Description: 'Enforces the filename for managing gems.'
+  Enabled: true
+  VersionAdded: '1.20'
+  EnforcedStyle: 'Gemfile'
+  SupportedStyles:
+    - 'Gemfile'
+    - 'gems.rb'
+  Include:
+    - '**/Gemfile'
+    - '**/gems.rb'
+    - '**/Gemfile.lock'
+    - '**/gems.locked'
+
+Bundler/GemVersion:
+  Description: 'Requires or forbids specifying gem versions.'
+  Enabled: false
+  VersionAdded: '1.14'
+  EnforcedStyle: 'required'
+  SupportedStyles:
+    - 'required'
+    - 'forbidden'
+  Include:
+    - '**/*.gemfile'
+    - '**/Gemfile'
+    - '**/gems.rb'
+  AllowedGems: []
+
 Bundler/InsecureProtocolSource:
   Description: >-
                  The source `:gemcutter`, `:rubygems` and `:rubyforge` are deprecated
@@ -183,6 +214,7 @@ Bundler/InsecureProtocolSource:
                  'https://rubygems.org' if possible, or 'http://rubygems.org' if not.
   Enabled: true
   VersionAdded: '0.50'
+  AllowHttpProtocol: true
   Include:
     - '**/*.gemfile'
     - '**/Gemfile'
@@ -231,11 +263,20 @@ Gemspec/OrderedDependencies:
   Include:
     - '**/*.gemspec'
 
+Gemspec/RequireMFA:
+  Description: 'Checks that the gemspec has metadata to require MFA from RubyGems.'
+  Enabled: true
+  VersionAdded: '1.23'
+  Reference:
+    - https://guides.rubygems.org/mfa-requirement-opt-in/
+  Include:
+    - '**/*.gemspec'
+
 Gemspec/RequiredRubyVersion:
   Description: 'Checks that `required_ruby_version` of gemspec is specified and equal to `TargetRubyVersion` of .rubocop.yml.'
   Enabled: true
   VersionAdded: '0.52'
-  VersionChanged: '0.89'
+  VersionChanged: '1.22'
   Include:
     - '**/*.gemspec'
 
@@ -258,8 +299,8 @@ Layout/AccessModifierIndentation:
   SupportedStyles:
     - outdent
     - indent
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/ArgumentAlignment:
@@ -287,8 +328,8 @@ Layout/ArgumentAlignment:
   SupportedStyles:
     - with_first_argument
     - with_fixed_indentation
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/ArrayAlignment:
@@ -316,8 +357,8 @@ Layout/ArrayAlignment:
   SupportedStyles:
     - with_first_element
     - with_fixed_indentation
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/AssignmentIndentation:
@@ -327,8 +368,8 @@ Layout/AssignmentIndentation:
   Enabled: true
   VersionAdded: '0.49'
   VersionChanged: '0.77'
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/BeginEndAlignment:
@@ -365,18 +406,19 @@ Layout/BlockEndNewline:
   VersionAdded: '0.49'
 
 Layout/CaseIndentation:
-  Description: 'Indentation of when in a case/when/[else/]end.'
+  Description: 'Indentation of when in a case/(when|in)/[else/]end.'
   StyleGuide: '#indent-when-to-case'
   Enabled: true
   VersionAdded: '0.49'
+  VersionChanged: '1.16'
   EnforcedStyle: end
   SupportedStyles:
     - case
     - end
   IndentOneStep: true
-  # By default, the indentation width from `Layout/IndentationWidth` is used.
-  # But it can be overridden by setting this parameter.
-  # This only matters if `IndentOneStep` is `true`
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
+  # This only matters if `IndentOneStep` is `true`.
   IndentationWidth: ~
 
 Layout/ClassStructure:
@@ -411,7 +453,11 @@ Layout/ClosingParenthesisIndentation:
 Layout/CommentIndentation:
   Description: 'Indentation of comments.'
   Enabled: true
+  # When true, allows comments to have extra indentation if that aligns them
+  # with a comment on the preceding line.
+  AllowForAlignment: false
   VersionAdded: '0.49'
+  VersionChanged: '1.24'
 
 Layout/ConditionPosition:
   Description: >-
@@ -483,13 +529,13 @@ Layout/EmptyLineBetweenDefs:
   StyleGuide: '#empty-lines-between-methods'
   Enabled: true
   VersionAdded: '0.49'
-  VersionChanged: '1.7'
+  VersionChanged: '1.23'
   EmptyLineBetweenMethodDefs: true
   EmptyLineBetweenClassDefs: true
   EmptyLineBetweenModuleDefs: true
-  # If `true`, this parameter means that single line method definitions don't
-  # need an empty line between them.
-  AllowAdjacentOneLineDefs: false
+  # `AllowAdjacentOneLineDefs` means that single line method definitions don't
+  # need an empty line between them. `true` by default.
+  AllowAdjacentOneLineDefs: true
   # Can be array to specify minimum and maximum number of empty lines, e.g. [1, 2]
   NumberOfEmptyLines: 1
 
@@ -653,8 +699,8 @@ Layout/FirstArgumentIndentation:
     # Same as `special_for_inner_method_call` except that the special rule only
     # applies if the outer method call encloses its arguments in parentheses.
     - special_for_inner_method_call_in_parentheses
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/FirstArrayElementIndentation:
@@ -680,8 +726,8 @@ Layout/FirstArrayElementIndentation:
     - special_inside_parentheses
     - consistent
     - align_brackets
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/FirstArrayElementLineBreak:
@@ -712,8 +758,8 @@ Layout/FirstHashElementIndentation:
     - special_inside_parentheses
     - consistent
     - align_braces
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/FirstHashElementLineBreak:
@@ -748,8 +794,8 @@ Layout/FirstParameterIndentation:
   SupportedStyles:
     - consistent
     - align_parentheses
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/HashAlignment:
@@ -759,7 +805,7 @@ Layout/HashAlignment:
   Enabled: true
   AllowMultipleStyles: true
   VersionAdded: '0.49'
-  VersionChanged: '0.77'
+  VersionChanged: '1.16'
   # Alignment of entries using hash rocket as separator. Valid values are:
   #
   # key - left alignment of keys
@@ -870,8 +916,8 @@ Layout/IndentationStyle:
   Enabled: true
   VersionAdded: '0.49'
   VersionChanged: '0.82'
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   # It is used during auto-correction to determine how many spaces should
   # replace each tab.
   IndentationWidth: ~
@@ -910,13 +956,26 @@ Layout/LeadingEmptyLines:
   VersionAdded: '0.57'
   VersionChanged: '0.77'
 
+Layout/LineEndStringConcatenationIndentation:
+  Description: >-
+                 Checks the indentation of the next line after a line that
+                 ends with a string literal and a backslash.
+  Enabled: true
+  VersionAdded: '1.18'
+  EnforcedStyle: aligned
+  SupportedStyles:
+    - aligned
+    - indented
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
+  IndentationWidth: ~
+
 Layout/LineLength:
   Description: 'Checks that line length does not exceed the configured limit.'
   StyleGuide: '#max-line-length'
   Enabled: true
   VersionAdded: '0.25'
   VersionChanged: '1.4'
-  AutoCorrect: true
   Max: 300
   # To make it possible to copy or click on URIs in the code, we allow lines
   # containing a URI to be longer than Max.
@@ -1040,8 +1099,8 @@ Layout/MultilineMethodCallIndentation:
     - aligned
     - indented
     - indented_relative_to_receiver
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/MultilineMethodDefinitionBraceLayout:
@@ -1070,8 +1129,8 @@ Layout/MultilineOperationIndentation:
   SupportedStyles:
     - aligned
     - indented
-  # By default, the indentation width from `Layout/IndentationWidth` is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
 
 Layout/ParameterAlignment:
@@ -1099,14 +1158,27 @@ Layout/ParameterAlignment:
   SupportedStyles:
     - with_first_parameter
     - with_fixed_indentation
-  # By default, the indentation width from Layout/IndentationWidth is used
-  # But it can be overridden by setting this parameter
+  # By default the indentation width from `Layout/IndentationWidth` is used,
+  # but it can be overridden by setting this parameter.
   IndentationWidth: ~
+
+Layout/RedundantLineBreak:
+  Description: >-
+                 Do not break up an expression into multiple lines when it fits
+                 on a single line.
+  Enabled: false
+  InspectBlocks: false
+  VersionAdded: '1.13'
 
 Layout/RescueEnsureAlignment:
   Description: 'Align rescues and ensures correctly.'
   Enabled: true
   VersionAdded: '0.49'
+
+Layout/SingleLineBlockChain:
+  Description: 'Put method call on a separate line if chained to a single line block.'
+  Enabled: false
+  VersionAdded: '1.14'
 
 Layout/SpaceAfterColon:
   Description: 'Use spaces after colons.'
@@ -1286,7 +1358,7 @@ Layout/SpaceInsideBlockBraces:
 
 Layout/SpaceInsideHashLiteralBraces:
   Description: "Use spaces inside hash literal braces - or don't."
-  StyleGuide: '#spaces-operators'
+  StyleGuide: '#spaces-braces'
   Enabled: true
   VersionAdded: '0.49'
   EnforcedStyle: space
@@ -1307,10 +1379,11 @@ Layout/SpaceInsideParens:
   StyleGuide: '#spaces-braces'
   Enabled: true
   VersionAdded: '0.49'
-  VersionChanged: '0.55'
+  VersionChanged: '1.22'
   EnforcedStyle: no_space
   SupportedStyles:
     - space
+    - compact
     - no_space
 
 Layout/SpaceInsidePercentLiteralDelimiters:
@@ -1382,6 +1455,8 @@ Lint/AmbiguousBlockAssociation:
   StyleGuide: '#syntax'
   Enabled: true
   VersionAdded: '0.48'
+  VersionChanged: '1.13'
+  IgnoredMethods: []
 
 Lint/AmbiguousOperator:
   Description: >-
@@ -1391,6 +1466,20 @@ Lint/AmbiguousOperator:
   Enabled: true
   VersionAdded: '0.17'
   VersionChanged: '0.83'
+
+Lint/AmbiguousOperatorPrecedence:
+  Description: >-
+                 Checks for expressions containing multiple binary operations with
+                 ambiguous precedence.
+  Enabled: true
+  VersionAdded: '1.21'
+
+Lint/AmbiguousRange:
+  Description: Checks for ranges with ambiguous boundaries.
+  Enabled: true
+  VersionAdded: '1.19'
+  SafeAutoCorrect: false
+  RequireParenthesesForMethodChains: false
 
 Lint/AmbiguousRegexpLiteral:
   Description: >-
@@ -1422,9 +1511,9 @@ Lint/BinaryOperatorWithIdenticalOperands:
 Lint/BooleanSymbol:
   Description: 'Check for `:true` and `:false` symbols.'
   Enabled: true
-  Safe: false
+  SafeAutoCorrect: false
   VersionAdded: '0.50'
-  VersionChanged: '0.83'
+  VersionChanged: '1.22'
 
 Lint/CircularArgumentReference:
   Description: "Default values in optional keyword arguments and optional ordinal arguments should not refer back to the name of the argument."
@@ -1456,6 +1545,7 @@ Lint/Debugger:
   Enabled: true
   VersionAdded: '0.14'
   VersionChanged: '1.10'
+  #DebuggerReceivers: [] # deprecated
   DebuggerMethods:
     # Groups are available so that a specific group can be disabled in
     # a user's configuration, but are otherwise not significant.
@@ -1469,6 +1559,11 @@ Lint/Debugger:
     Capybara:
       - save_and_open_page
       - save_and_open_screenshot
+    debug.rb:
+      - binding.b
+      - binding.break
+      - Kernel.binding.b
+      - Kernel.binding.break
     Pry:
       - binding.pry
       - binding.remote_pry
@@ -1477,6 +1572,8 @@ Lint/Debugger:
     Rails:
       - debugger
       - Kernel.debugger
+    RubyJard:
+      - jard
     WebConsole:
       - binding.console
 
@@ -1489,6 +1586,7 @@ Lint/DeprecatedConstants:
   Description: 'Checks for deprecated constants.'
   Enabled: true
   VersionAdded: '1.8'
+  VersionChanged: '1.22'
   # You can configure deprecated constants.
   # If there is an alternative method, you can set alternative value as `Alternative`.
   # And you can set the deprecated version as `DeprecatedVersion`.
@@ -1509,6 +1607,9 @@ Lint/DeprecatedConstants:
     'FALSE':
       Alternative: 'false'
       DeprecatedVersion: '2.4'
+    'Net::HTTPServerException':
+      Alternative: 'Net::HTTPClientException'
+      DeprecatedVersion: '2.6'
     'Random::DEFAULT':
       Alternative: 'Random.new'
       DeprecatedVersion: '3.0'
@@ -1584,7 +1685,7 @@ Lint/EmptyBlock:
   Description: 'This cop checks for blocks without a body.'
   Enabled: true
   VersionAdded: '1.1'
-  VersionChanged: '1.3'
+  VersionChanged: '1.15'
   AllowComments: true
   AllowEmptyLambdas: true
 
@@ -1616,6 +1717,12 @@ Lint/EmptyFile:
   Enabled: true
   AllowComments: true
   VersionAdded: '0.90'
+
+Lint/EmptyInPattern:
+  Description: 'Checks for the presence of `in` pattern branches without a body.'
+  Enabled: true
+  AllowComments: true
+  VersionAdded: '1.16'
 
 Lint/EmptyInterpolation:
   Description: 'Checks for empty string interpolation.'
@@ -1693,6 +1800,13 @@ Lint/ImplicitStringConcatenation:
                  could better be represented as a single string literal.
   Enabled: true
   VersionAdded: '0.36'
+
+Lint/IncompatibleIoSelectWithFiberScheduler:
+  Description: 'Checks for `IO.select` that is incompatible with Fiber Scheduler.'
+  Enabled: true
+  SafeAutoCorrect: false
+  VersionAdded: '1.21'
+  VersionChanged: '1.24'
 
 Lint/IneffectiveAccessModifier:
   Description: >-
@@ -1775,7 +1889,6 @@ Lint/MultipleComparison:
   Enabled: true
   VersionAdded: '0.47'
   VersionChanged: '1.1'
-  AllowMethodComparison: true
 
 Lint/NestedMethodDefinition:
   Description: 'Do not use nested method definitions.'
@@ -1958,6 +2071,11 @@ Lint/RequireParentheses:
   Enabled: true
   VersionAdded: '0.18'
 
+Lint/RequireRelativeSelfPath:
+  Description: 'Checks for uses a file requiring itself with `require_relative`.'
+  Enabled: true
+  VersionAdded: '1.22'
+
 Lint/RescueException:
   Description: 'Avoid rescuing the Exception class.'
   StyleGuide: '#no-blind-rescues'
@@ -2064,6 +2182,7 @@ Lint/SymbolConversion:
   Description: 'Checks for unnecessary symbol conversions.'
   Enabled: true
   VersionAdded: '1.9'
+  VersionChanged: '1.16'
   EnforcedStyle: strict
   SupportedStyles:
     - strict
@@ -2209,6 +2328,11 @@ Lint/UselessMethodDefinition:
   Safe: false
   AllowComments: true
 
+Lint/UselessRuby2Keywords:
+  Description: 'Finds unnecessary uses of `ruby2_keywords`.'
+  Enabled: true
+  VersionAdded: '1.23'
+
 Lint/UselessSetterCall:
   Description: 'Checks for useless setter call to a local variable.'
   Enabled: true
@@ -2255,6 +2379,7 @@ Metrics/BlockLength:
   CountComments: false  # count full line comments?
   Max: 50
   CountAsOne: []
+  #ExcludedMethods: [] # deprecated, retained for backwards compatibility
   IgnoredMethods:
     # By default, exclude the `#refine` method, as it tends to have larger
     # associated blocks.
@@ -2300,6 +2425,7 @@ Metrics/MethodLength:
   CountComments: false  # count full line comments?
   Max: 50
   CountAsOne: []
+  #ExcludedMethods: [] # deprecated, retained for backwards compatibility
   IgnoredMethods: []
 
 Metrics/ModuleLength:
@@ -2363,6 +2489,15 @@ Naming/BinaryOperatorParameterName:
   VersionAdded: '0.50'
   VersionChanged: '1.2'
 
+Naming/BlockForwarding:
+  Description: 'Use anonymous block forwarding.'
+  Enabled: true
+  VersionAdded: '1.24'
+  EnforcedStyle: anonymous
+  SupportedStyles:
+    - anonymous
+    - explicit
+
 Naming/BlockParameterName:
   Description: >-
                  Checks for block parameter names that contain capital letters,
@@ -2412,6 +2547,13 @@ Naming/FileName:
   # whether each source file's class or module name matches the file name --
   # not whether the nested module hierarchy matches the subdirectory path.
   CheckDefinitionPathHierarchy: true
+  # paths that are considered root directories, for example "lib" in most ruby projects
+  # or "app/models" in rails projects
+  CheckDefinitionPathHierarchyRoots:
+    - lib
+    - spec
+    - test
+    - src
   # If non-`nil`, expect all source file names to match the following regex.
   # Only the file name itself is matched, not the entire file path.
   # Use anchors as necessary if you want to match the entire name rather than
@@ -2481,6 +2623,33 @@ Naming/HeredocDelimiterNaming:
   VersionAdded: '0.50'
   ForbiddenDelimiters:
     - !ruby/regexp '/(^|\s)(EO[A-Z]{1}|END)(\s|$)/'
+
+Naming/InclusiveLanguage:
+  Description: 'Recommend the use of inclusive language instead of problematic terms.'
+  Enabled: false
+  VersionAdded: '1.18'
+  VersionChanged: '1.21'
+  CheckIdentifiers: true
+  CheckConstants: true
+  CheckVariables: true
+  CheckStrings: false
+  CheckSymbols: true
+  CheckComments: true
+  CheckFilepaths: true
+  FlaggedTerms:
+    whitelist:
+      Regex: !ruby/regexp '/white[-_\s]?list/'
+      Suggestions:
+        - allowlist
+        - permit
+    blacklist:
+      Regex: !ruby/regexp '/black[-_\s]?list/'
+      Suggestions:
+        - denylist
+        - block
+    slave:
+      WholeWord: true
+      Suggestions: ['replica', 'secondary', 'follower']
 
 Naming/MemoizedInstanceVariableName:
   Description: >-
@@ -2615,6 +2784,14 @@ Security/Eval:
   Enabled: true
   VersionAdded: '0.47'
 
+Security/IoMethods:
+  Description: >-
+                 Checks for the first argument to `IO.read`, `IO.binread`, `IO.write`, `IO.binwrite`,
+                 `IO.foreach`, and `IO.readlines`.
+  Enabled: true
+  Safe: false
+  VersionAdded: '1.22'
+
 Security/JSONLoad:
   Description: >-
                  Prefer usage of `JSON.parse` over `JSON.load` due to potential
@@ -2622,10 +2799,9 @@ Security/JSONLoad:
   Reference: 'https://ruby-doc.org/stdlib-2.7.0/libdoc/json/rdoc/JSON.html#method-i-load'
   Enabled: true
   VersionAdded: '0.43'
-  VersionChanged: '0.44'
+  VersionChanged: '1.22'
   # Autocorrect here will change to a method that may cause crashes depending
   # on the value of the argument.
-  AutoCorrect: false
   SafeAutoCorrect: false
 
 Security/MarshalLoad:
@@ -2691,8 +2867,9 @@ Style/AndOr:
   Description: 'Use &&/|| instead of and/or.'
   StyleGuide: '#no-and-or-or'
   Enabled: true
+  SafeAutoCorrect: false
   VersionAdded: '0.9'
-  VersionChanged: '0.25'
+  VersionChanged: '1.21'
   # Whether `and` and `or` are banned only in conditionals (conditionals)
   # or completely (always).
   EnforcedStyle: conditionals
@@ -2728,7 +2905,7 @@ Style/AsciiComments:
   StyleGuide: '#english-comments'
   Enabled: true
   VersionAdded: '0.9'
-  VersionChanged: '0.52'
+  VersionChanged: '1.21'
   AllowedChars:
     - ©
 
@@ -2890,7 +3067,7 @@ Style/CaseEquality:
   Enabled: true
   VersionAdded: '0.9'
   VersionChanged: '0.89'
-  # If AllowOnConstant is enabled, the cop will ignore violations when the receiver of
+  # If `AllowOnConstant` option is enabled, the cop will ignore violations when the receiver of
   # the case equality operator is a constant.
   #
   #   # bad
@@ -3065,7 +3242,7 @@ Style/CommentAnnotation:
   StyleGuide: '#annotate-keywords'
   Enabled: true
   VersionAdded: '0.10'
-  VersionChanged: '1.3'
+  VersionChanged: '1.20'
   Keywords:
     - TODO
     - FIXME
@@ -3073,12 +3250,14 @@ Style/CommentAnnotation:
     - HACK
     - REVIEW
     - NOTE
+  RequireColon: true
 
 Style/CommentedKeyword:
   Description: 'Do not place comments on the same line as certain keywords.'
   Enabled: true
+  SafeAutoCorrect: false
   VersionAdded: '0.51'
-  VersionChanged: '1.7'
+  VersionChanged: '1.19'
 
 Style/ConditionalAssignment:
   Description: >-
@@ -3331,6 +3510,18 @@ Style/ExponentialNotation:
     - engineering
     - integral
 
+Style/FileRead:
+  Description: 'Favor `File.(bin)read` convenience methods.'
+  StyleGuide: '#file-read'
+  Enabled: true
+  VersionAdded: '1.24'
+
+Style/FileWrite:
+  Description: 'Favor `File.(bin)write` convenience methods.'
+  StyleGuide: '#file-write'
+  Enabled: true
+  VersionAdded: '1.24'
+
 Style/FloatDivision:
   Description: 'For performing float division, coerce one side only.'
   StyleGuide: '#float-division'
@@ -3450,6 +3641,7 @@ Style/HashAsLastArrayItem:
 
 Style/HashConversion:
   Description: 'Avoid Hash[] in favor of ary.to_h or literal hashes.'
+  StyleGuide: '#avoid-hash-constructor'
   Enabled: true
   VersionAdded: '1.10'
   VersionChanged: '1.11'
@@ -3459,8 +3651,10 @@ Style/HashEachMethods:
   Description: 'Use Hash#each_key and Hash#each_value.'
   StyleGuide: '#hash-each'
   Enabled: true
-  VersionAdded: '0.80'
   Safe: false
+  VersionAdded: '0.80'
+  VersionChanged: '1.16'
+  AllowedReceivers: []
 
 Style/HashExcept:
   Description: >-
@@ -3486,7 +3680,7 @@ Style/HashSyntax:
   StyleGuide: '#hash-literals'
   Enabled: true
   VersionAdded: '0.9'
-  VersionChanged: '0.43'
+  VersionChanged: '1.24'
   EnforcedStyle: ruby19
   SupportedStyles:
     # checks for 1.9 syntax (e.g. {a: 1}) for all symbol keys
@@ -3497,6 +3691,13 @@ Style/HashSyntax:
     - no_mixed_keys
     # enforces both ruby19 and no_mixed_keys styles
     - ruby19_no_mixed_keys
+  # Force hashes that have a hash value omission
+  EnforcedShorthandSyntax: always
+  SupportedShorthandSyntax:
+    # forces use of the 3.1 syntax (e.g. {foo:}) when the hash key and value are the same.
+    - always
+    # forces use of explicit hash literal value.
+    - never
   # Force hashes that have a symbol value to use hash rockets
   UseHashRocketsWithSymbolValues: false
   # Do not suggest { a?: 1 } over { :a? => 1 } in ruby19 style
@@ -3522,7 +3723,9 @@ Style/IdenticalConditionalBranches:
                  line at the end of each branch, which can validly be moved
                  out of the conditional.
   Enabled: true
+  SafeAutoCorrect: false
   VersionAdded: '0.36'
+  VersionChanged: '1.19'
 
 Style/IfInsideElse:
   Description: 'Finds if nodes inside else, which can be converted to elsif.'
@@ -3569,10 +3772,16 @@ Style/ImplicitRuntimeError:
   Enabled: false
   VersionAdded: '0.41'
 
+Style/InPatternThen:
+  Description: 'Checks for `in;` uses in `case` expressions.'
+  StyleGuide: '#no-in-pattern-semicolons'
+  Enabled: true
+  VersionAdded: '1.16'
+
 Style/InfiniteLoop:
   Description: >-
                  Use Kernel#loop for infinite loops.
-                 This cop is unsafe in the body may raise a `StopIteration` exception.
+                 This cop is unsafe if the body may raise a `StopIteration` exception.
   Safe: false
   StyleGuide: '#infinite-loop'
   Enabled: true
@@ -3664,6 +3873,12 @@ Style/LineEndConcatenation:
   SafeAutoCorrect: false
   VersionAdded: '0.18'
   VersionChanged: '0.64'
+
+Style/MapToHash:
+  Description: 'Prefer `to_h` with a block over `map.to_h`.'
+  Enabled: true
+  VersionAdded: '1.24'
+  Safe: false
 
 Style/MethodCallWithArgsParentheses:
   Description: 'Use parentheses for method calls with arguments.'
@@ -3797,6 +4012,12 @@ Style/MultilineIfThen:
   VersionAdded: '0.9'
   VersionChanged: '0.26'
 
+Style/MultilineInPatternThen:
+  Description: 'Do not use `then` for multi-line `in` statement.'
+  StyleGuide: '#no-then'
+  Enabled: true
+  VersionAdded: '1.16'
+
 Style/MultilineMemoization:
   Description: 'Wrap multiline memoizations in a `begin` and `end` block.'
   Enabled: true
@@ -3835,6 +4056,7 @@ Style/MultipleComparison:
   Enabled: true
   VersionAdded: '0.49'
   VersionChanged: '1.1'
+  AllowMethodComparison: true
 
 Style/MutableConstant:
   Description: 'Do not assign mutable objects to constants.'
@@ -3968,6 +4190,7 @@ Style/NilLambda:
   Description: 'Prefer `-> {}` to `-> { nil }`.'
   Enabled: true
   VersionAdded: '1.3'
+  VersionChanged: '1.15'
 
 Style/NonNilCheck:
   Description: 'Checks for redundant nil checks.'
@@ -3990,6 +4213,21 @@ Style/Not:
   VersionAdded: '0.9'
   VersionChanged: '0.20'
 
+Style/NumberedParameters:
+  Description: 'Restrict the usage of numbered parameters.'
+  Enabled: true
+  VersionAdded: '1.22'
+  EnforcedStyle: allow_single_line
+  SupportedStyles:
+    - allow_single_line
+    - disallow
+
+Style/NumberedParametersLimit:
+  Description: 'Avoid excessive numbered params in a single block.'
+  Enabled: true
+  VersionAdded: '1.22'
+  Max: 1
+
 Style/NumericLiteralPrefix:
   Description: 'Use smallcase prefixes for numeric literals.'
   StyleGuide: '#numeric-literal-prefixes'
@@ -3999,7 +4237,6 @@ Style/NumericLiteralPrefix:
   SupportedOctalStyles:
     - zero_with_o
     - zero_only
-
 
 Style/NumericLiterals:
   Description: >-
@@ -4011,6 +4248,8 @@ Style/NumericLiterals:
   VersionChanged: '0.48'
   MinDigits: 5
   Strict: false
+  # You can specify allowed numbers. (e.g. port number 3000, 8080, and etc)
+  AllowedNumbers: []
 
 Style/NumericPredicate:
   Description: >-
@@ -4045,6 +4284,16 @@ Style/OneLineConditional:
   VersionAdded: '0.9'
   VersionChanged: '0.90'
 
+Style/OpenStructUse:
+  Description: >-
+                 Avoid using OpenStruct. As of Ruby 3.0, use is officially discouraged due to performance,
+                 version compatibility, and potential security issues.
+  Reference:
+    - https://docs.ruby-lang.org/en/3.0.0/OpenStruct.html#class-OpenStruct-label-Caveats
+
+  Enabled: true
+  VersionAdded: '1.23'
+
 Style/OptionHash:
   Description: "Don't use option hashes when you can use keyword arguments."
   Enabled: false
@@ -4057,6 +4306,7 @@ Style/OptionHash:
     - args
     - params
     - parameters
+  Allowlist: []
 
 Style/OptionalArguments:
   Description: >-
@@ -4157,6 +4407,16 @@ Style/Proc:
   Enabled: true
   VersionAdded: '0.9'
   VersionChanged: '0.18'
+
+Style/QuotedSymbols:
+  Description: 'Use a consistent style for quoted symbols.'
+  Enabled: true
+  VersionAdded: '1.16'
+  EnforcedStyle: same_as_string_literals
+  SupportedStyles:
+    - same_as_string_literals
+    - single_quotes
+    - double_quotes
 
 Style/RaiseArgs:
   Description: 'Checks the arguments passed to raise/fail.'
@@ -4303,12 +4563,19 @@ Style/RedundantSelfAssignment:
   Safe: false
   VersionAdded: '0.90'
 
+Style/RedundantSelfAssignmentBranch:
+  Description: 'Checks for places where conditional branch makes redundant self-assignment.'
+  Enabled: true
+  VersionAdded: '1.19'
+
 Style/RedundantSort:
   Description: >-
                   Use `min` instead of `sort.first`,
                   `max_by` instead of `sort_by...last`, etc.
   Enabled: true
   VersionAdded: '0.76'
+  VersionChanged: '1.22'
+  Safe: false
 
 Style/RedundantSortBy:
   Description: 'Use `sort` instead of `sort_by { |x| x }`.'
@@ -4388,6 +4655,12 @@ Style/Sample:
   Reference: 'https://github.com/JuanitoFatas/fast-ruby#arrayshufflefirst-vs-arraysample-code'
   Enabled: true
   VersionAdded: '0.30'
+
+Style/SelectByRegexp:
+  Description: 'Prefer grep/grep_v to select/reject with a regexp match.'
+  Enabled: true
+  SafeAutoCorrect: false
+  VersionAdded: '1.22'
 
 Style/SelfAssignment:
   Description: >-
@@ -4474,6 +4747,7 @@ Style/SpecialGlobalVars:
   VersionAdded: '0.13'
   VersionChanged: '0.36'
   SafeAutoCorrect: false
+  RequireEnglish: true
   EnforcedStyle: use_english_names
   SupportedStyles:
     - use_perl_names
@@ -4515,7 +4789,8 @@ Style/StringConcatenation:
   Enabled: true
   Safe: false
   VersionAdded: '0.89'
-  VersionChanged: '1.6'
+  VersionChanged: '1.18'
+  Mode: aggressive
 
 Style/StringHashKeys:
   Description: 'Prefer symbols instead of strings as hash keys.'
@@ -4573,8 +4848,9 @@ Style/StructInheritance:
   Description: 'Checks for inheritance from Struct.new.'
   StyleGuide: '#no-extend-struct-new'
   Enabled: true
+  SafeAutoCorrect: false
   VersionAdded: '0.29'
-  VersionChanged: '0.86'
+  VersionChanged: '1.20'
 
 Style/SwapValues:
   Description: 'This cop enforces the use of shorthand-style swapping of 2 variables.'
@@ -4624,6 +4900,12 @@ Style/TernaryParentheses:
     - require_no_parentheses
     - require_parentheses_when_complex
   AllowSafeAssignment: true
+
+Style/TopLevelMethodDefinition:
+  Description: 'This cop looks for top-level method definitions.'
+  StyleGuide: '#top-level-methods'
+  Enabled: false
+  VersionAdded: '1.15'
 
 Style/TrailingBodyOnClass:
   Description: 'Class body goes below class statement.'
@@ -4711,7 +4993,7 @@ Style/TrivialAccessors:
   StyleGuide: '#attr_family'
   Enabled: true
   VersionAdded: '0.9'
-  VersionChanged: '0.77'
+  VersionChanged: '1.15'
   # When set to `false` the cop will suggest the use of accessor methods
   # in situations like:
   #
@@ -4730,7 +5012,7 @@ Style/TrivialAccessors:
   # on_exception :restart
   #
   # Commonly used in DSLs
-  AllowDSLWriters: false
+  AllowDSLWriters: true
   IgnoreClassMethods: false
   AllowedMethods:
     - to_ary
@@ -4787,7 +5069,7 @@ Style/VariableInterpolation:
 
 Style/WhenThen:
   Description: 'Use when x then ... for one-line cases.'
-  StyleGuide: '#one-line-cases'
+  StyleGuide: '#no-when-semicolons'
   Enabled: true
   VersionAdded: '0.9'
 
@@ -4811,7 +5093,7 @@ Style/WordArray:
   StyleGuide: '#percent-w'
   Enabled: false
   VersionAdded: '0.9'
-  VersionChanged: '0.36'
+  VersionChanged: '1.19'
   EnforcedStyle: percent
   SupportedStyles:
     # percent style: %w(word1 word2)

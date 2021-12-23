@@ -20,7 +20,7 @@ module Geos
       set_options(options)
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSWKBWriter_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
@@ -85,7 +85,7 @@ module Geos
 
     private
 
-      def set_options(options) #:nodoc:
+      def set_options(options) # :nodoc:
         self.include_srid = options[:include_srid] if options.key?(:include_srid)
       end
   end

@@ -123,7 +123,7 @@ module Geos
       @z = CoordinateAccessor.new(self, 2)
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSCoordSeq_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
@@ -321,11 +321,11 @@ module Geos
       end
 
       length.times do |i|
-        x[i] = ((x[i] - grid[:offset_x]) / grid[:size_x]).round * grid[:size_x] + grid[:offset_x] if grid[:size_x] != 0
+        x[i] = (((x[i] - grid[:offset_x]) / grid[:size_x]).round * grid[:size_x]) + grid[:offset_x] if grid[:size_x] != 0
 
-        y[i] = ((y[i] - grid[:offset_y]) / grid[:size_y]).round * grid[:size_y] + grid[:offset_y] if grid[:size_y] != 0
+        y[i] = (((y[i] - grid[:offset_y]) / grid[:size_y]).round * grid[:size_y]) + grid[:offset_y] if grid[:size_y] != 0
 
-        z[i] = ((z[i] - grid[:offset_z]) / grid[:size_z]).round * grid[:size_z] + grid[:offset_z] if has_z? && grid[:size_z] != 0
+        z[i] = (((z[i] - grid[:offset_z]) / grid[:size_z]).round * grid[:size_z]) + grid[:offset_z] if has_z? && grid[:size_z] != 0
       end
 
       cs = remove_duplicate_coords
@@ -353,17 +353,17 @@ module Geos
           y = self.y[i]
           z = self.z[i]
 
-          self.x[i] = options[:afac] * x + options[:bfac] * y + options[:cfac] * z + options[:xoff]
-          self.y[i] = options[:dfac] * x + options[:efac] * y + options[:ffac] * z + options[:yoff]
-          self.z[i] = options[:gfac] * x + options[:hfac] * y + options[:ifac] * z + options[:zoff]
+          self.x[i] = (options[:afac] * x) + (options[:bfac] * y) + (options[:cfac] * z) + options[:xoff]
+          self.y[i] = (options[:dfac] * x) + (options[:efac] * y) + (options[:ffac] * z) + options[:yoff]
+          self.z[i] = (options[:gfac] * x) + (options[:hfac] * y) + (options[:ifac] * z) + options[:zoff]
         end
       else
         length.times do |i|
           x = self.x[i]
           y = self.y[i]
 
-          self.x[i] = options[:afac] * x + options[:bfac] * y + options[:xoff]
-          self.y[i] = options[:dfac] * x + options[:efac] * y + options[:yoff]
+          self.x[i] = (options[:afac] * x) + (options[:bfac] * y) + options[:xoff]
+          self.y[i] = (options[:dfac] * x) + (options[:efac] * y) + options[:yoff]
         end
       end
 
@@ -395,8 +395,8 @@ module Geos
         gfac: 0,
         hfac: 0,
         ifac: 1,
-        xoff: origin[0] - Math.cos(radians) * origin[0] + Math.sin(radians) * origin[1],
-        yoff: origin[1] - Math.sin(radians) * origin[0] - Math.cos(radians) * origin[1],
+        xoff: origin[0] - (Math.cos(radians) * origin[0]) + (Math.sin(radians) * origin[1]),
+        yoff: origin[1] - (Math.sin(radians) * origin[0]) - (Math.cos(radians) * origin[1]),
         zoff: 0
       )
     end
@@ -549,11 +549,11 @@ module Geos
 
     protected
 
-      def check_bounds(idx) #:nodoc:
+      def check_bounds(idx) # :nodoc:
         raise Geos::IndexBoundsError, 'Index out of bounds' if idx.negative? || idx >= length
       end
 
-      def build_coordinate(n) #:nodoc:
+      def build_coordinate(n) # :nodoc:
         [
           get_x(n),
           (dimensions >= 2 ? get_y(n) : nil),

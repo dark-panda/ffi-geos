@@ -233,7 +233,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_nearest
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest))
 
     geom_1 = read('POINT (3 3)')
     geom_2 = read('POINT (2 7)')
@@ -250,7 +250,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_nearest_with_depth
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest))
 
     number_of_geoms = 100
     geoms = []
@@ -284,7 +284,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_nearest_with_empty_tree
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest))
 
     tree = Geos::STRtree.new(10)
     geom_1 = read('POINT (3 3)')
@@ -294,7 +294,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_nearest_with_some_empty_geometries
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest))
 
     geom_1 = read('LINESTRING EMPTY')
     geom_2 = read('POINT (2 7)')
@@ -312,7 +312,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_nearest_with_only_empty_geometries
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest))
     skip if Geos::GEOS_VERSION > '3.9.0'
 
     geom_1 = read('LINESTRING EMPTY')
@@ -327,7 +327,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_disallowed_inserts_on_nearest
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest))
 
     setup_tree
 
@@ -339,7 +339,7 @@ class STRtreeTests < Minitest::Test
   end
 
   def test_nearest_item
-    skip unless ENV['FORCE_TESTS'] || defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest_item)
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::STRtree) && Geos::STRtree.method_defined?(:nearest_item))
 
     geom_1 = read('POINT (3 3)')
     geom_2 = read('POINT (2 7)')

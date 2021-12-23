@@ -177,7 +177,7 @@ class PointTests < Minitest::Test
 
     affine_tester(:rotate_x, 'POINT Z (1 -1 -1)', wkt, Math::PI)
     affine_tester(:rotate_x, 'POINT Z (1 -1 1)', wkt, Math::PI / 2)
-    affine_tester(:rotate_x, 'POINT Z (1 1 -1)', wkt, Math::PI + Math::PI / 2)
+    affine_tester(:rotate_x, 'POINT Z (1 1 -1)', wkt, Math::PI + (Math::PI / 2))
     affine_tester(:rotate_x, wkt, wkt, Math::PI * 2)
   end
 
@@ -189,7 +189,7 @@ class PointTests < Minitest::Test
 
     affine_tester(:rotate_y, 'POINT Z (-1 1 -1)', wkt, Math::PI)
     affine_tester(:rotate_y, 'POINT Z (1 1 -1)', wkt, Math::PI / 2)
-    affine_tester(:rotate_y, 'POINT Z (-1 1 1)', wkt, Math::PI + Math::PI / 2)
+    affine_tester(:rotate_y, 'POINT Z (-1 1 1)', wkt, Math::PI + (Math::PI / 2))
     affine_tester(:rotate_y, wkt, wkt, Math::PI * 2)
   end
 
@@ -200,7 +200,7 @@ class PointTests < Minitest::Test
 
     affine_tester(:rotate_z, 'POINT (-1 -1)', wkt, Math::PI)
     affine_tester(:rotate_z, 'POINT (-1 1)', wkt, Math::PI / 2)
-    affine_tester(:rotate_z, 'POINT (1 -1)', wkt, Math::PI + Math::PI / 2)
+    affine_tester(:rotate_z, 'POINT (1 -1)', wkt, Math::PI + (Math::PI / 2))
     affine_tester(:rotate_z, wkt, wkt, Math::PI * 2)
   end
 

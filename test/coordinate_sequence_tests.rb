@@ -542,21 +542,21 @@ class CoordinateSequenceTests < Minitest::Test
   def test_rotate_x
     affine_tester(:rotate_x, [1, -1, -1], [1, 1, 1], Math::PI)
     affine_tester(:rotate_x, [1, -1, 1], [1, 1, 1], Math::PI / 2)
-    affine_tester(:rotate_x, [1, 1, -1], [1, 1, 1], Math::PI + Math::PI / 2)
+    affine_tester(:rotate_x, [1, 1, -1], [1, 1, 1], Math::PI + (Math::PI / 2))
     affine_tester(:rotate_x, [1, 1, 1], [1, 1, 1], Math::PI * 2)
   end
 
   def test_rotate_y
     affine_tester(:rotate_y, [-1, 1, -1], [1, 1, 1], Math::PI)
     affine_tester(:rotate_y, [1, 1, -1], [1, 1, 1], Math::PI / 2)
-    affine_tester(:rotate_y, [-1, 1, 1], [1, 1, 1], Math::PI + Math::PI / 2)
+    affine_tester(:rotate_y, [-1, 1, 1], [1, 1, 1], Math::PI + (Math::PI / 2))
     affine_tester(:rotate_y, [1, 1, 1], [1, 1, 1], Math::PI * 2)
   end
 
   def test_rotate_z
     affine_tester(:rotate_z, [-1, -1], [1, 1], Math::PI)
     affine_tester(:rotate_z, [-1, 1], [1, 1], Math::PI / 2)
-    affine_tester(:rotate_z, [1, -1], [1, 1], Math::PI + Math::PI / 2)
+    affine_tester(:rotate_z, [1, -1], [1, 1], Math::PI + (Math::PI / 2))
     affine_tester(:rotate_z, [1, 1], [1, 1], Math::PI * 2)
   end
 

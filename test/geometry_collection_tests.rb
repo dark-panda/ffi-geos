@@ -174,7 +174,7 @@ class GeometryCollectionTests < Minitest::Test
 
   def test_snap_to_grid
     wkt = 'GEOMETRYCOLLECTION (LINESTRING (-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0), ' \
-      'POLYGON ((-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0)), POINT (10.12 10.12))'
+          'POLYGON ((-10.12 0, -10.12 5, -10.12 5, -10.12 6, -10.12 6, -10.12 6, -10.12 7, -10.12 7, -10.12 7, -10.12 8, -10.12 8, -9 8, -9 9, -10.12 0)), POINT (10.12 10.12))'
 
     expected = 'GEOMETRYCOLLECTION (LINESTRING (-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0), POLYGON ((-10 0, -10 5, -10 5, -10 6, -10 6, -10 6, -10 7, -10 7, -10 7, -10 8, -10 8, -9 8, -9 9, -10 0)), POINT (10 10))'
 
@@ -255,7 +255,7 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:rotate_x,
       'GEOMETRYCOLLECTION Z (POINT Z (1 1 -1), LINESTRING Z (1 1 -1, 10 10 -10), POLYGON Z ((0 0 0, 5 0 0, 5 0 -5, 0 0 -5, 0 0 0)))',
       wkt,
-      Math::PI + Math::PI / 2)
+      Math::PI + (Math::PI / 2))
 
     affine_tester(:rotate_x,
       wkt,
@@ -282,7 +282,7 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:rotate_y,
       'GEOMETRYCOLLECTION Z (POINT Z (-1 1 1), LINESTRING Z (-1 1 1, -10 10 10), POLYGON Z ((0 0 0, 0 0 5, 0 5 5, 0 5 0, 0 0 0)))',
       wkt,
-      Math::PI + Math::PI / 2)
+      Math::PI + (Math::PI / 2))
 
     affine_tester(:rotate_y,
       wkt,
@@ -308,7 +308,7 @@ class GeometryCollectionTests < Minitest::Test
     affine_tester(:rotate_z,
       'GEOMETRYCOLLECTION (POINT (1 -1), LINESTRING (0 0, 10 -10), POLYGON ((0 0, 0 -5, 5 -5, 5 0, 0 0)))',
       wkt,
-      Math::PI + Math::PI / 2)
+      Math::PI + (Math::PI / 2))
 
     affine_tester(:rotate_z,
       wkt,

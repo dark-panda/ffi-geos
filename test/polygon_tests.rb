@@ -147,7 +147,7 @@ class PolygonTests < Minitest::Test
     affine_tester(:rotate_x,
       'POLYGON Z ((0 0 0, 5 0 0, 5 0 -5, 0 0 -5, 0 0 0))',
       wkt,
-      Math::PI + Math::PI / 2)
+      Math::PI + (Math::PI / 2))
 
     affine_tester(:rotate_x,
       wkt,
@@ -173,7 +173,7 @@ class PolygonTests < Minitest::Test
     affine_tester(:rotate_y,
       'POLYGON Z ((0 0 0, 0 0 5, 0 5 5, 0 5 0, 0 0 0))',
       wkt,
-      Math::PI + Math::PI / 2)
+      Math::PI + (Math::PI / 2))
 
     affine_tester(:rotate_y,
       wkt,
@@ -195,7 +195,7 @@ class PolygonTests < Minitest::Test
     affine_tester(:rotate_z,
       'POLYGON ((0 0, 0 -5, 5 -5, 5 0, 0 0))',
       'POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))',
-      Math::PI + Math::PI / 2)
+      Math::PI + (Math::PI / 2))
 
     affine_tester(:rotate_z,
       'POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))',

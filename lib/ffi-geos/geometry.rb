@@ -38,7 +38,7 @@ module Geos
       self.srid = source.srid
     end
 
-    def self.release(ptr) #:nodoc:
+    def self.release(ptr) # :nodoc:
       FFIGeos.GEOSGeom_destroy_r(Geos.current_handle_pointer, ptr)
     end
 
@@ -330,7 +330,7 @@ module Geos
         bool_result(FFIGeos.GEOSCovers_r(Geos.current_handle_pointer, ptr, geom.ptr))
       end
     else
-      def covers?(geom) #:nodoc:
+      def covers?(geom) # :nodoc:
         check_geometry(geom)
         !!%w{
           T*****FF*
@@ -352,7 +352,7 @@ module Geos
         bool_result(FFIGeos.GEOSCoveredBy_r(Geos.current_handle_pointer, ptr, geom.ptr))
       end
     else
-      def covered_by?(geom) #:nodoc:
+      def covered_by?(geom) # :nodoc:
         check_geometry(geom)
         !!%w{
           T*F**F***
@@ -386,7 +386,7 @@ module Geos
 
     def eql_almost?(other, decimal = 6)
       check_geometry(other)
-      bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle_pointer, ptr, other.ptr, 0.5 * 10 ** -decimal))
+      bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle_pointer, ptr, other.ptr, 0.5 * (10 ** -decimal)))
     end
     alias equals_almost? eql_almost?
     alias almost_equals? eql_almost?
