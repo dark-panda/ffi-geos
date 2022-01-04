@@ -125,16 +125,16 @@ module Geos
       translate
     }.each do |m|
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        def #{m}!(*args)
-          exterior_ring.coord_seq.#{m}!(*args)
+        def #{m}!(*args, **kwargs)
+          exterior_ring.coord_seq.#{m}!(*args, **kwargs)
           interior_rings.each do |ring|
             ring.coord_seq.#{m}!(*args)
           end
           self
         end
 
-        def #{m}(*args)
-          ret = dup.#{m}!(*args)
+        def #{m}(*args, **kwargs)
+          ret = dup.#{m}!(*args, **kwargs)
           ret.srid = pick_srid_according_to_policy(srid)
           ret
         end

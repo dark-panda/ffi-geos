@@ -515,16 +515,16 @@ class CoordinateSequenceTests < Minitest::Test
   end
 
   undef :affine_tester
-  def affine_tester(method, expected, coords, *args)
+  def affine_tester(method, expected, coords, *args, **options)
     cs = Geos::CoordinateSequence.new(coords)
-    cs.send("#{method}!", *args)
+    cs.__safe_send__("#{method}!", *args, **options)
 
     expected.length.times do |i|
       assert_in_delta(expected[i], cs.get_ordinate(0, i), TOLERANCE)
     end
 
     cs = Geos::CoordinateSequence.new(coords)
-    cs_2 = cs.send(method, *args)
+    cs_2 = cs.__safe_send__(method, *args, **options)
 
     expected.length.times do |i|
       assert_in_delta(coords[i], cs.get_ordinate(0, i), TOLERANCE)

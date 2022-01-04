@@ -287,7 +287,7 @@ module Geos
       RUBY
     end
 
-    def snap_to_grid!(*args)
+    def snap_to_grid!(*args, **kwargs)
       grid = {
         offset_x: 0, # 1
         offset_y: 0, # 2
@@ -299,8 +299,8 @@ module Geos
 
       if args.length == 1 && args[0].is_a?(Numeric)
         grid[:size_x] = grid[:size_y] = grid[:size_z] = args[0]
-      elsif args[0].is_a?(Hash)
-        grid.merge!(args[0])
+      elsif !kwargs.empty?
+        grid.merge!(kwargs)
       end
 
       grid[:size_x] = grid[:size_y] = grid[:size_z] = grid[:size] if grid[:size]
@@ -334,7 +334,7 @@ module Geos
       self
     end
 
-    def snap_to_grid(*args)
+    def snap_to_grid(*args, **)
       dup.snap_to_grid!(*args)
     end
 
@@ -455,9 +455,9 @@ module Geos
       dup.rotate!(radians)
     end
 
-    def scale!(*args)
-      x, y, z = if args.length == 1 && args[0].is_a?(Hash)
-        args[0].values_at(:x, :y, :z)
+    def scale!(*args, **kwargs)
+      x, y, z = if !kwargs.empty?
+        kwargs.values_at(:x, :y, :z)
       elsif args.length.between?(1, 3)
         args.values_at(0...3)
       else
@@ -480,13 +480,13 @@ module Geos
       )
     end
 
-    def scale(*args)
-      dup.scale!(*args)
+    def scale(*args, **kwargs)
+      dup.scale!(*args, **kwargs)
     end
 
-    def trans_scale!(*args)
-      delta_x, delta_y, x_factor, y_factor = if args.length == 1 && args[0].is_a?(Hash)
-        args[0].values_at(:delta_x, :delta_y, :x_factor, :y_factor)
+    def trans_scale!(*args, **kwargs)
+      delta_x, delta_y, x_factor, y_factor = if !kwargs.empty?
+        kwargs.values_at(:delta_x, :delta_y, :x_factor, :y_factor)
       elsif args.length.between?(1, 4)
         args.values_at(0...4)
       else
@@ -514,13 +514,13 @@ module Geos
       )
     end
 
-    def trans_scale(*args)
-      dup.trans_scale!(*args)
+    def trans_scale(*args, **kwargs)
+      dup.trans_scale!(*args, **kwargs)
     end
 
-    def translate!(*args)
-      x, y, z = if args.length == 1 && args[0].is_a?(Hash)
-        args[0].values_at(:x, :y, :z)
+    def translate!(*args, **kwargs)
+      x, y, z = if !kwargs.empty?
+        kwargs.values_at(:x, :y, :z)
       elsif args.length.between?(1, 3)
         args.values_at(0...3)
       else
@@ -543,8 +543,8 @@ module Geos
       )
     end
 
-    def translate(*args)
-      dup.translate!(*args)
+    def translate(*args, **kwargs)
+      dup.translate!(*args, **kwargs)
     end
 
     protected
