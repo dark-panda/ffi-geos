@@ -42,7 +42,7 @@ module Geos
     end
     alias slice []
 
-    def offset_curve(width, options = {})
+    def offset_curve(width, **options)
       options = Constants::BUFFER_PARAM_DEFAULTS.merge(options)
 
       cast_geometry_ptr(
@@ -81,7 +81,7 @@ module Geos
       cur_path.concat(to_a)
     end
 
-    def snap_to_grid!(*args)
+    def snap_to_grid!(*args, **)
       unless empty?
         cs = coord_seq.snap_to_grid!(*args)
 
@@ -97,7 +97,7 @@ module Geos
       self
     end
 
-    def snap_to_grid(*args)
+    def snap_to_grid(*args, **)
       ret = dup.snap_to_grid!(*args)
       ret.srid = pick_srid_according_to_policy(srid)
       ret
@@ -193,16 +193,16 @@ module Geos
       translate
     }.each do |m|
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        def #{m}!(*args)
+        def #{m}!(*args, **kwargs)
           unless self.empty?
-            self.coord_seq.#{m}!(*args)
+            self.coord_seq.#{m}!(*args, **kwargs)
           end
 
           self
         end
 
-        def #{m}(*args)
-          ret = self.dup.#{m}!(*args)
+        def #{m}(*args, **kwargs)
+          ret = self.dup.#{m}!(*args, **kwargs)
           ret.srid = pick_srid_according_to_policy(self.srid)
           ret
         end

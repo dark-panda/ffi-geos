@@ -118,16 +118,16 @@ module Geos
       translate
     }.each do |m|
       class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
-        def #{m}!(*args)
+        def #{m}!(*args, **kwargs)
           unless empty?
-            coord_seq.#{m}!(*args)
+            coord_seq.#{m}!(*args, **kwargs)
           end
 
           self
         end
 
-        def #{m}(*args)
-          ret = dup.#{m}!(*args)
+        def #{m}(*args, **kwargs)
+          ret = dup.#{m}!(*args, **kwargs)
           ret.srid = pick_srid_according_to_policy(srid)
           ret
         end

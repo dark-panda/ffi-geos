@@ -81,7 +81,8 @@ module TestHelper
     geom = read(wkt)
     geom.srid = 4326
     Geos.srid_copy_policy = srid_policy
-    geom_b = geom.send(method, *args, **options)
+
+    geom_b = geom.__safe_send__(method, *args, **options)
     assert_equal(4326, geom.srid)
     assert_equal(expected_srid, geom_b.srid)
     assert_equal(expected, write(geom_b))
@@ -115,13 +116,14 @@ module TestHelper
   def snapped_tester(method, expected, geom, *args, **options)
     geom = geom_from_geom_or_wkt(geom)
 
-    result = geom.send(method, *args, **options)
+    result = geom.__safe_send__(method, *args, **options)
     assert_equal(expected, write(result.snap_to_grid(1)))
   end
 
   def simple_tester(method, expected, geom, *args, **options)
     geom = geom_from_geom_or_wkt(geom)
-    result = geom.send(method, *args, **options)
+
+    result = geom.__safe_send__(method, *args, **options)
     result = write(result) if result.is_a?(Geos::Geometry)
 
     if expected.nil?
@@ -133,13 +135,13 @@ module TestHelper
 
   def simple_bang_tester(method, expected, wkt, *args, **options)
     geom = read(wkt)
-    result = geom.send(method, *args, **options)
+    result = geom.__safe_send__(method, *args, **options)
 
     assert_equal(wkt, write(geom))
     assert_equal(expected, write(result))
 
     geom = read(wkt)
-    geom.send("#{method}!", *args, **options)
+    geom.__safe_send__("#{method}!", *args, **options)
 
     assert_equal(expected, write(geom))
   end
@@ -153,7 +155,7 @@ module TestHelper
 
   def array_tester(method, expected, geom, *args, **options)
     geom = geom_from_geom_or_wkt(geom)
-    result = geom.send(method, *args, **options)
+    result = geom.__safe_send__(method, *args, **options)
 
     case result
       when Geos::Geometry
@@ -171,15 +173,37 @@ module TestHelper
     writer.trim = true
 
     geom = read(wkt)
-    geom.send("#{method}!", *args, **options).snap_to_grid!(0.1)
+    geom.__safe_send__("#{method}!", *args, **options).snap_to_grid!(0.1)
 
     assert_equal(expected, write(geom))
 
     geom = read(wkt)
-    geom_2 = geom.send(method, *args, **options).snap_to_grid(0.1)
+    geom_2 = geom.__safe_send__(method, *args, **options).snap_to_grid(0.1)
 
     assert_equal(wkt, write(geom))
     assert_equal(expected, write(geom_2, trim: true))
+  end
+end
+
+class Object
+  if RUBY_VERSION >= '2.7'
+    def __safe_send__(method_name, *args, **kwargs)
+      send(method_name, *args, **kwargs)
+    end
+  else
+    def __safe_send__(method_name, *args, **kwargs)
+      raise NoMethodError unless respond_to?(method_name)
+
+      arity = method(method_name).arity
+
+      if arity.zero?
+        send(method_name)
+      elsif arity.negative? && !kwargs.empty?
+        send(method_name, *args, **kwargs)
+      else
+        send(method_name, *args)
+      end
+    end
   end
 end
 
