@@ -1387,6 +1387,10 @@ module Geos
       end
     GEOS_CAPI_FIRST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i
     GEOS_CAPI_LAST_INTERFACE = GEOS_CAPI_VERSION_MAJOR.to_i + GEOS_CAPI_VERSION_MINOR.to_i
+
+    GEOS_NICE_VERSION = [GEOS_VERSION_MAJOR, GEOS_VERSION_MINOR, GEOS_VERSION_PATCH].collect { |version|
+      version.to_s.rjust(2, '0')
+    }.join
   end
 
   module Constants

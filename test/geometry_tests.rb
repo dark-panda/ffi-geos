@@ -13,7 +13,7 @@ class GeometryTests < Minitest::Test
   def test_intersection
     comparison_tester(
       :intersection,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((10 10, 10 5, 5 5, 5 10, 10 10))'
       else
         'POLYGON ((5 10, 10 10, 10 5, 5 5, 5 10))'
@@ -36,7 +36,11 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :intersection,
-      'GEOMETRYCOLLECTION (LINESTRING (2 0, 4 0), POINT (0 0), POINT (10 0))',
+      if Geos::GEOS_NICE_VERSION >= '031000'
+        'GEOMETRYCOLLECTION (LINESTRING (2 0, 4 0), POINT (10 0), POINT (0 0))'
+      else
+        'GEOMETRYCOLLECTION (LINESTRING (2 0, 4 0), POINT (0 0), POINT (10 0))'
+      end,
       'LINESTRING(0 0, 10 0)',
       'LINESTRING(9 0, 12 0, 12 20, 4 0, 2 0, 2 10, 0 10, 0 -10)',
       precision: 2
@@ -119,7 +123,11 @@ class GeometryTests < Minitest::Test
 
     snapped_tester(
       :buffer,
-      'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 109 -5, 105 -9, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))',
+      if Geos::GEOS_NICE_VERSION >= '031100'
+        'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 110 -4, 104 -10, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))'
+      else
+        'POLYGON ((90 10, 90 100, 93 107, 100 110, 107 107, 110 100, 109 -5, 105 -9, 0 -10, -7 -7, -10 0, -7 7, 0 10, 90 10))'
+      end,
       'LINESTRING(0 0, 100 0, 100 100)',
       10,
       quad_segs: 2, join: :mitre, mitre_limit: 1.0
@@ -206,7 +214,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :difference,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 10, 5 10, 10 10, 10 0, 5 0, 0 0, 0 10))'
       else
         'POLYGON ((0 0, 0 10, 5 10, 10 10, 10 0, 5 0, 0 0))'
@@ -217,7 +225,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :difference,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 10, 10 10, 10 0, 0 0, 0 10))'
       else
         'POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0))'
@@ -228,7 +236,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :difference,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 10, 10 10, 10 5, 5 5, 5 0, 0 0, 0 10))'
       else
         'POLYGON ((0 0, 0 10, 10 10, 10 5, 5 5, 5 0, 0 0))'
@@ -303,7 +311,7 @@ class GeometryTests < Minitest::Test
 
       comparison_tester(
         method,
-        if Geos::GEOS_VERSION > '3.9.0'
+        if Geos::GEOS_NICE_VERSION > '030900'
           'GEOMETRYCOLLECTION (POLYGON ((0 10, 5 10, 10 10, 10 0, 5 0, 0 0, 0 10)), LINESTRING (5 -10, 5 0))'
         else
           'GEOMETRYCOLLECTION (LINESTRING (5 -10, 5 0), POLYGON ((0 0, 0 10, 5 10, 10 10, 10 0, 5 0, 0 0)))'
@@ -314,7 +322,7 @@ class GeometryTests < Minitest::Test
 
       comparison_tester(
         method,
-        if Geos::GEOS_VERSION > '3.9.0'
+        if Geos::GEOS_NICE_VERSION > '030900'
           'GEOMETRYCOLLECTION (POLYGON ((0 10, 10 10, 10 0, 0 0, 0 10)), LINESTRING (10 0, 20 0))'
         else
           'GEOMETRYCOLLECTION (LINESTRING (10 0, 20 0), POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0)))'
@@ -325,7 +333,7 @@ class GeometryTests < Minitest::Test
 
       comparison_tester(
         method,
-        if Geos::GEOS_VERSION > '3.9.0'
+        if Geos::GEOS_NICE_VERSION > '030900'
           'MULTIPOLYGON (((0 10, 10 10, 10 5, 5 5, 5 0, 0 0, 0 10)), ((10 0, 10 5, 15 5, 15 -5, 5 -5, 5 0, 10 0)))'
         else
           'MULTIPOLYGON (((0 0, 0 10, 10 10, 10 5, 5 5, 5 0, 0 0)), ((5 0, 10 0, 10 5, 15 5, 15 -5, 5 -5, 5 0)))'
@@ -420,7 +428,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :union,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'GEOMETRYCOLLECTION (POLYGON ((0 10, 5 10, 10 10, 10 0, 5 0, 0 0, 0 10)), LINESTRING (5 -10, 5 0))'
       else
         'GEOMETRYCOLLECTION (LINESTRING (5 -10, 5 0), POLYGON ((0 0, 0 10, 5 10, 10 10, 10 0, 5 0, 0 0)))'
@@ -431,7 +439,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :union,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'GEOMETRYCOLLECTION (POLYGON ((0 10, 10 10, 10 0, 0 0, 0 10)), LINESTRING (10 0, 20 0))'
       else
         'GEOMETRYCOLLECTION (LINESTRING (10 0, 20 0), POLYGON ((0 0, 0 10, 10 10, 10 0, 0 0)))'
@@ -442,7 +450,7 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :union,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 10, 10 10, 10 5, 15 5, 15 -5, 5 -5, 5 0, 0 0, 0 10))'
       else
         'POLYGON ((0 0, 0 10, 10 10, 10 5, 15 5, 15 -5, 5 -5, 5 0, 0 0))'
@@ -468,7 +476,7 @@ class GeometryTests < Minitest::Test
 
     simple_tester(
       :union_cascaded,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 0, 0 1, 0 11, 10 11, 10 14, 14 14, 14 10, 11 10, 11 0, 1 0, 0 0), (12 12, 11 12, 11 11, 12 11, 12 12))'
       else
         'POLYGON ((1 0, 0 0, 0 1, 0 11, 10 11, 10 14, 14 14, 14 10, 11 10, 11 0, 1 0), (11 11, 12 11, 12 12, 11 12, 11 11))'
@@ -487,7 +495,7 @@ class GeometryTests < Minitest::Test
 
     simple_tester(
       :union_cascaded,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 1, 1 1, 2 1, 2 0, 1 0, 0 0, 0 1))'
       else
         'POLYGON ((0 0, 0 1, 1 1, 2 1, 2 0, 1 0, 0 0))'
@@ -504,7 +512,7 @@ class GeometryTests < Minitest::Test
 
     simple_tester(
       :unary_union,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 0, 0 1, 0 11, 10 11, 10 14, 14 14, 14 10, 11 10, 11 0, 1 0, 0 0), (12 12, 11 12, 11 11, 12 11, 12 12))'
       else
         'POLYGON ((1 0, 0 0, 0 1, 0 11, 10 11, 10 14, 14 14, 14 10, 11 10, 11 0, 1 0), (11 11, 12 11, 12 12, 11 12, 11 11))'
@@ -547,7 +555,7 @@ class GeometryTests < Minitest::Test
   def test_union_without_arguments
     simple_tester(
       :union,
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'POLYGON ((0 0, 0 1, 0 11, 10 11, 10 14, 14 14, 14 10, 11 10, 11 0, 1 0, 0 0), (12 12, 11 12, 11 11, 12 11, 12 12))'
       else
         'POLYGON ((1 0, 0 0, 0 1, 0 11, 10 11, 10 14, 14 14, 14 10, 11 10, 11 0, 1 0), (11 11, 12 11, 12 12, 11 12, 11 11))'
@@ -955,7 +963,13 @@ class GeometryTests < Minitest::Test
     }
 
     assert_nil(read('POINT(0 0)').valid_detail)
-    tester['Invalid Coordinate', 'POINT (0 nan)', 'POINT(0 NaN)', 0]
+
+    if Geos::GEOS_NICE_VERSION >= '031000'
+      tester['Invalid Coordinate', 'POINT (0 NaN)', 'POINT(0 NaN)', 0]
+    else
+      tester['Invalid Coordinate', 'POINT (0 nan)', 'POINT(0 NaN)', 0]
+    end
+
     tester['Self-intersection', 'POINT (2.5 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
 
     tester['Ring Self-intersection', 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
@@ -1371,7 +1385,7 @@ class GeometryTests < Minitest::Test
     ]
 
     tester[
-      if Geos::GEOS_VERSION > '3.8'
+      if Geos::GEOS_NICE_VERSION >= '030800'
         '5.0 5.0, 8.0 8.0'
       else
         '5.0 5.0 NaN, 8.0 8.0 NaN'
@@ -1471,7 +1485,11 @@ class GeometryTests < Minitest::Test
   def test_polygonize_full
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:polygonize_full)
 
-    writer.rounding_precision = 3
+    writer.rounding_precision = if Geos::GEOS_NICE_VERSION >= '031000'
+      0
+    else
+      3
+    end
 
     geom_a = read(
       'GEOMETRYCOLLECTION(
@@ -1556,7 +1574,7 @@ class GeometryTests < Minitest::Test
     geom = read('POLYGON((0 0, 1 1, 0 1, 1 0, 0 0))')
 
     assert_equal(
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'MULTIPOLYGON (((1 0, 0 0, 0.5 0.5, 1 0)), ((1 1, 0.5 0.5, 0 1, 1 1)))'
       else
         'MULTIPOLYGON (((0 0, 0.5 0.5, 1 0, 0 0)), ((0.5 0.5, 0 1, 1 1, 0.5 0.5)))'
@@ -1842,7 +1860,7 @@ class GeometryTests < Minitest::Test
     geom = 'MULTIPOINT(0 0, 100 0, 100 100, 0 100)'
 
     tester[
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'GEOMETRYCOLLECTION (POLYGON ((200 200, 200 50, 50 50, 50 200, 200 200)), POLYGON ((-100 200, 50 200, 50 50, -100 50, -100 200)), POLYGON ((-100 -100, -100 50, 50 50, 50 -100, -100 -100)), POLYGON ((200 -100, 50 -100, 50 50, 200 50, 200 -100)))'
       else
         'GEOMETRYCOLLECTION (POLYGON ((50 200, 200 200, 200 50, 50 50, 50 200)), POLYGON ((-100 50, -100 200, 50 200, 50 50, -100 50)), POLYGON ((50 -100, -100 -100, -100 50, 50 50, 50 -100)), POLYGON ((200 50, 200 -100, 50 -100, 50 50, 200 50)))'
@@ -1858,9 +1876,16 @@ class GeometryTests < Minitest::Test
     ]
 
     # Allows a tolerance for the first argument
-    @writer.rounding_precision = 3
+    writer.rounding_precision = if Geos::GEOS_NICE_VERSION >= '031000'
+      0
+    else
+      3
+    end
+
+    writer.trim = true
+
     tester[
-      if Geos::GEOS_VERSION > '3.9.0'
+      if Geos::GEOS_NICE_VERSION > '030900'
         'GEOMETRYCOLLECTION (POLYGON ((290 140, 185 140, 185 215, 188 235, 290 252, 290 140)), POLYGON ((80 340, 101 340, 188 235, 185 215, 80 215, 80 340)), POLYGON ((80 140, 80 215, 185 215, 185 140, 80 140)), POLYGON ((290 340, 290 252, 188 235, 101 340, 290 340)))'
       else
         'GEOMETRYCOLLECTION (POLYGON ((290 252, 290 140, 185 140, 185 215, 188 235, 290 252)), POLYGON ((80 215, 80 340, 101 340, 188 235, 185 215, 80 215)), POLYGON ((185 140, 80 140, 80 215, 185 215, 185 140)), POLYGON ((101 340, 290 340, 290 252, 188 235, 101 340)))'
@@ -2038,7 +2063,7 @@ class GeometryTests < Minitest::Test
     simple_tester(:reverse, 'MULTIPOINT (100 100, 10 100, 30 100)', 'MULTIPOINT (100 100, 10 100, 30 100)')
     simple_tester(:reverse, 'LINESTRING (200 200, 200 100)', 'LINESTRING (200 100, 200 200)')
 
-    if Geos::GEOS_VERSION >= '3.8.1'
+    if Geos::GEOS_NICE_VERSION >= '030801'
       simple_tester(:reverse, 'MULTILINESTRING ((3 3, 4 4), (1 1, 2 2))', 'MULTILINESTRING ((4 4, 3 3), (2 2, 1 1))')
     else
       simple_tester(:reverse, 'MULTILINESTRING ((1 1, 2 2), (3 3, 4 4))', 'MULTILINESTRING ((4 4, 3 3), (2 2, 1 1))')

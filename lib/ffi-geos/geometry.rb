@@ -441,7 +441,7 @@ module Geos
 
     # GEOS versions prior to 3.3.0 didn't handle exceptions and can crash on
     # bad input.
-    if FFIGeos.respond_to?(:GEOSProject_r) && Geos::GEOS_VERSION >= '3.3.0'
+    if FFIGeos.respond_to?(:GEOSProject_r) && Geos::GEOS_NICE_VERSION >= '030300'
       def project(geom, normalized = false)
         raise TypeError, 'Expected Geos::Point type' unless geom.is_a?(Geos::Point)
 

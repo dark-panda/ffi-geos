@@ -80,7 +80,11 @@ class LineStringTests < Minitest::Test
     # straight right
     simple_tester(
       :offset_curve,
-      'LINESTRING (10 -2, 0 -2)',
+      if Geos::GEOS_NICE_VERSION >= '031100'
+        'LINESTRING (0 -2, 10 -2)'
+      else
+        'LINESTRING (10 -2, 0 -2)'
+      end,
       'LINESTRING (0 0, 10 0)',
       -2,
       quad_segs: 0,
@@ -91,7 +95,11 @@ class LineStringTests < Minitest::Test
     # outside curve
     simple_tester(
       :offset_curve,
-      'LINESTRING (12 10, 12 0, 10 -2, 0 -2)',
+      if Geos::GEOS_NICE_VERSION >= '031100'
+        'LINESTRING (0 -2, 10 -2, 12 0, 12 10)'
+      else
+        'LINESTRING (12 10, 12 0, 10 -2, 0 -2)'
+      end,
       'LINESTRING (0 0, 10 0, 10 10)',
       -2,
       quad_segs: 1,

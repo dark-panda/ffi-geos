@@ -23,18 +23,19 @@ puts "Ruby version #{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} - #{RbConfig::CONFIG['RUB
 puts "ffi version #{Gem.loaded_specs['ffi'].version}" if Gem.loaded_specs['ffi']
 
 if Geos.respond_to?(:version)
-  puts "GEOS version #{Geos.version}"
+  puts "GEOS version #{Geos.version} (#{Geos::GEOS_NICE_VERSION})"
 else
-  puts "GEOS version #{Geos::GEOS_VERSION}"
+  puts "GEOS version #{Geos::GEOS_VERSION} (#{Geos::GEOS_NICE_VERSION})"
 end
 
 puts "ffi-geos version #{Geos::VERSION}" if defined?(Geos::VERSION)
 puts "Using #{Geos::FFIGeos.geos_library_path}" if defined?(Geos::FFIGeos)
+puts "Process #{$PID}"
 
 module TestHelper
   TOLERANCE = 0.0000000000001
 
-  EMPTY_GEOMETRY = if Geos::GEOS_VERSION > '3.8'
+  EMPTY_GEOMETRY = if Geos::GEOS_NICE_VERSION >= '030800'
     'POINT EMPTY'
   else
     'GEOMETRYCOLLECTION EMPTY'
