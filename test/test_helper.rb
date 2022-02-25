@@ -9,6 +9,12 @@ SimpleCov.start do
   add_filter '/.bundle/'
 end
 
+if ENV['CI']
+  require 'simplecov_json_formatter'
+
+  SimpleCov.formatter = SimpleCov::Formatter::JSONFormatter
+end
+
 require 'rubygems'
 require 'minitest/autorun'
 require 'minitest/reporters'

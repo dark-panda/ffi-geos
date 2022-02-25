@@ -12,5 +12,6 @@ gem 'rake'
 gem 'rdoc'
 gem 'rubocop', require: false
 gem 'simplecov', require: false
+gem 'simplecov_json_formatter', require: false
 
 instance_eval File.read('Gemfile.local') if File.exist?('Gemfile.local')
