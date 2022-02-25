@@ -1,3 +1,15 @@
+
+inherit_from:
+  - .rubocop-minitest.yml
+  - .rubocop_todo.yml
+
+inherit_mode:
+  merge:
+    - Exclude
+
+require:
+  - rubocop-minitest
+
 # Common configuration.
 
 AllCops:
@@ -148,13 +160,7 @@ AllCops:
   # rubocop is run. Keys are the name of the extension, and values are an array
   # of gems in the Gemfile that the extension is suggested for, if not already
   # included.
-  SuggestExtensions:
-    rubocop-rails: [rails]
-    rubocop-rspec: [rspec, rspec-rails]
-    rubocop-minitest: [minitest]
-    rubocop-sequel: [sequel]
-    rubocop-rake: [rake]
-    rubocop-graphql: [graphql]
+  SuggestExtensions: false
 
 #################### Bundler ###############################
 

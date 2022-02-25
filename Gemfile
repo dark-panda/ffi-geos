@@ -11,6 +11,7 @@ gem 'minitest-reporters'
 gem 'rake'
 gem 'rdoc'
 gem 'rubocop', require: false
+gem 'rubocop-minitest', require: false
 gem 'simplecov', require: false
 gem 'simplecov_json_formatter', require: false
 
