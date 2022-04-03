@@ -56,7 +56,13 @@ module Geos
         elsif FFI::Platform::IS_WINDOWS
           ENV['PATH'].split(File::PATH_SEPARATOR)
         else
-          ['/usr/local/{lib64,lib}', '/opt/local/{lib64,lib}', '/usr/{lib64,lib}', '/usr/lib/{x86_64,i386,aarch64}-linux-gnu']
+          [
+            '/usr/local/{lib64,lib}',
+            '/opt/local/{lib64,lib}',
+            '/usr/{lib64,lib}',
+            '/opt/homebrew/lib',
+            '/usr/lib/{x86_64,i386,aarch64}-linux-gnu'
+          ]
         end
     end
 
