@@ -637,6 +637,12 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSConstrainedDelaunayTriangulation_r)
+      def constrained_delaunay_triangulation
+        cast_geometry_ptr(FFIGeos.GEOSConstrainedDelaunayTriangulation_r(Geos.current_handle_pointer, ptr))
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSVoronoiDiagram_r)
       # Available in GEOS 3.5.0+
       #

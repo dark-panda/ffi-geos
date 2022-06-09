@@ -466,4 +466,24 @@ class WkbWriterTests < Minitest::Test
       @wkb_writer.output_dimensions = 0
     end
   end
+
+  def test_wkb_flavor_extended
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSWKBWriter_setFlavor_r)
+
+    @wkb_writer.output_dimensions = 3
+    @wkb_writer.flavor = :extended
+
+    assert_equal('010200008003000000000000000000F03F000000000000004000000000000008400000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000002240',
+      @wkb_writer.write_hex(read('LINESTRING Z (1 2 3, 4 5 6, 7 8 9)')))
+  end
+
+  def test_wkb_flavor_iso
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSWKBWriter_setFlavor_r)
+
+    @wkb_writer.output_dimensions = 3
+    @wkb_writer.flavor = :iso
+
+    assert_equal('01EA03000003000000000000000000F03F000000000000004000000000000008400000000000001040000000000000144000000000000018400000000000001C4000000000000020400000000000002240',
+      @wkb_writer.write_hex(read('LINESTRING Z (1 2 3, 4 5 6, 7 8 9)')))
+  end
 end

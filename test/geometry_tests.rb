@@ -1845,6 +1845,24 @@ class GeometryTests < Minitest::Test
     tester['MULTILINESTRING ((10 0, 10 10), (0 0, 10 10), (0 0, 10 0))', 'MULTIPOINT(0 0, 10 0, 10 10, 11 10)', tolerance: 2.0, only_edges: true]
   end
 
+  def test_constrained_delaunay_triangulation
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:constrained_delaunay_triangulation)
+
+    tester = lambda { |expected, geom|
+      geom = read(geom)
+      geom_tri = geom.constrained_delaunay_triangulation
+      geom_tri.normalize!
+
+      assert_equal(write(read(expected).normalize), write(geom_tri))
+    }
+
+    writer.trim = true
+
+    tester['GEOMETRYCOLLECTION EMPTY', 'POLYGON EMPTY']
+    tester['GEOMETRYCOLLECTION EMPTY', 'POINT(0 0)']
+    tester['GEOMETRYCOLLECTION (POLYGON ((10 10, 20 40, 90 10, 10 10)), POLYGON ((90 90, 20 40, 90 10, 90 90)))', 'POLYGON ((10 10, 20 40, 90 90, 90 10, 10 10))']
+  end
+
   def test_voronoi_diagram
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:voronoi_diagram)
 

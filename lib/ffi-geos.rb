@@ -587,6 +587,11 @@ module Geos
         :pointer, :pointer, :pointer, :double, :int
       ],
 
+      GEOSConstrainedDelaunayTriangulation_r: [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
+
       GEOSVoronoiDiagram_r: [
         # *geom, *handle, *geom, *envelope, tolerance, only_edges
         :pointer, :pointer, :pointer, :pointer, :double, :int
