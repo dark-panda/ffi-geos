@@ -70,6 +70,12 @@ class PreparedGeometryTests < Minitest::Test
     relationship_tester(:contains?, true, false, false, false, false, true, false, false)
   end
 
+  def test_contains_properly
+    skip unless ENV['FORCE_TESTS'] || defined?(Geos::PreparedGeometry)
+
+    relationship_tester(:contains_properly?, true, false, false, false, false, false, false, false)
+  end
+
   def test_overlaps
     skip unless ENV['FORCE_TESTS'] || defined?(Geos::PreparedGeometry)
 
