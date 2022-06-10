@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version = Geos::VERSION
 
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = '>= 2.5'
+  s.required_ruby_version = '>= 2.6'
 
   s.authors = ['J Smith']
   s.description = 'An ffi wrapper for GEOS, a C++ port of the Java Topology Suite (JTS).'

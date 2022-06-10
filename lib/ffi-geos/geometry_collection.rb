@@ -46,7 +46,7 @@ module Geos
 
     %w{ x y z }.each do |dimension|
       %w{ max min }.each do |op|
-        native_method = "GEOSGeom_get#{dimension.upcase}#{op[0].upcase}#{op[1..-1]}_r"
+        native_method = "GEOSGeom_get#{dimension.upcase}#{op[0].upcase}#{op[1..]}_r"
 
         if FFIGeos.respond_to?(native_method)
           class_eval(<<-RUBY, __FILE__, __LINE__ + 1)

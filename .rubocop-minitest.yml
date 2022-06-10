@@ -28,17 +28,6 @@ Minitest/AssertInDelta:
   Enabled: true
   VersionAdded: '0.10'
 
-Minitest/AssertionInLifecycleHook:
-  Description: 'This cop checks for usage of assertions in lifecycle hooks.'
-  Enabled: true
-  VersionAdded: '0.10'
-
-Minitest/AssertMatch:
-  Description: 'This cop enforces the test to use `assert_match` instead of using `assert(matcher.match(object))`.'
-  StyleGuide: 'https://minitest.rubystyle.guide#assert-match'
-  Enabled: true
-  VersionAdded: '0.6'
-
 Minitest/AssertIncludes:
   Description: 'This cop enforces the test to use `assert_includes` instead of using `assert(collection.include?(object))`.'
   StyleGuide: 'https://minitest.rubystyle.guide#assert-includes'
@@ -57,6 +46,12 @@ Minitest/AssertKindOf:
   Enabled: true
   VersionAdded: '0.10'
 
+Minitest/AssertMatch:
+  Description: 'This cop enforces the test to use `assert_match` instead of using `assert(matcher.match(object))`.'
+  StyleGuide: 'https://minitest.rubystyle.guide#assert-match'
+  Enabled: true
+  VersionAdded: '0.6'
+
 Minitest/AssertNil:
   Description: 'This cop enforces the test to use `assert_nil` instead of using `assert_equal(nil, something)` or `assert(something.nil?)`.'
   StyleGuide: 'https://minitest.rubystyle.guide#assert-nil'
@@ -74,6 +69,12 @@ Minitest/AssertPathExists:
   StyleGuide: 'https://minitest.rubystyle.guide/#assert-path-exists'
   Enabled: true
   VersionAdded: '0.10'
+
+Minitest/AssertPredicate:
+  Description: 'This cop enforces the test to use `assert_predicate` instead of using `assert(obj.a_predicate_method?)`.'
+  StyleGuide: 'https://minitest.rubystyle.guide/#assert-predicate'
+  Enabled: true
+  VersionAdded: '0.18'
 
 Minitest/AssertRespondTo:
   Description: 'This cop enforces the test to use `assert_respond_to(object, :do_something)` over `assert(object.respond_to?(:do_something))`.'
@@ -98,6 +99,17 @@ Minitest/AssertWithExpectedArgument:
   Enabled: true
   Safe: false
   VersionAdded: '0.11'
+
+Minitest/AssertionInLifecycleHook:
+  Description: 'This cop checks for usage of assertions in lifecycle hooks.'
+  Enabled: true
+  VersionAdded: '0.10'
+
+Minitest/DuplicateTestRun:
+  Description: 'This cop detects duplicate test runs caused by one test class inheriting from another.'
+  StyleGuide: 'https://minitest.rubystyle.guide/#subclassing-test-cases'
+  Enabled: true
+  VersionAdded: '0.19'
 
 Minitest/GlobalExpectations:
   Description: 'This cop checks for deprecated global expectations.'
@@ -164,12 +176,6 @@ Minitest/RefuteIncludes:
   Enabled: true
   VersionAdded: '0.3'
 
-Minitest/RefuteMatch:
-  Description: 'This cop enforces the test to use `refute_match` instead of using `refute(matcher.match(object))`.'
-  StyleGuide: 'https://minitest.rubystyle.guide#refute-match'
-  Enabled: true
-  VersionAdded: '0.6'
-
 Minitest/RefuteInstanceOf:
   Description: 'This cop enforces the test to use `refute_instance_of(Class, object)` over `refute(object.instance_of?(Class))`.'
   StyleGuide: 'https://minitest.rubystyle.guide#refute-instance-of'
@@ -181,6 +187,12 @@ Minitest/RefuteKindOf:
   StyleGuide: 'https://github.com/rubocop/minitest-style-guide#refute-kind-of'
   Enabled: true
   VersionAdded: '0.10'
+
+Minitest/RefuteMatch:
+  Description: 'This cop enforces the test to use `refute_match` instead of using `refute(matcher.match(object))`.'
+  StyleGuide: 'https://minitest.rubystyle.guide#refute-match'
+  Enabled: true
+  VersionAdded: '0.6'
 
 Minitest/RefuteNil:
   Description: 'This cop enforces the test to use `refute_nil` instead of using `refute_equal(nil, something)` or `refute(something.nil?)`.'
@@ -194,11 +206,22 @@ Minitest/RefutePathExists:
   Enabled: true
   VersionAdded: '0.10'
 
+Minitest/RefutePredicate:
+  Description: 'This cop enforces the test to use `refute_predicate` instead of using `refute(obj.a_predicate_method?)`.'
+  StyleGuide: 'https://minitest.rubystyle.guide/#refute-predicate'
+  Enabled: true
+  VersionAdded: '0.18'
+
 Minitest/RefuteRespondTo:
   Description: 'This cop enforces the test to use `refute_respond_to(object, :do_something)` over `refute(object.respond_to?(:do_something))`.'
   StyleGuide: 'https://minitest.rubystyle.guide#refute-respond-to'
   Enabled: true
   VersionAdded: '0.4'
+
+Minitest/SkipEnsure:
+  Description: 'Checks that `ensure` call even if `skip`.'
+  Enabled: true
+  VersionAdded: '0.20'
 
 Minitest/TestMethodName:
   Description: 'This cop enforces that test method names start with `test_` prefix.'
