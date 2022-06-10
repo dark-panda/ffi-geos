@@ -104,6 +104,11 @@ module Geos
       :ndr, 1 # Little Endian
     ])
 
+    Geos::Flavors = enum(:flavor, [
+      :extended, 1,
+      :iso, 2
+    ])
+
     Geos::BufferCapStyles = enum(:buffer_cap_style, [
       :round, 1,
       :flat, 2,
@@ -732,6 +737,11 @@ module Geos
         :int, :pointer, :pointer, :pointer, :pointer
       ],
 
+      GEOSDistanceWithin_r: [
+        # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, double distance
+        :int, :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSHausdorffDistance_r: [
         # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, (double *) distance
         :int, :pointer, :pointer, :pointer, :pointer
@@ -1092,6 +1102,16 @@ module Geos
       GEOSWKBWriter_setIncludeSRID_r: [
         # void, *handle, *geom, bool
         :void, :pointer, :pointer, :char
+      ],
+
+      GEOSWKBWriter_getFlavor_r: [
+        # flavor, *handle, *geom
+        :flavor, :pointer, :pointer
+      ],
+
+      GEOSWKBWriter_setFlavor_r: [
+        # void, *handle, *geom, flavor
+        :void, :pointer, :pointer, :flavor
       ],
       #### /WkbWriter functions ####
 

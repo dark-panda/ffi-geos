@@ -83,6 +83,18 @@ module Geos
       FFIGeos.GEOSWKBWriter_setByteOrder_r(Geos.current_handle_pointer, ptr, val)
     end
 
+    if FFIGeos.respond_to?(:GEOSWKBWriter_getFlavor_r)
+      def flavor
+        FFIGeos.GEOSWKBWriter_getFlavor_r(Geos.current_handle_pointer, ptr)
+      end
+    end
+
+    if FFIGeos.respond_to?(:GEOSWKBWriter_setFlavor_r)
+      def flavor=(val)
+        FFIGeos.GEOSWKBWriter_setFlavor_r(Geos.current_handle_pointer, ptr, val)
+      end
+    end
+
     private
 
       def set_options(options) # :nodoc:
