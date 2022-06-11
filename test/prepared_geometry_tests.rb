@@ -117,4 +117,17 @@ class PreparedGeometryTests < Minitest::Test
       Geos::PreparedGeometry.new('hello world')
     end
   end
+
+  def test_distance
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::PreparedGeometry) && Geos::FFIGeos.respond_to?(:GEOSPreparedDistance_r))
+
+    assert_equal(5.0, read(POINT_A).to_prepared.distance(read(POINT_B)))
+  end
+
+  def test_distance_within
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::PreparedGeometry) && Geos::FFIGeos.respond_to?(:GEOSPreparedDistanceWithin_r))
+
+    assert(read(POINT_A).to_prepared.distance_within?(read(POINT_B), 30.0))
+    refute(read(POINT_A).to_prepared.distance_within?(read(POINT_B), 3.0))
+  end
 end

@@ -77,5 +77,17 @@ module Geos
       check_geometry(geom)
       bool_result(FFIGeos.GEOSPreparedWithin_r(Geos.current_handle_pointer, ptr, geom.ptr))
     end
+
+    def distance(geom)
+      check_geometry(geom)
+      double_ptr = FFI::MemoryPointer.new(:double)
+      FFIGeos.GEOSPreparedDistance_r(Geos.current_handle_pointer, ptr, geom.ptr, double_ptr)
+      double_ptr.read_double
+    end
+
+    def distance_within?(geom, distance)
+      check_geometry(geom)
+      bool_result(FFIGeos.GEOSPreparedDistanceWithin_r(Geos.current_handle_pointer, ptr, geom.ptr, distance))
+    end
   end
 end

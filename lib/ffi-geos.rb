@@ -974,6 +974,16 @@ module Geos
         # (2 on exception, 1 on true, 0 on false), *handle, *prepared, *geom
         :char, :pointer, :pointer, :pointer
       ],
+
+      GEOSPreparedDistance_r: [
+        # (1 on success, 0 on failure), *handle, *prepared, *geom, *distance
+        :int, :pointer, :pointer, :pointer, :pointer
+      ],
+
+      GEOSPreparedDistanceWithin_r: [
+        # (1 on true, 0 on false), *handle, *prepared, *geom, max_distance
+        :char, :pointer, :pointer, :pointer, :double
+      ],
       #### /PreparedGeometry functions ####
 
       #### WktReader functions ####
