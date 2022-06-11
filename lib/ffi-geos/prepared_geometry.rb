@@ -89,5 +89,13 @@ module Geos
       check_geometry(geom)
       bool_result(FFIGeos.GEOSPreparedDistanceWithin_r(Geos.current_handle_pointer, ptr, geom.ptr, distance))
     end
+
+    def nearest_points(geom)
+      check_geometry(geom)
+
+      coord_seq_ptr = FFIGeos.GEOSPreparedNearestPoints_r(Geos.current_handle_pointer, ptr, geom.ptr)
+
+      Geos::CoordinateSequence.new(coord_seq_ptr)
+    end
   end
 end

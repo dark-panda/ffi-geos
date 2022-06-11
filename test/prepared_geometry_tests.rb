@@ -130,4 +130,15 @@ class PreparedGeometryTests < Minitest::Test
     assert(read(POINT_A).to_prepared.distance_within?(read(POINT_B), 30.0))
     refute(read(POINT_A).to_prepared.distance_within?(read(POINT_B), 3.0))
   end
+
+  def test_nearest_points
+    skip unless ENV['FORCE_TESTS'] || (defined?(Geos::PreparedGeometry) && Geos::FFIGeos.respond_to?(:GEOSPreparedNearestPoints_r))
+
+    coord_seq = read('POLYGON((1 1, 1 5, 5 5, 5 1, 1 1))').to_prepared.nearest_points(read('POLYGON((8 8, 9 9, 9 10, 8 8))'))
+
+    assert_equal(5.0, coord_seq.x[0])
+    assert_equal(5.0, coord_seq.y[0])
+    assert_equal(8.0, coord_seq.x[1])
+    assert_equal(8.0, coord_seq.y[1])
+  end
 end

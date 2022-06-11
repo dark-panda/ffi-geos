@@ -984,6 +984,11 @@ module Geos
         # (1 on true, 0 on false), *handle, *prepared, *geom, max_distance
         :char, :pointer, :pointer, :pointer, :double
       ],
+
+      GEOSPreparedNearestPoints_r: [
+        # *coord_seq, *handle, *prepared, *geom
+        :pointer, :pointer, :pointer, :pointer
+      ],
       #### /PreparedGeometry functions ####
 
       #### WktReader functions ####
