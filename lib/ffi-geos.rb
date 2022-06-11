@@ -15,6 +15,10 @@ module Geos
     File.join(GEOS_BASE, 'wkb_reader')
   autoload :WkbWriter,
     File.join(GEOS_BASE, 'wkb_writer')
+  autoload :GeoJSONReader,
+    File.join(GEOS_BASE, 'geojson_reader')
+  autoload :GeoJSONWriter,
+    File.join(GEOS_BASE, 'geojson_writer')
   autoload :CoordinateSequence,
     File.join(GEOS_BASE, 'coordinate_sequence')
   autoload :Geometry,
@@ -739,7 +743,7 @@ module Geos
 
       GEOSDistanceWithin_r: [
         # (0 on exception, 1 otherwise), *handle, *geom_a, *geom_b, double distance
-        :int, :pointer, :pointer, :pointer, :double
+        :char, :pointer, :pointer, :pointer, :double
       ],
 
       GEOSHausdorffDistance_r: [
@@ -1114,6 +1118,40 @@ module Geos
         :void, :pointer, :pointer, :flavor
       ],
       #### /WkbWriter functions ####
+
+      #### GeoJSONReader functions ####
+      GEOSGeoJSONReader_create_r: [
+        # *geojson_reader, *handle
+        :pointer, :pointer
+      ],
+
+      GEOSGeoJSONReader_readGeometry_r: [
+        # *geom, *handle, *geojson_reader, string
+        :pointer, :pointer, :pointer, :string
+      ],
+
+      GEOSGeoJSONReader_destroy_r: [
+        # void, *handle, *geojson_reader
+        :void, :pointer, :pointer
+      ],
+      #### /GeoJSONReader functions ###
+
+      #### GeoJSONWriter functions ####
+      GEOSGeoJSONWriter_create_r: [
+        # *geojson_writer, *handle
+        :pointer, :pointer
+      ],
+
+      GEOSGeoJSONWriter_destroy_r: [
+        # void, *handle, *geojson_writer
+        :void, :pointer, :pointer
+      ],
+
+      GEOSGeoJSONWriter_writeGeometry_r: [
+        # string, *handle, *geojson_writer, :geom, :indent
+        :string, :pointer, :pointer, :pointer, :int
+      ],
+      #### /GeoJSONWriter functions ####
 
       #### Linearref functions ####
       GEOSProject_r: [
