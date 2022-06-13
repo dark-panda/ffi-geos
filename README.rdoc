@@ -54,6 +54,8 @@ Ruby bindings along with the following enhancements and additions:
   GEOS library and perform other work or cancel GEOS calls outright. The
   interruption API was added in GEOS 3.4.0.
 
+* Geos::GeoJSONReader and Geos::GeoJSONWriter support on GEOS 3.10+.
+
 == New Methods and Additions (not exhaustive)
 
 * SRIDs can be copied on many operations. GEOS doesn't usually copy SRIDs
