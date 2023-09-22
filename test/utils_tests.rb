@@ -261,7 +261,13 @@ class UtilsTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || Geos.respond_to?(:create_multi_point)
 
     assert_equal('MULTIPOINT EMPTY', write(Geos.create_multi_point))
-    assert_equal('MULTIPOINT (0 0, 10 10)',
+
+    assert_equal(
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((0 0), (10 10))'
+      else
+        'MULTIPOINT (0 0, 10 10)'
+      end,
       write(
         Geos.create_multi_point(
           read('POINT(0 0)'),

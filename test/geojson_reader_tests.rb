@@ -55,7 +55,11 @@ class GeoJSONReaderTests < Minitest::Test
 
   def test_multi_point
     geojson_tester(
-      'MULTIPOINT (10.000 40.000, 40.000 30.000, 20.000 20.000, 30.000 10.000)',
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((10.000 40.000), (40.000 30.000), (20.000 20.000), (30.000 10.000))'
+      else
+        'MULTIPOINT (10.000 40.000, 40.000 30.000, 20.000 20.000, 30.000 10.000)'
+      end,
       '{"type":"MultiPoint","coordinates":[[10, 40], [40, 30], [20, 20], [30, 10]]}'
     )
   end

@@ -433,12 +433,20 @@ class WkbWriterTests < Minitest::Test
     }
 
     tester[
-      [1, 1, 0, 0, 32, 230, 16, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64].pack('C*'),
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        [1, 1, 0, 0, 160, 230, 16, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 8, 64].pack('C*')
+      else
+        [1, 1, 0, 0, 32, 230, 16, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64].pack('C*')
+      end,
       include_srid: true
     ]
 
     tester[
-      [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64].pack('C*')
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        [1, 1, 0, 0, 128, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0, 0, 0, 8, 64].pack('C*')
+      else
+        [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64].pack('C*')
+      end
     ]
   end
 
@@ -448,13 +456,25 @@ class WkbWriterTests < Minitest::Test
     geom = read('POINT(1 2 3)')
     geom.srid = 4326
 
-    assert_equal('0101000020E6100000000000000000F03F0000000000000040',
+    assert_equal(
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        '01010000A0E6100000000000000000F03F00000000000000400000000000000840'
+      else
+        '0101000020E6100000000000000000F03F0000000000000040'
+      end,
       @wkb_writer.write_hex(
         geom,
         include_srid: true
       ))
 
-    assert_equal('0101000000000000000000F03F0000000000000040', @wkb_writer.write_hex(geom))
+    assert_equal(
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        '0101000080000000000000F03F00000000000000400000000000000840'
+      else
+        '0101000000000000000000F03F0000000000000040'
+      end,
+      @wkb_writer.write_hex(geom)
+    )
   end
 
   def test_illegal_output_dimensions

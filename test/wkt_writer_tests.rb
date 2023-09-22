@@ -35,7 +35,11 @@ class WktWriterTests < Minitest::Test
     [
       'POINT (0 0)',
       'POINT EMPTY',
-      'MULTIPOINT (0 1, 2 3)',
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((0 1), (2 3))'
+      else
+        'MULTIPOINT (0 1, 2 3)'
+      end,
       'MULTIPOINT EMPTY',
       'LINESTRING (0 0, 2 3)',
       'LINESTRING EMPTY',
@@ -45,7 +49,11 @@ class WktWriterTests < Minitest::Test
       'POLYGON EMPTY',
       'MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11)))',
       'MULTIPOLYGON EMPTY',
-      'GEOMETRYCOLLECTION (MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11))), POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)), MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)), LINESTRING (0 0, 2 3), MULTIPOINT (0 0, 2 3), POINT (9 0))',
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'GEOMETRYCOLLECTION (MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11))), POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)), MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)), LINESTRING (0 0, 2 3), MULTIPOINT ((0 0), (2 3)), POINT (9 0))'
+      else
+        'GEOMETRYCOLLECTION (MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((10 10, 10 14, 14 14, 14 10, 10 10), (11 11, 11 12, 12 12, 12 11, 11 11))), POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0)), MULTILINESTRING ((0 0, 2 3), (10 10, 3 4)), LINESTRING (0 0, 2 3), MULTIPOINT (0 0, 2 3), POINT (9 0))'
+      end,
       'GEOMETRYCOLLECTION EMPTY'
     ].each do |g|
       assert_equal(g, write(read(g)))

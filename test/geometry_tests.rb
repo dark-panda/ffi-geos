@@ -269,7 +269,11 @@ class GeometryTests < Minitest::Test
 
       comparison_tester(
         method,
-        'MULTIPOINT (0 0, 1 0)',
+        if Geos::GEOS_NICE_VERSION >= '031200'
+          'MULTIPOINT ((0 0), (1 0))'
+        else
+          'MULTIPOINT (0 0, 1 0)'
+        end,
         'POINT(0 0)',
         'POINT(1 0)'
       )
@@ -365,7 +369,11 @@ class GeometryTests < Minitest::Test
 
     simple_tester(
       :boundary,
-      'MULTIPOINT (0 0, 10 10)',
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((0 0), (10 10))'
+      else
+        'MULTIPOINT (0 0, 10 10)'
+      end,
       'LINESTRING(0 0, 10 10)'
     )
 
@@ -386,7 +394,11 @@ class GeometryTests < Minitest::Test
 
     comparison_tester(
       :union,
-      'MULTIPOINT (0 0, 1 0)',
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((0 0), (1 0))'
+      else
+        'MULTIPOINT (0 0, 1 0)'
+      end,
       'POINT(0 0)',
       'POINT(1 0)'
     )
@@ -468,7 +480,14 @@ class GeometryTests < Minitest::Test
 
     result = geom_a.union(geom_b, precision: 2)
 
-    assert_equal('MULTIPOINT (2 8, 4 10)', write(result))
+    assert_equal(
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((2 8), (4 10))'
+      else
+        'MULTIPOINT (2 8, 4 10)'
+      end,
+      write(result)
+    )
   end
 
   def test_union_cascaded
@@ -486,7 +505,7 @@ class GeometryTests < Minitest::Test
         ((10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11)),
         ((0 0, 11 0, 11 11, 0 11, 0 0))
-      ))'
+      )'
     )
   end
 
@@ -503,7 +522,7 @@ class GeometryTests < Minitest::Test
       'MULTIPOLYGON(
         ((0 0, 0 1, 1 1, 1 0, 0 0)),
         ((1 0, 1 1, 2 1, 2 0, 1 0))
-      ))'
+      )'
     )
   end
 
@@ -522,7 +541,7 @@ class GeometryTests < Minitest::Test
         ((10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11)),
         ((0 0, 11 0, 11 11, 0 11, 0 0))
-      ))'
+      )'
     )
   end
 
@@ -537,7 +556,7 @@ class GeometryTests < Minitest::Test
         ((10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11)),
         ((0 0, 11 0, 11 11, 0 11, 0 0))
-      ))',
+      )',
       3
     )
   end
@@ -565,7 +584,7 @@ class GeometryTests < Minitest::Test
         ((10 10, 10 14, 14 14, 14 10, 10 10),
         (11 11, 11 12, 12 12, 12 11, 11 11)),
         ((0 0, 11 0, 11 11, 0 11, 0 0))
-      ))'
+      )'
     )
   end
 
@@ -792,13 +811,17 @@ class GeometryTests < Minitest::Test
       LINESTRING (0 0, 2 3),
       MULTIPOINT (0 0, 2 3),
       POINT (9 0),
-      POINT(1 0)),
+      POINT (1 0),
       LINESTRING EMPTY
-    ')
+    )')
 
     simple_tester(
       :extract_unique_points,
-      'MULTIPOINT (0 0, 1 0, 1 1, 0 1, 10 10, 10 14, 14 14, 14 10, 11 11, 11 12, 12 12, 12 11, 2 3, 3 4, 9 0)',
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'MULTIPOINT ((0 0), (1 0), (1 1), (0 1), (10 10), (10 14), (14 14), (14 10), (11 11), (11 12), (12 12), (12 11), (2 3), (3 4), (9 0))'
+      else
+        'MULTIPOINT (0 0, 1 0, 1 1, 0 1, 10 10, 10 14, 14 14, 14 10, 11 11, 11 12, 12 12, 12 11, 2 3, 3 4, 9 0)'
+      end,
       geom.extract_unique_points
     )
   end
@@ -972,10 +995,10 @@ class GeometryTests < Minitest::Test
 
     tester['Self-intersection', 'POINT (2.5 5)', 'POLYGON((0 0, 0 5, 5 5, 5 10, 0 0))', 0]
 
-    tester['Ring Self-intersection', 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))', 0]
+    tester['Ring Self-intersection', 'POINT (0 0)', 'POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0))', 0]
 
     assert_nil(
-      read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0)))').valid_detail(
+      read('POLYGON((0 0, -10 10, 10 10, 0 0, 4 5, -4 5, 0 0))').valid_detail(
         :allow_selftouching_ring_forming_hole
       )
     )
@@ -1635,7 +1658,7 @@ class GeometryTests < Minitest::Test
   end
 
   def test_line_string_enumerator
-    geom = read('LINESTRING(0 0, 10 10))')
+    geom = read('LINESTRING(0 0, 10 10)')
     assert_kind_of(Enumerable, geom.each)
     assert_kind_of(Enumerable, geom.to_enum)
     assert_equal(geom, geom.each(&EMPTY_BLOCK))
@@ -1827,13 +1850,13 @@ class GeometryTests < Minitest::Test
       'GEOMETRYCOLLECTION (POLYGON ((8 2, 10 10, 8.5 1, 8 2)), POLYGON ((7 8, 10 10, 8 2, 7 8)), POLYGON ((3 8, 10 10, 7 8, 3 8)), ' \
       'POLYGON ((2 2, 8 2, 8.5 1, 2 2)), POLYGON ((2 2, 7 8, 8 2, 2 2)), POLYGON ((2 2, 3 8, 7 8, 2 2)), POLYGON ((0.5 9, 10 10, 3 8, 0.5 9)), ' \
       'POLYGON ((0.5 9, 3 8, 2 2, 0.5 9)), POLYGON ((0 0, 2 2, 8.5 1, 0 0)), POLYGON ((0 0, 0.5 9, 2 2, 0 0)))',
-      'POLYGON((0 0, 8.5 1, 10 10, 0.5 9, 0 0),(2 2, 3 8, 7 8, 8 2, 2 2)))',
+      'POLYGON((0 0, 8.5 1, 10 10, 0.5 9, 0 0),(2 2, 3 8, 7 8, 8 2, 2 2))',
       0
     ]
 
     tester[
       'MULTILINESTRING ((8.5 1, 10 10), (8 2, 10 10), (8 2, 8.5 1), (7 8, 10 10), (7 8, 8 2), (3 8, 10 10), (3 8, 7 8), (2 2, 8.5 1), (2 2, 8 2), (2 2, 7 8), (2 2, 3 8), (0.5 9, 10 10), (0.5 9, 3 8), (0.5 9, 2 2), (0 0, 8.5 1), (0 0, 2 2), (0 0, 0.5 9))',
-      'POLYGON((0 0, 8.5 1, 10 10, 0.5 9, 0 0),(2 2, 3 8, 7 8, 8 2, 2 2)))',
+      'POLYGON((0 0, 8.5 1, 10 10, 0.5 9, 0 0),(2 2, 3 8, 7 8, 8 2, 2 2))',
       0,
       only_edges: true
     ]
@@ -1945,7 +1968,14 @@ class GeometryTests < Minitest::Test
     geom = read('POLYGON ((1 6, 6 11, 11 6, 6 1, 1 6))')
     minimum_rotated_rectangle = geom.minimum_rotated_rectangle
 
-    assert_equal('POLYGON ((6 1, 11 6, 6 11, 1 6, 6 1))', write(minimum_rotated_rectangle))
+    assert_equal(
+      if Geos::GEOS_NICE_VERSION >= '031200'
+        'POLYGON ((6 1, 1 6, 6 11, 11 6, 6 1))'
+      else
+        'POLYGON ((6 1, 11 6, 6 11, 1 6, 6 1))'
+      end,
+      write(minimum_rotated_rectangle)
+    )
   end
 
   def test_minimum_clearance
@@ -2078,7 +2108,13 @@ class GeometryTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:reverse)
 
     simple_tester(:reverse, 'POINT (3 5)', 'POINT (3 5)')
-    simple_tester(:reverse, 'MULTIPOINT (100 100, 10 100, 30 100)', 'MULTIPOINT (100 100, 10 100, 30 100)')
+
+    if Geos::GEOS_NICE_VERSION >= '031200'
+      simple_tester(:reverse, 'MULTIPOINT ((100 100), (10 100), (30 100))', 'MULTIPOINT (100 100, 10 100, 30 100)')
+    else
+      simple_tester(:reverse, 'MULTIPOINT (100 100, 10 100, 30 100)', 'MULTIPOINT (100 100, 10 100, 30 100)')
+    end
+
     simple_tester(:reverse, 'LINESTRING (200 200, 200 100)', 'LINESTRING (200 100, 200 200)')
 
     if Geos::GEOS_NICE_VERSION >= '030801'
