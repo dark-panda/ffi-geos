@@ -1335,12 +1335,12 @@ module Geos
 
     private
 
-      def default_notice_handler(*args)
+      def default_notice_handler(msg)
         # no-op
       end
 
-      def default_error_handler(*args)
-        raise Geos::GEOSException, args[0] % args[1]
+      def default_error_handler(msg)
+        raise Geos::GEOSException, msg
       end
   end
 
