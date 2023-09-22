@@ -562,7 +562,7 @@ class GeometryTests < Minitest::Test
   end
 
   def test_disjoint_subset_union
-    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSDisjointSubsetUnion_r)
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:disjoint_subset_union)
 
     simple_tester(
       :disjoint_subset_union,
@@ -786,6 +786,70 @@ class GeometryTests < Minitest::Test
         (5 0, 10 0),
         (5 -5, 5 0)
       )'
+    )
+  end
+
+  def test_line_substring
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:line_substring)
+
+    simple_tester(
+      :line_substring,
+      'LINESTRING (0 0, 1 1)',
+      'LINESTRING (0 0, 2 2)',
+      0,
+      0.5
+    )
+
+    simple_tester(
+      :line_substring,
+      'MULTILINESTRING ((0 52.5, 0 100), (0 -5, 0 0))',
+      'MULTILINESTRING((0 0, 0 100),(0 -5, 0 0))',
+      0.5,
+      1
+    )
+
+    simple_tester(
+      :line_substring,
+      'LINESTRING (1 1, 1 1)',
+      'LINESTRING (0 0, 2 2)',
+      0.5,
+      0.5
+    )
+
+    simple_tester(
+      :line_substring,
+      'LINESTRING (1 1, 1 1)',
+      'LINESTRING (0 0, 2 2)',
+      0.5,
+      0.5
+    )
+
+    assert_raises(Geos::GEOSException, 'IllegalArgumentException: end fraction must be <= 1') do
+      simple_tester(
+        :line_substring,
+        '',
+        'LINESTRING (0 0, 2 2)',
+        0.5,
+        1.5
+      )
+    end
+
+    assert_raises(Geos::GEOSException, 'IllegalArgumentException: end fraction must be <= 1') do
+      simple_tester(
+        :line_substring,
+        '',
+        'LINESTRING (0 0, 2 2)',
+        0.5,
+        -0.1
+      )
+    end
+
+    simple_tester(
+      :line_substring,
+      'LINESTRING (0.5 0.5, 0 0)',
+      'LINESTRING (0 0, 1 1)',
+      0.5,
+      0
     )
   end
 

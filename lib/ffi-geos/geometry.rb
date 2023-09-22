@@ -280,6 +280,13 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSLineMerge_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end
 
+    if FFIGeos.respond_to?(:GEOSLineSubstring_r)
+      # Added in GEOS 3.12+
+      def line_substring(start_fraction, end_fraction)
+        cast_geometry_ptr(FFIGeos.GEOSLineSubstring_r(Geos.current_handle_pointer, ptr, start_fraction, end_fraction), srid_copy: srid)
+      end
+    end
+
     def simplify(tolerance)
       cast_geometry_ptr(FFIGeos.GEOSSimplify_r(Geos.current_handle_pointer, ptr, tolerance), srid_copy: srid)
     end

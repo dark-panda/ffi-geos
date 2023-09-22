@@ -551,6 +551,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSLineSubstring_r: [
+        # *geom, *handle, *geom, start_fraction, end_fraction
+        :pointer, :pointer, :pointer, :double, :double
+      ],
+
       GEOSGeom_getXMin_r: [
         # 0 on exception, *handle, (double *) value
         :int, :pointer, :pointer, :pointer
