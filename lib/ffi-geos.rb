@@ -495,6 +495,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSDisjointSubsetUnion_r: [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
+
       GEOSUnaryUnion_r: [
         # *geom, *handle, *geom
         :pointer, :pointer, :pointer

@@ -561,6 +561,16 @@ class GeometryTests < Minitest::Test
     )
   end
 
+  def test_disjoint_subset_union
+    skip unless ENV['FORCE_TESTS'] || Geos::FFIGeos.respond_to?(:GEOSDisjointSubsetUnion_r)
+
+    simple_tester(
+      :disjoint_subset_union,
+      'MULTIPOLYGON (((0 0, 0 1, 1 1, 2 1, 2 0, 1 0, 0 0)), ((3 3, 4 3, 4 4, 3 3)))',
+      'MULTIPOLYGON (((0 0, 1 0, 1 1, 0 1, 0 0)), ((1 0, 2 0, 2 1, 1 1, 1 0)), ((3 3, 4 3, 4 4, 3 3)))'
+    )
+  end
+
   def test_node
     skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:node)
 

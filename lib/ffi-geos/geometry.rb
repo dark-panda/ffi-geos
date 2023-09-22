@@ -199,6 +199,13 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSDisjointSubsetUnion_r)
+      # Added in GEOS 3.12+
+      def disjoint_subset_union
+        cast_geometry_ptr(FFIGeos.GEOSDisjointSubsetUnion_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSUnaryUnion_r)
       # Available in GEOS 3.3+
       def unary_union(precision = nil)
