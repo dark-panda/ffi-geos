@@ -29,6 +29,14 @@ class PolygonTests < Minitest::Test
     assert_equal(2, geom.dimensions)
   end
 
+  def test_densify
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:densify)
+
+    geom = read('POLYGON ((0 0, 10 0, 10 10, 0 10, 0 0))')
+
+    assert_equal('POLYGON ((0 0, 5 0, 10 0, 10 5, 10 10, 5 10, 0 10, 0 5, 0 0))', write(geom.densify(5)))
+  end
+
   def test_num_geometries
     geom = read('POLYGON ((0 0, 5 0, 5 5, 0 5, 0 0))')
     assert_equal(1, geom.num_geometries)

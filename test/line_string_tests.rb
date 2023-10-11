@@ -29,6 +29,14 @@ class LineStringTests < Minitest::Test
     assert_equal(1, geom.dimensions)
   end
 
+  def test_densify
+    skip unless ENV['FORCE_TESTS'] || Geos::Geometry.method_defined?(:densify)
+
+    geom = read('LINESTRING (0 0, 0 10)')
+
+    assert_equal('LINESTRING (0 0, 0 5, 0 10)', write(geom.densify(5)))
+  end
+
   def test_num_geometries
     geom = read('LINESTRING (0 0, 10 10)')
     assert_equal(1, geom.num_geometries)
