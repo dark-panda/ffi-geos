@@ -12,25 +12,30 @@ class LineStringTests < Minitest::Test
 
   def test_default_srid
     geom = read('LINESTRING (0 0, 10 10)')
+
     assert_equal(0, geom.srid)
   end
 
   def test_setting_srid_manually
     geom = read('LINESTRING (0 0, 10 10)')
     geom.srid = 4326
+
     assert_equal(4326, geom.srid)
   end
 
   def test_dimensions
     geom = read('LINESTRING (0 0, 10 10)')
+
     assert_equal(1, geom.dimensions)
 
     geom = read('LINESTRING (0 0 0, 10 10 10)')
+
     assert_equal(1, geom.dimensions)
   end
 
   def test_num_geometries
     geom = read('LINESTRING (0 0, 10 10)')
+
     assert_equal(1, geom.num_geometries)
   end
 
@@ -48,7 +53,7 @@ class LineStringTests < Minitest::Test
     ], geom[0, 2].collect { |g| write(g) })
 
     assert_nil(geom[0, -1])
-    assert_equal([], geom[-1, 0])
+    assert_empty(geom[-1, 0])
     assert_equal([
       'POINT (1 1)',
       'POINT (2 2)'
@@ -97,11 +102,11 @@ class LineStringTests < Minitest::Test
       :offset_curve,
       if Geos::GEOS_NICE_VERSION >= '031201'
         'LINESTRING (0 -2, 10 -2, 10.390180644032256 -1.9615705608064609, 10.76536686473018 -1.8477590650225735, ' \
-          '11.111140466039204 -1.6629392246050905, 11.414213562373096 -1.414213562373095, 11.66293922460509 -1.1111404660392044, '\
+          '11.111140466039204 -1.6629392246050905, 11.414213562373096 -1.414213562373095, 11.66293922460509 -1.1111404660392044, ' \
           '11.847759065022574 -0.7653668647301796, 11.96157056080646 -0.3901806440322565, 12 0, 12 10)'
       elsif Geos::GEOS_NICE_VERSION >= '031200'
         'LINESTRING (0 -2, 10 -2, 10.390180644032256 -1.9615705608064609, 10.76536686473018 -1.8477590650225735, ' \
-          '11.111140466039204 -1.6629392246050902, 11.414213562373096 -1.414213562373095, 11.66293922460509 -1.1111404660392044, '\
+          '11.111140466039204 -1.6629392246050902, 11.414213562373096 -1.414213562373095, 11.66293922460509 -1.1111404660392044, ' \
           '11.847759065022574 -0.7653668647301796, 11.96157056080646 -0.3901806440322565, 12 0, 12 10)'
       elsif Geos::GEOS_NICE_VERSION >= '031100'
         'LINESTRING (0 -2, 10 -2, 12 0, 12 10)'
@@ -207,37 +212,45 @@ class LineStringTests < Minitest::Test
 
   def test_x_max
     geom = read('LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0)')
+
     assert_equal(8, geom.x_max)
   end
 
   def test_x_min
     geom = read('LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0)')
+
     assert_equal(-10, geom.x_min)
   end
 
   def test_y_max
     geom = read('LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0)')
+
     assert_equal(9, geom.y_max)
   end
 
   def test_y_min
     geom = read('LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0)')
+
     assert_equal(0, geom.y_min)
   end
 
   def test_z_max
     geom = read('LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0)')
+
     assert_equal(0, geom.z_max)
 
     geom = read('LINESTRING Z (0 0 0, 5 0 3, 8 9 4, -10 5 3, 0 0 0)')
+
     assert_equal(4, geom.z_max)
   end
 
   def test_z_min
     geom = read('LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0)')
+
     assert_equal(0, geom.z_min)
 
     geom = read('LINESTRING Z (0 0 0, 5 0 3, 8 9 4, -10 5 3, 0 0 0)')
+
     assert_equal(0, geom.z_min)
   end
 
@@ -249,7 +262,7 @@ class LineStringTests < Minitest::Test
   end
 
   def test_snap_to_grid_empty
-    assert(read('LINESTRING EMPTY').snap_to_grid!.empty?, 'Expected an empty LineString')
+    assert_empty(read('LINESTRING EMPTY').snap_to_grid!, 'Expected an empty LineString')
   end
 
   def test_snap_to_grid_with_srid

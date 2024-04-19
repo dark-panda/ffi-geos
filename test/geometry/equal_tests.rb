@@ -24,9 +24,8 @@ class GeometryEqualTests < Minitest::Test
     geom_a = read('POINT(1.0 1.0)')
     geom_b = read('POINT(2.0 2.0)')
 
-    assert(geom_a == geom_a, 'Expected geoms to be equal using ==')
-    refute(geom_a == geom_b, 'Expected geoms to not be equal using ==')
-    refute(geom_a == 'test', 'Expected geoms to not be equal using ==')
+    refute_equal(geom_a, geom_b, 'Expected geoms to not be equal using ==')
+    refute_equal(geom_a, 'test', 'Expected geoms to not be equal using ==')
   end
 
   def test_eql_exact

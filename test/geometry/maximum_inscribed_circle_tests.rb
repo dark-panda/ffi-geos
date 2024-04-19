@@ -15,6 +15,7 @@ class GeometryMaximumInscribledCircleTests < Minitest::Test
 
     geom = read('POLYGON ((100 200, 200 200, 200 100, 100 100, 100 200))')
     output = geom.maximum_inscribed_circle(0.001)
+
     assert_equal('LINESTRING (150 150, 150 200)', write(output))
   end
 end

@@ -547,7 +547,7 @@ module Geos
         check_geometry(geom)
         nearest_points_ptr = FFIGeos.GEOSNearestPoints_r(Geos.current_handle_pointer, ptr, geom.ptr)
 
-        return CoordinateSequence.new(nearest_points_ptr) unless nearest_points_ptr.null?
+        CoordinateSequence.new(nearest_points_ptr) unless nearest_points_ptr.null?
       end
     end
 

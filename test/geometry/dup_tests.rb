@@ -22,6 +22,7 @@ class GeometryDupTests < Minitest::Test
     geom_a = read('POINT(0 0)')
     geom_a.srid = srid
     geom_b = geom_a.dup
+
     assert_equal(geom_a, geom_b)
     assert_equal(srid, geom_b.srid)
   end

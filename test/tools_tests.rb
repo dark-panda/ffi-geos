@@ -31,12 +31,15 @@ class ToolsTests < Minitest::Test
 
   def test_pick_srid_from_geoms
     Geos.srid_copy_policy = :default
+
     assert_equal(0, Geos::Tools.pick_srid_from_geoms(4326, 4269))
 
     Geos.srid_copy_policy = :zero
+
     assert_equal(0, Geos::Tools.pick_srid_from_geoms(4326, 4269))
 
     Geos.srid_copy_policy = :lenient
+
     assert_equal(4326, Geos::Tools.pick_srid_from_geoms(4326, 4269))
 
     Geos.srid_copy_policy = :strict
@@ -63,15 +66,19 @@ class ToolsTests < Minitest::Test
 
   def test_pick_srid_according_to_policy
     Geos.srid_copy_policy = :default
+
     assert_equal(0, Geos::Tools.pick_srid_according_to_policy(4326))
 
     Geos.srid_copy_policy = :zero
+
     assert_equal(0, Geos::Tools.pick_srid_according_to_policy(4326))
 
     Geos.srid_copy_policy = :lenient
+
     assert_equal(4326, Geos::Tools.pick_srid_according_to_policy(4326))
 
     Geos.srid_copy_policy = :strict
+
     assert_equal(4326, Geos::Tools.pick_srid_according_to_policy(4326))
   ensure
     Geos.srid_copy_policy = :default

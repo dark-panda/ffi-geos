@@ -169,6 +169,6 @@ class GeoJSONReaderTests < Minitest::Test
       srid: 3857
     )
 
-    assert_equal(geom.srid, 3857)
+    assert_equal(3857, geom.srid)
   end
 end

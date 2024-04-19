@@ -12,30 +12,36 @@ class PointTests < Minitest::Test
 
   def test_default_srid
     geom = read('POINT(0 0)')
+
     assert_equal(0, geom.srid)
   end
 
   def test_setting_srid_manually
     geom = read('POINT(0 0)')
     geom.srid = 4326
+
     assert_equal(4326, geom.srid)
   end
 
   def test_dimensions
     geom = read('POINT(1 2)')
+
     assert_equal(0, geom.dimensions)
 
     geom = read('POINT(1 2 3)')
+
     assert_equal(0, geom.dimensions)
   end
 
   def test_num_geometries
     geom = read('POINT(1 2)')
+
     assert_equal(1, geom.num_geometries)
   end
 
   def test_get_x
     geom = read('POINT (1 2)')
+
     assert_equal(1, geom.get_x)
     assert_equal(1, geom.x)
 
@@ -46,6 +52,7 @@ class PointTests < Minitest::Test
 
   def test_get_y
     geom = read('POINT (1 2)')
+
     assert_equal(2, geom.get_y)
     assert_equal(2, geom.y)
 
@@ -56,6 +63,7 @@ class PointTests < Minitest::Test
 
   def test_get_z
     geom = read('POINT Z (1 2 3)')
+
     assert_equal(3, geom.get_z)
     assert_equal(3, geom.z)
     assert_raises(NoMethodError) do
@@ -68,12 +76,15 @@ class PointTests < Minitest::Test
     geom.srid = 4326
 
     Geos.srid_copy_policy = :zero
+
     assert_equal(0, geom.simplify(0.1).srid)
 
     Geos.srid_copy_policy = :lenient
+
     assert_equal(4326, geom.simplify(0.1).srid)
 
     Geos.srid_copy_policy = :strict
+
     assert_equal(4326, geom.simplify(0.1).srid)
   ensure
     Geos.srid_copy_policy = :default
@@ -84,12 +95,15 @@ class PointTests < Minitest::Test
     geom.srid = 4326
 
     Geos.srid_copy_policy = :zero
+
     assert_equal(0, geom.extract_unique_points.srid)
 
     Geos.srid_copy_policy = :lenient
+
     assert_equal(4326, geom.extract_unique_points.srid)
 
     Geos.srid_copy_policy = :strict
+
     assert_equal(4326, geom.extract_unique_points.srid)
   ensure
     Geos.srid_copy_policy = :default
@@ -98,43 +112,51 @@ class PointTests < Minitest::Test
   def test_normalize
     geom = read('POINT(10 10)')
 
-    assert_equal(geom.object_id, geom.normalize.object_id)
-    assert_equal(geom.object_id, geom.normalize!.object_id)
+    assert_same(geom, geom.normalize)
+    assert_same(geom, geom.normalize!)
   end
 
   def test_x_max
     geom = read('POINT (-10 -15)')
+
     assert_equal(-10, geom.x_max)
   end
 
   def test_x_min
     geom = read('POINT (-10 -15)')
+
     assert_equal(-10, geom.x_min)
   end
 
   def test_y_max
     geom = read('POINT (-10 -15)')
+
     assert_equal(-15, geom.y_max)
   end
 
   def test_y_min
     geom = read('POINT (-10 -15)')
+
     assert_equal(-15, geom.y_min)
   end
 
   def test_z_max
     geom = read('POINT (-10 -15)')
+
     assert_equal(0, geom.z_max)
 
     geom = read('POINT Z (-10 -15 -20)')
+
     assert_equal(-20, geom.z_max)
   end
 
   def test_z_min
     geom = read('POINT (-10 -15)')
+
     assert_equal(0, geom.z_min)
 
     geom = read('POINT Z (-10 -15 -20)')
+
     assert_equal(-20, geom.z_min)
   end
 
@@ -146,7 +168,7 @@ class PointTests < Minitest::Test
   end
 
   def test_snap_to_grid_empty
-    assert(read('POINT EMPTY').snap_to_grid!.empty?, 'Expected an empty Point')
+    assert_empty(read('POINT EMPTY').snap_to_grid!, 'Expected an empty Point')
   end
 
   def test_snap_to_grid_with_srid

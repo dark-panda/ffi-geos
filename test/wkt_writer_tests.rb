@@ -21,9 +21,11 @@ class WktWriterTests < Minitest::Test
     geom = read('POINT(6 7)')
 
     writer.trim = true
+
     assert_equal('POINT (6 7)', write(geom))
 
     writer.trim = false
+
     assert_equal('POINT (6.0000000000000000 7.0000000000000000)', write(geom))
   end
 
@@ -67,6 +69,7 @@ class WktWriterTests < Minitest::Test
 
     tester = lambda { |expected, precision|
       writer.rounding_precision = precision if precision
+
       assert_equal(expected, write(geom))
     }
 
@@ -102,6 +105,7 @@ class WktWriterTests < Minitest::Test
 
     # 3d if requested _and_ available
     writer.output_dimensions = 3
+
     assert_equal('POINT Z (1 2 3)', write(geom_3d))
     assert_equal('POINT (3 2)', write(geom_2d))
 
@@ -122,6 +126,7 @@ class WktWriterTests < Minitest::Test
     @writer.rounding_precision = 2
 
     geom = read('POINT(1 2 3)')
+
     assert_equal('POINT (1 2)', write(geom, trim: true))
 
     assert_equal('POINT (1.0000 2.0000)', write(geom, rounding_precision: 4))
@@ -141,20 +146,25 @@ class WktWriterTests < Minitest::Test
 
     # New 3d WKT by default
     writer.output_dimensions = 3
+
     assert_equal('POINT Z (1 2 3)', write(geom_3d))
 
     # Switch to old
     writer.old_3d = true
+
     assert_equal('POINT (1 2 3)', write(geom_3d))
 
     # Old3d flag is not reset when changing dimensions
     writer.output_dimensions = 2
+
     assert_equal('POINT (1 2)', write(geom_3d))
     writer.output_dimensions = 3
+
     assert_equal('POINT (1 2 3)', write(geom_3d))
 
     # Likewise, dimensions spec is not reset when changing old3d flag
     writer.old_3d = false
+
     assert_equal('POINT Z (1 2 3)', write(geom_3d))
   end
 end

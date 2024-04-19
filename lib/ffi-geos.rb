@@ -54,7 +54,7 @@ module Geos
 
   module FFIGeos
     def self.search_paths
-      @search_paths ||= \
+      @search_paths ||=
         if ENV['GEOS_LIBRARY_PATH']
           [ENV['GEOS_LIBRARY_PATH']]
         elsif FFI::Platform::IS_WINDOWS
@@ -81,7 +81,7 @@ module Geos
     end
 
     def self.geos_library_path
-      @geos_library_path ||= \
+      @geos_library_path ||=
         # On MingW the libraries have version numbers
         find_lib('{lib,}geos_c{,-?}')
     end
@@ -1340,7 +1340,7 @@ module Geos
       end
 
       def default_error_handler(*args)
-        raise Geos::GEOSException, args[0] % args[1]
+        raise Geos::GEOSException, sprintf(args[0], *args[1])
       end
   end
 

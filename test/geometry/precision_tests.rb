@@ -15,13 +15,15 @@ class GeometryPrecisionTests < Minitest::Test
 
     geom = read('POLYGON EMPTY')
     scale = geom.precision
-    assert_equal(0.0, scale)
+
+    assert_in_delta(0.0, scale)
 
     geom_with_precision = geom.with_precision(2.0)
 
     assert_equal('POLYGON EMPTY', write(geom_with_precision))
     scale = geom_with_precision.precision
-    assert_equal(2.0, scale)
+
+    assert_in_delta(2.0, scale)
   end
 
   def test_with_precision
@@ -30,9 +32,11 @@ class GeometryPrecisionTests < Minitest::Test
     geom = read('LINESTRING(1 0, 2 0)')
 
     geom_with_precision = geom.with_precision(5.0)
+
     assert_equal('LINESTRING EMPTY', write(geom_with_precision))
 
     geom_with_precision = geom.with_precision(5.0, keep_collapsed: true)
+
     assert_equal('LINESTRING (0 0, 0 0)', write(geom_with_precision))
   end
 end

@@ -2,7 +2,7 @@
 
 require 'test_helper'
 
-class GeometryTests < Minitest::Test
+class GeometryCoordSeqTests < Minitest::Test
   include TestHelper
 
   def setup

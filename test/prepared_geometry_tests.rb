@@ -30,6 +30,7 @@ class PreparedGeometryTests < Minitest::Test
       geom_b = read(geom_b)
 
       value = geom_a.send(method, geom_b)
+
       assert_equal(expected[i], value)
     end
   end
@@ -121,7 +122,7 @@ class PreparedGeometryTests < Minitest::Test
   def test_distance
     skip unless ENV['FORCE_TESTS'] || (defined?(Geos::PreparedGeometry) && Geos::FFIGeos.respond_to?(:GEOSPreparedDistance_r))
 
-    assert_equal(5.0, read(POINT_A).to_prepared.distance(read(POINT_B)))
+    assert_in_delta(5.0, read(POINT_A).to_prepared.distance(read(POINT_B)))
   end
 
   def test_distance_within
@@ -136,9 +137,9 @@ class PreparedGeometryTests < Minitest::Test
 
     coord_seq = read('POLYGON((1 1, 1 5, 5 5, 5 1, 1 1))').to_prepared.nearest_points(read('POLYGON((8 8, 9 9, 9 10, 8 8))'))
 
-    assert_equal(5.0, coord_seq.x[0])
-    assert_equal(5.0, coord_seq.y[0])
-    assert_equal(8.0, coord_seq.x[1])
-    assert_equal(8.0, coord_seq.y[1])
+    assert_in_delta(5.0, coord_seq.x[0])
+    assert_in_delta(5.0, coord_seq.y[0])
+    assert_in_delta(8.0, coord_seq.x[1])
+    assert_in_delta(8.0, coord_seq.y[1])
   end
 end

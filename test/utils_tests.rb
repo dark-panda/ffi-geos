@@ -32,7 +32,7 @@ class UtilsTests < Minitest::Test
     assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF2'), "'0FFFFFFF2' and '0FFFFFFF2' patterns match")
     assert(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFF*'), "'0FFFFFFF2' and '0FFFFFFF*' patterns match")
     assert(Geos::Utils.relate_match('0FFFFFFF2', 'TFFFFFFF2'), "'0FFFFFFF2' and 'TFFFFFFF2' patterns match")
-    assert(!Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'), "'0FFFFFFF2' and '0FFFFFFFF' patterns match")
+    refute(Geos::Utils.relate_match('0FFFFFFF2', '0FFFFFFFF'), "'0FFFFFFF2' and '0FFFFFFFF' patterns match")
   end
 
   def create_method_tester(expected, method, cs, type_id, klass)
@@ -188,6 +188,7 @@ class UtilsTests < Minitest::Test
     exterior_ring = Geos.create_linear_ring(cs)
 
     geom = Geos.create_polygon(exterior_ring)
+
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
@@ -212,6 +213,7 @@ class UtilsTests < Minitest::Test
     )
 
     geom = Geos.create_polygon(outer, inner)
+
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
@@ -244,6 +246,7 @@ class UtilsTests < Minitest::Test
     )
 
     geom = Geos.create_polygon(exterior_ring, [hole_1, hole_2])
+
     assert_instance_of(Geos::Polygon, geom)
     assert_equal('Polygon', geom.geom_type)
     assert_equal(Geos::GEOS_POLYGON, geom.type_id)
@@ -273,7 +276,8 @@ class UtilsTests < Minitest::Test
           read('POINT(0 0)'),
           read('POINT(10 10)')
         )
-      ))
+      )
+    )
   end
 
   def test_create_bad_multi_point
@@ -457,6 +461,7 @@ class UtilsTests < Minitest::Test
       ])
 
       Geos.create_linear_ring(cs)
+
       GC.start
     end
   end

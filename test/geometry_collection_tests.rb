@@ -14,6 +14,7 @@ class GeometryCollectionTests < Minitest::Test
     skip unless ENV['FORCE_TESTS'] || Geos::GeometryCollection.method_defined?(:[])
 
     geom = read('GEOMETRYCOLLECTION(POINT(0 0))')
+
     assert_kind_of(Enumerable, geom.each)
     assert_kind_of(Enumerable, geom.to_enum)
     assert_equal(geom, geom.each(&EMPTY_BLOCK))
@@ -39,7 +40,7 @@ class GeometryCollectionTests < Minitest::Test
     ], geom[0, 2].collect { |g| write(g) })
 
     assert_nil(geom[0, -1])
-    assert_equal([], geom[-1, 0])
+    assert_empty(geom[-1, 0])
     assert_equal([
       'POINT (10 20)',
       'POLYGON ((0 0, 0 5, 5 5, 5 0, 0 0))'
@@ -62,25 +63,30 @@ class GeometryCollectionTests < Minitest::Test
 
   def test_default_srid
     geom = read('GEOMETRYCOLLECTION (POINT(0 0))')
+
     assert_equal(0, geom.srid)
   end
 
   def test_setting_srid_manually
     geom = read('GEOMETRYCOLLECTION (POINT(0 0))')
     geom.srid = 4326
+
     assert_equal(4326, geom.srid)
   end
 
   def test_dimensions
     geom = read('GEOMETRYCOLLECTION (POINT(0 0))')
+
     assert_equal(0, geom.dimensions)
 
     geom = read('GEOMETRYCOLLECTION (LINESTRING(1 2, 3 4))')
+
     assert_equal(1, geom.dimensions)
   end
 
   def test_num_geometries
     geom = read('GEOMETRYCOLLECTION (POINT(1 2), LINESTRING(1 2, 3 4))')
+
     assert_equal(2, geom.num_geometries)
   end
 
@@ -130,6 +136,7 @@ class GeometryCollectionTests < Minitest::Test
       LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0),
       POINT(3 12)
     )')
+
     assert_equal(0, geom.z_max)
 
     geom = read('GEOMETRYCOLLECTION Z (
@@ -137,6 +144,7 @@ class GeometryCollectionTests < Minitest::Test
       LINESTRING Z (0 0 0, 5 0 3, 8 9 4, -10 5 3, 0 0 0),
       POINT Z (3 12 6)
     )')
+
     assert_equal(6, geom.z_max)
 
     # GEOS lets you mix dimensionality, while PostGIS doesn't.
@@ -145,6 +153,7 @@ class GeometryCollectionTests < Minitest::Test
       LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0),
       POINT(3 12 10)
     )')
+
     assert_equal(10, geom.z_max)
   end
 
@@ -154,6 +163,7 @@ class GeometryCollectionTests < Minitest::Test
       LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0),
       POINT(3 12)
     )')
+
     assert_equal(0, geom.z_min)
 
     geom = read('GEOMETRYCOLLECTION Z (
@@ -161,6 +171,7 @@ class GeometryCollectionTests < Minitest::Test
       LINESTRING Z (0 0 0, 5 0 3, 8 9 4, -10 5 3, 0 0 0),
       POINT Z (3 12 6)
     )')
+
     assert_equal(0, geom.z_min)
 
     # GEOS lets you mix dimensionality, while PostGIS doesn't.
@@ -169,6 +180,7 @@ class GeometryCollectionTests < Minitest::Test
       LINESTRING (0 0, 5 0, 8 9, -10 5, 0 0),
       POINT(3 12 -10)
     )')
+
     assert_equal(-10, geom.z_min)
   end
 
@@ -182,7 +194,7 @@ class GeometryCollectionTests < Minitest::Test
   end
 
   def test_snap_to_grid_empty
-    assert(read('GEOMETRYCOLLECTION EMPTY').snap_to_grid!.empty?, 'Expected an empty GeometryCollection')
+    assert_empty(read('GEOMETRYCOLLECTION EMPTY').snap_to_grid!, 'Expected an empty GeometryCollection')
   end
 
   def test_snap_to_grid_with_srid

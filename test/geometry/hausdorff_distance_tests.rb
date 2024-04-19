@@ -16,6 +16,7 @@ class GeometryHausdorffDistanceTests < Minitest::Test
     tester = lambda { |expected, g_1, g_2|
       geom_1 = read(g_1)
       geom_2 = read(g_2)
+
       assert_in_delta(expected, geom_1.hausdorff_distance(geom_2), TOLERANCE)
     }
 
@@ -32,6 +33,7 @@ class GeometryHausdorffDistanceTests < Minitest::Test
     tester = lambda { |expected, g_1, g_2|
       geom_1 = read(g_1)
       geom_2 = read(g_2)
+
       assert_in_delta(expected, geom_1.hausdorff_distance(geom_2, 0.001), TOLERANCE)
     }
 

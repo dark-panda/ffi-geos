@@ -17,6 +17,7 @@ class WkbReaderTests < Minitest::Test
     else
       @wkb_reader.read(g)
     end
+
     refute_nil(geom)
     assert_equal(type_id, geom.type_id)
     assert_equal(geom_type, geom.geom_type)

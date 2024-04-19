@@ -18,7 +18,7 @@ class GeometryMinimumClearanceTests < Minitest::Test
       clearance = geom.minimum_clearance
 
       if expected_clearance.eql?(Float::INFINITY)
-        assert(clearance.infinite?)
+        assert_predicate(clearance, :infinite?)
       else
         assert_in_delta(expected_clearance, clearance, TOLERANCE)
       end

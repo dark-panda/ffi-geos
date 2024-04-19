@@ -26,7 +26,7 @@ class InterruptTests < Minitest::Test
   end
 
   def assert_interrupt_called(times = 0)
-    assert(@interrupt_calls > times, "Expected @interrupt_calls to be > #{times}")
+    assert_operator(@interrupt_calls, :>, times, "Expected @interrupt_calls to be > #{times}")
   end
 
   def test_interrupt_with_method

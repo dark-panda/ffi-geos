@@ -40,8 +40,7 @@ class STRtreeTests < Minitest::Test
     assert_equal([@item_1],
       @tree.query(read('LINESTRING(5 5, 6 6)')))
 
-    assert_equal([],
-      @tree.query(read('LINESTRING(20 0, 30 10)')))
+    assert_empty(@tree.query(read('LINESTRING(20 0, 30 10)')))
 
     assert_equal([@item_2, @item_3],
       @tree.query(read('LINESTRING(25 25, 26 26)')))
@@ -58,8 +57,7 @@ class STRtreeTests < Minitest::Test
     assert_equal([@item_1],
       @tree.query(read('LINESTRING(5 5, 6 6)'), :item))
 
-    assert_equal([],
-      @tree.query(read('LINESTRING(20 0, 30 10)'), :item))
+    assert_empty(@tree.query(read('LINESTRING(20 0, 30 10)'), :item))
 
     assert_equal([@item_2, @item_3],
       @tree.query(read('LINESTRING(25 25, 26 26)'), :item))
@@ -70,8 +68,7 @@ class STRtreeTests < Minitest::Test
     assert_equal([@geom_1],
       @tree.query(read('LINESTRING(5 5, 6 6)'), :geometry))
 
-    assert_equal([],
-      @tree.query(read('LINESTRING(20 0, 30 10)'), :geometry))
+    assert_empty(@tree.query(read('LINESTRING(20 0, 30 10)'), :geometry))
 
     assert_equal([@geom_2, @geom_3],
       @tree.query(read('LINESTRING(25 25, 26 26)'), :geometry))
@@ -86,8 +83,7 @@ class STRtreeTests < Minitest::Test
       @tree.query(read('LINESTRING(5 5, 6 6)'), :all)
     )
 
-    assert_equal([],
-      @tree.query(read('LINESTRING(20 0, 30 10)'), :all))
+    assert_empty(@tree.query(read('LINESTRING(20 0, 30 10)'), :all))
 
     assert_equal(
       [
@@ -115,8 +111,7 @@ class STRtreeTests < Minitest::Test
     assert_equal([@item_1],
       @tree.query_all(read('LINESTRING(5 5, 6 6)')).collect { |v| v[:item] })
 
-    assert_equal([],
-      @tree.query_all(read('LINESTRING(20 0, 30 10)')))
+    assert_empty(@tree.query_all(read('LINESTRING(20 0, 30 10)')))
 
     assert_equal([@item_2, @item_3],
       @tree.query_all(read('LINESTRING(25 25, 26 26)')).collect { |v| v[:item] })
@@ -133,8 +128,7 @@ class STRtreeTests < Minitest::Test
     assert_equal([@geom_1],
       @tree.query_geometries(read('LINESTRING(5 5, 6 6)')))
 
-    assert_equal([],
-      @tree.query_geometries(read('LINESTRING(20 0, 30 10)')))
+    assert_empty(@tree.query_geometries(read('LINESTRING(20 0, 30 10)')))
 
     assert_equal([@geom_2, @geom_3],
       @tree.query_geometries(read('LINESTRING(25 25, 26 26)')))
@@ -150,11 +144,9 @@ class STRtreeTests < Minitest::Test
 
     @tree.remove(read('POINT(5 5)'), @item_1)
 
-    assert_equal([],
-      @tree.query(read('LINESTRING(5 5, 6 6)')))
+    assert_empty(@tree.query(read('LINESTRING(5 5, 6 6)')))
 
-    assert_equal([],
-      @tree.query(read('LINESTRING(20 0, 30 10)')))
+    assert_empty(@tree.query(read('LINESTRING(20 0, 30 10)')))
 
     assert_equal([@item_2, @item_3],
       @tree.query(read('LINESTRING(25 25, 26 26)')))
@@ -191,8 +183,7 @@ class STRtreeTests < Minitest::Test
     assert_equal([item_1],
       tree.query(read('LINESTRING(5 5, 6 6)')))
 
-    assert_equal([],
-      tree.query(read('LINESTRING(20 0, 30 10)')))
+    assert_empty(tree.query(read('LINESTRING(20 0, 30 10)')))
 
     assert_equal([item_2, item_3],
       tree.query(read('LINESTRING(25 25, 26 26)')))
@@ -246,6 +237,7 @@ class STRtreeTests < Minitest::Test
     tree.insert(geom_3)
 
     nearest_geom = tree.nearest(geom_4)
+
     assert_equal(write(geom_2), write(nearest_geom))
   end
 
@@ -356,6 +348,7 @@ class STRtreeTests < Minitest::Test
     tree.insert(geom_3, item_3)
 
     nearest_item = tree.nearest_item(geom_4)
+
     assert_equal(item_2, nearest_item)
   end
 end

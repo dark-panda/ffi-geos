@@ -30,6 +30,7 @@ class GeometryValidTests < Minitest::Test
 
     tester = lambda { |detail, location, geom, flags|
       ret = read(geom).valid_detail(flags)
+
       assert_equal(detail, ret[:detail])
       assert_equal(location, write(ret[:location]))
     }

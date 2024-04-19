@@ -14,10 +14,12 @@ class GeometryRelationshipsTests < Minitest::Test
     tester = lambda { |geom_a, geom_b, tests|
       tests.each do |test|
         expected, method, args = test
-        if ENV['FORCE_TESTS'] || geom_a.respond_to?(method)
-          value = geom_a.send(method, *([geom_b] + Array(args)))
-          assert_equal(expected, value)
-        end
+
+        next unless ENV['FORCE_TESTS'] || geom_a.respond_to?(method)
+
+        value = geom_a.send(method, *([geom_b] + Array(args)))
+
+        assert_equal(expected, value)
       end
     }
 

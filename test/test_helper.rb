@@ -90,6 +90,7 @@ module TestHelper
     Geos.srid_copy_policy = srid_policy
 
     geom_b = geom.__safe_send__(method, *args, **options)
+
     assert_equal(4326, geom.srid)
     assert_equal(expected_srid, geom_b.srid)
     assert_equal(expected, write(geom_b))
@@ -124,6 +125,7 @@ module TestHelper
     geom = geom_from_geom_or_wkt(geom)
 
     result = geom.__safe_send__(method, *args, **options)
+
     assert_equal(expected, write(result.snap_to_grid(1)))
   end
 

@@ -25,6 +25,7 @@ class GeometryPolygonizeTests < Minitest::Test
     )
 
     polygonized = geom_a.polygonize
+
     assert_equal(2, polygonized.length)
     assert_equal(
       'POLYGON ((185 221, 88 275, 180 316, 292 281, 185 221))',
@@ -43,6 +44,7 @@ class GeometryPolygonizeTests < Minitest::Test
     geom_b = read('LINESTRING (150 150, 150 250, 250 250, 250 150, 150 150)')
 
     polygonized = geom_a.polygonize(geom_b)
+
     assert_equal(2, polygonized.length)
     assert_equal(
       'POLYGON ((100 100, 100 300, 300 300, 300 100, 100 100), (150 150, 250 150, 250 250, 150 250, 150 150))',
@@ -65,6 +67,7 @@ class GeometryPolygonizeTests < Minitest::Test
     )
 
     polygonized = geom_a.polygonize_valid
+
     assert_equal(
       'POLYGON ((100 100, 100 300, 300 300, 300 100, 100 100), (150 150, 250 150, 250 250, 150 250, 150 150))',
       write(polygonized.snap_to_grid(0.1))
@@ -86,6 +89,7 @@ class GeometryPolygonizeTests < Minitest::Test
     )
 
     cut_edges = geom_a.polygonize_cut_edges
+
     assert_equal(0, cut_edges.length)
   end
 

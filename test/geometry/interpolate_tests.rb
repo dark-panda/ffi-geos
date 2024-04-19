@@ -32,6 +32,7 @@ class GeometryInterpolateTests < Minitest::Test
 
     tester = lambda { |expected, g, d|
       geom = read(g)
+
       assert_equal(expected, write(geom.interpolate_normalized(d)))
     }
 

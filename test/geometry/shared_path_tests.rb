@@ -17,6 +17,7 @@ class GeometrySharedPathTests < Minitest::Test
     geom_b = read('MULTILINESTRING((5 0, 15 0),(40 0, 30 0))')
 
     paths = geom_a.shared_paths(geom_b)
+
     assert_equal(2, paths.length)
     assert_equal(
       'MULTILINESTRING ((5 0, 15 0))',

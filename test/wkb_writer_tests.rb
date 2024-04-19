@@ -465,7 +465,8 @@ class WkbWriterTests < Minitest::Test
       @wkb_writer.write_hex(
         geom,
         include_srid: true
-      ))
+      )
+    )
 
     assert_equal(
       if Geos::GEOS_NICE_VERSION >= '031200'

@@ -154,9 +154,10 @@ module Geos
     end
     alias slice []
 
-    def has_z?
+    def z?
       dimensions == 3
     end
+    alias has_z? z?
 
     # Sets the x value of a coordinate. Can also be set via #x[]=.
     def set_x(idx, val)

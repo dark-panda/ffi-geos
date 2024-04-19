@@ -59,9 +59,11 @@ class GeometryRelateTests < Minitest::Test
     geom_b = read('POINT(0 0)')
 
     ret = geom_a.relate_boundary_node_rule(geom_b, :ogc)
+
     assert_equal('0F1FFFFF2', ret)
 
     ret = geom_a.relate_boundary_node_rule(geom_b, :endpoint)
+
     assert_equal('FF10FFFF2', ret)
 
     assert_raises(TypeError) do

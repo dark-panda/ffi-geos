@@ -8,6 +8,7 @@ class WktReaderTests < Minitest::Test
   def wkt_tester(type_id, geom_type, klass, *geoms)
     geoms.each do |g|
       geom = read(g)
+
       refute_nil(geom)
       assert_equal(type_id, geom.type_id)
       assert_equal(geom_type, geom.geom_type)
@@ -106,6 +107,7 @@ class WktReaderTests < Minitest::Test
 
   def test_read_linearring
     geom = read('LINEARRING(0 0, 1 1, 2 2, 3 3, 0 0)')
+
     assert_equal(Geos::GEOS_LINEARRING, geom.type_id)
     assert_equal('LinearRing', geom.geom_type)
     assert_kind_of(Geos::LinearRing, geom)

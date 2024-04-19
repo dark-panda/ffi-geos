@@ -15,10 +15,12 @@ class GeometryLargestEmptyCircleTests < Minitest::Test
 
     geom = read('MULTIPOINT ((100 100), (100 200), (200 200), (200 100))')
     output = geom.largest_empty_circle(0.001)
+
     assert_equal('LINESTRING (150 150, 100 100)', write(output))
 
     geom = read('MULTIPOINT ((100 100), (100 200), (200 200), (200 100))')
     output = geom.largest_empty_circle(0.001, boundary: read('MULTIPOINT ((100 100), (100 200), (200 200), (200 100))'))
+
     assert_equal('LINESTRING (100 100, 100 100)', write(output))
   end
 end

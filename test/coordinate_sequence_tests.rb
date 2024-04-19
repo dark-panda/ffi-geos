@@ -12,16 +12,19 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_set_and_get_x
     @cs.set_x(0, 10.01)
+
     assert_in_delta(10.01, @cs.get_x(0), TOLERANCE)
   end
 
   def test_set_and_get_y
     @cs.set_y(0, 20.02)
+
     assert_in_delta(20.02, @cs.get_y(0), TOLERANCE)
   end
 
   def test_set_and_get_z
     @cs.set_z(0, 20.02)
+
     assert_in_delta(20.02, @cs.get_z(0), TOLERANCE)
   end
 
@@ -53,7 +56,7 @@ class CoordinateSequenceTests < Minitest::Test
       [0, 0]
     ])
 
-    assert(cs.counter_clockwise?)
+    assert_predicate(cs, :counter_clockwise?)
 
     cs = Geos::CoordinateSequence.new([
       [0, 0],
@@ -62,7 +65,7 @@ class CoordinateSequenceTests < Minitest::Test
       [0, 0]
     ])
 
-    refute(cs.counter_clockwise?)
+    refute_predicate(cs, :counter_clockwise?)
   end
 
   def test_check_bounds
@@ -115,6 +118,7 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_with_no_arguments
     cs = Geos::CoordinateSequence.new
+
     assert_equal(0, cs.size)
     assert_equal(3, cs.dimensions)
   end
@@ -153,6 +157,7 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_to_point
     cs = Geos::CoordinateSequence.new([5, 7])
+
     assert_equal('POINT (5 7)', write(cs.to_point, trim: true))
   end
 
@@ -170,9 +175,11 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_empty
     cs = Geos::CoordinateSequence.new
+
     assert_geom_empty(cs)
 
     cs = Geos::CoordinateSequence.new([4, 1])
+
     refute_geom_empty(cs)
   end
 
@@ -219,11 +226,13 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_to_s_2d
     cs = Geos::CoordinateSequence.new([[1, 2], [10, 11]])
+
     assert_equal('1.0 2.0, 10.0 11.0', cs.to_s)
   end
 
   def test_to_s_3d
     cs = Geos::CoordinateSequence.new([[1, 2, 3], [10, 11, 12]])
+
     assert_equal('1.0 2.0 3.0, 10.0 11.0 12.0', cs.to_s)
   end
 
@@ -358,37 +367,45 @@ class CoordinateSequenceTests < Minitest::Test
 
   def test_x_max
     cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
+
     assert_equal(10, cs.x_max)
   end
 
   def test_x_min
     cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
+
     assert_equal(-10, cs.x_min)
   end
 
   def test_y_max
     cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
+
     assert_equal(20, cs.y_max)
   end
 
   def test_y_min
     cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
+
     assert_equal(-15, cs.y_min)
   end
 
   def test_z_max
     cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
-    assert(cs.z_max.nan?, ' Expected NaN')
+
+    assert_predicate(cs.z_max, :nan?, ' Expected NaN')
 
     cs = Geos::CoordinateSequence.new([-10, -15, -20], [0, 5, 10], [10, 20, 30])
+
     assert_equal(30, cs.z_max)
   end
 
   def test_z_min
     cs = Geos::CoordinateSequence.new([-10, -15], [0, 5], [10, 20])
-    assert(cs.z_min.nan?, ' Expected NaN')
+
+    assert_predicate(cs.z_min, :nan?, ' Expected NaN')
 
     cs = Geos::CoordinateSequence.new([-10, -15, -20], [0, 5, 10], [10, 20, 30])
+
     assert_equal(-20, cs.z_min)
   end
 
@@ -422,6 +439,7 @@ class CoordinateSequenceTests < Minitest::Test
 
       cs = Geos::CoordinateSequence.new(*coordinates)
       snapped = cs.snap_to_grid(10 ** -i)
+
       assert_equal(coordinates, cs.to_a)
       assert_equal(expected[i].inspect, snapped.to_a.inspect)
     end

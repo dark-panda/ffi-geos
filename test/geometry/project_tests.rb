@@ -23,29 +23,34 @@ class GeometryProjectTests < Minitest::Test
 
     geom_a = read('LINESTRING(0 0, 10 0)')
     geom_b = read('POINT(0 0)')
+
     assert_equal(0, geom_a.project(geom_b))
     assert_equal(0, geom_a.project(geom_b, true))
     assert_equal(0, geom_a.project_normalized(geom_b))
 
     geom_b = read('POINT(10 0)')
+
     assert_equal(10, geom_a.project(geom_b))
     assert_equal(1, geom_a.project(geom_b, true))
     assert_equal(1, geom_a.project_normalized(geom_b))
 
     geom_b = read('POINT(5 0)')
+
     assert_equal(5, geom_a.project(geom_b))
-    assert_equal(0.5, geom_a.project(geom_b, true))
-    assert_equal(0.5, geom_a.project_normalized(geom_b))
+    assert_in_delta(0.5, geom_a.project(geom_b, true))
+    assert_in_delta(0.5, geom_a.project_normalized(geom_b))
 
     geom_a = read('MULTILINESTRING((0 0, 10 0),(20 10, 20 20))')
     geom_b = read('POINT(20 0)')
+
     assert_equal(10, geom_a.project(geom_b))
-    assert_equal(0.5, geom_a.project(geom_b, true))
-    assert_equal(0.5, geom_a.project_normalized(geom_b))
+    assert_in_delta(0.5, geom_a.project(geom_b, true))
+    assert_in_delta(0.5, geom_a.project_normalized(geom_b))
 
     geom_b = read('POINT(20 5)')
+
     assert_equal(10, geom_a.project(geom_b))
-    assert_equal(0.5, geom_a.project(geom_b, true))
-    assert_equal(0.5, geom_a.project_normalized(geom_b))
+    assert_in_delta(0.5, geom_a.project(geom_b, true))
+    assert_in_delta(0.5, geom_a.project_normalized(geom_b))
   end
 end

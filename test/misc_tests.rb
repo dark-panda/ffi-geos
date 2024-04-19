@@ -111,7 +111,7 @@ class MiscTests < Minitest::Test
 
     yield results
 
-    refute(geom.valid?, 'Expected geom to be invalid')
+    refute_predicate(geom, :valid?, 'Expected geom to be invalid')
     assert_match(/^NOTICE: .+$/, results)
   ensure
     Geos.current_handle.reset_notice_handler
