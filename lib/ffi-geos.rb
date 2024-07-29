@@ -821,6 +821,11 @@ module Geos
         :int, :pointer, :pointer
       ],
 
+      GEOSOrientPolygons_r: [
+        # -1 on exception, *handle, *geom, exterior_cw
+        :int, :pointer, :pointer, :int
+      ],
+
       GEOSGetInteriorRingN_r: [
         # *geom, *handle, *geom, n
         :pointer, :pointer, :pointer, :int

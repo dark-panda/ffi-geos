@@ -59,6 +59,18 @@ module Geos
     end
     alias normalize normalize!
 
+    if FFIGeos.respond_to?(:GEOSOrientPolygons_r)
+      def orient_polygons!(exterior_cw = false)
+        raise Geos::GEOSException, self.class if FFIGeos.GEOSOrientPolygons_r(Geos.current_handle_pointer, ptr, bool_to_int(exterior_cw)) == -1
+
+        self
+      end
+
+      def orient_polygons(exterior_cw = false)
+        dup.orient_polygons!(exterior_cw)
+      end
+    end
+
     def srid
       FFIGeos.GEOSGetSRID_r(Geos.current_handle_pointer, ptr)
     end
