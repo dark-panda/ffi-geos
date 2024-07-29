@@ -144,6 +144,20 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSConvexHull_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end
 
+    if FFIGeos.respond_to?(:GEOSConcaveHull_r) && FFIGeos.respond_to?(:GEOSConcaveHullByLength_r)
+      def concave_hull(ratio: 0.0, allow_holes: false, length: nil)
+        cast_geometry_ptr(
+          case length
+            when Numeric
+              FFIGeos.GEOSConcaveHullByLength_r(Geos.current_handle_pointer, ptr, length, bool_to_int(allow_holes))
+            else
+              FFIGeos.GEOSConcaveHull_r(Geos.current_handle_pointer, ptr, ratio, bool_to_int(allow_holes))
+          end,
+          srid_copy: srid
+        )
+      end
+    end
+
     def difference(geom, precision: nil)
       check_geometry(geom)
 
@@ -724,6 +738,12 @@ module Geos
         end
 
         cast_geometry_ptr(FFIGeos.GEOSGeom_setPrecision_r(Geos.current_handle_pointer, ptr, grid_size, flags))
+      end
+    end
+
+    if FFIGeos.respond_to?(:GEOSConcaveHullOfPolygons_r)
+      def concave_hull_of_polygons(length_ratio, tight: false, allow_holes: false)
+        cast_geometry_ptr(FFIGeos.GEOSConcaveHullOfPolygons_r(Geos.current_handle_pointer, ptr, length_ratio, bool_to_int(tight), bool_to_int(allow_holes)), srid_copy: srid)
       end
     end
 

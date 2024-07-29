@@ -455,6 +455,16 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSConcaveHull_r: [
+        # *geom, *handle, *geom, ratio, allow_holes
+        :pointer, :pointer, :pointer, :double, :uint
+      ],
+
+      GEOSConcaveHullByLength_r: [
+        # *geom, *handle, *geom, length, allow_holes
+        :pointer, :pointer, :pointer, :double, :uint
+      ],
+
       GEOSDifference_r: [
         # *geom, *handle, *geom_a, *geom_b
         :pointer, :pointer, :pointer, :pointer
@@ -844,6 +854,11 @@ module Geos
       GEOSGeom_getPrecision_r: [
         # precision, *hande, *geom
         :double, :pointer, :pointer
+      ],
+
+      GEOSConcaveHullOfPolygons_r: [
+        # *geom, *handle, *geom, length_ratio, tight, allow_holes
+        :pointer, :pointer, :pointer, :double, :uint, :uint
       ],
 
       GEOSMinimumRotatedRectangle_r: [
