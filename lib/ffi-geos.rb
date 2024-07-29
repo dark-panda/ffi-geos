@@ -571,6 +571,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSLineMergeDirected_r: [
+        # *geom, *handle, *geom
+        :pointer, :pointer, :pointer
+      ],
+
       GEOSLineSubstring_r: [
         # *geom, *handle, *geom, start_fraction, end_fraction
         :pointer, :pointer, :pointer, :double, :double

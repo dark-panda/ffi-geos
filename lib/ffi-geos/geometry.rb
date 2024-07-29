@@ -309,6 +309,12 @@ module Geos
       cast_geometry_ptr(FFIGeos.GEOSLineMerge_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end
 
+    if FFIGeos.respond_to?(:GEOSLineMergeDirected_r)
+      def line_merge_directed
+        cast_geometry_ptr(FFIGeos.GEOSLineMergeDirected_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSLineSubstring_r)
       # Added in GEOS 3.12+
       def line_substring(start_fraction, end_fraction)
