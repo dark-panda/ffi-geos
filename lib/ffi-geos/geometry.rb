@@ -262,6 +262,15 @@ module Geos
     end
     alias center centroid
 
+    if FFIGeos.respond_to?(:GEOSHilbertCode_r)
+      def hilbert_code(extent, level)
+        check_geometry(extent)
+        code_ptr = FFI::MemoryPointer.new(:uint)
+        FFIGeos.GEOSHilbertCode_r(Geos.current_handle_pointer, ptr, extent.ptr, level, code_ptr)
+        code_ptr.read_uint
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSMinimumBoundingCircle_r)
       # Added in GEOS 3.8+. Does not yet support the radius or center
       # arguments.

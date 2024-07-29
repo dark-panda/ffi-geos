@@ -551,6 +551,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSHilbertCode_r: [
+        # int, *handler, *geom, *extent, level, *code
+        :int, :pointer, :pointer, :pointer, :uint, :pointer
+      ],
+
       GEOSMinimumBoundingCircle_r: [
         # *geom, *handle, *geom, *double radius, **geom center
         :pointer, :pointer, :pointer, :pointer, :pointer
