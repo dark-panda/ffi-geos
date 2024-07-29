@@ -398,6 +398,14 @@ module Geos
     alias equals_exact? eql_exact?
     alias exactly_equals? eql_exact?
 
+    if FFIGeos.respond_to?(:GEOSEqualsIdentical_r)
+      def eql_identical?(other)
+        check_geometry(other)
+        bool_result(FFIGeos.GEOSEqualsIdentical_r(Geos.current_handle_pointer, ptr, other.ptr))
+      end
+      alias equals_identical? eql_identical?
+    end
+
     def eql_almost?(other, decimal = 6)
       check_geometry(other)
       bool_result(FFIGeos.GEOSEqualsExact_r(Geos.current_handle_pointer, ptr, other.ptr, 0.5 * (10 ** -decimal)))

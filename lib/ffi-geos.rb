@@ -691,6 +691,11 @@ module Geos
         :char, :pointer, :pointer, :pointer, :double
       ],
 
+      GEOSEqualsIdentical_r: [
+        # (2 on exception, 1 on true, 2 on false), *handle, *geom_a, *geom_b
+        :char, :pointer, :pointer, :pointer
+      ],
+
       GEOSisEmpty_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
