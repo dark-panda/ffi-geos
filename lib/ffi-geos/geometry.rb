@@ -481,6 +481,12 @@ module Geos
       bool_result(FFIGeos.GEOSHasZ_r(Geos.current_handle_pointer, ptr))
     end
 
+    if FFIGeos.respond_to?(:GEOSHasM_r)
+      def has_m?
+        bool_result(FFIGeos.GEOSHasM_r(Geos.current_handle_pointer, ptr))
+      end
+    end
+
     # GEOS versions prior to 3.3.0 didn't handle exceptions and can crash on
     # bad input.
     if FFIGeos.respond_to?(:GEOSProject_r) && Geos::GEOS_NICE_VERSION >= '030300'

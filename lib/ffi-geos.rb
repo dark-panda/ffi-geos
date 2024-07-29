@@ -746,6 +746,11 @@ module Geos
         :char, :pointer, :pointer
       ],
 
+      GEOSHasM_r: [
+        # (2 on exception, 1 on true, 2 on false), *handle, *geom
+        :char, :pointer, :pointer
+      ],
+
       GEOSisClosed_r: [
         # (2 on exception, 1 on true, 2 on false), *handle, *geom
         :char, :pointer, :pointer
