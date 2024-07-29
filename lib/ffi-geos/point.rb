@@ -41,6 +41,15 @@ module Geos
     end
     alias z get_z
 
+    if FFIGeos.respond_to?(:GEOSGeomGetM_r)
+      def get_m
+        double_ptr = FFI::MemoryPointer.new(:double)
+        FFIGeos.GEOSGeomGetM_r(Geos.current_handle_pointer, ptr, double_ptr)
+        double_ptr.read_double
+      end
+      alias m get_m
+    end
+
     def area
       0
     end

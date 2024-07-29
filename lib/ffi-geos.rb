@@ -836,6 +836,11 @@ module Geos
         :int, :pointer, :pointer, :pointer
       ],
 
+      GEOSGeomGetM_r: [
+        # -1 on exception, *handle, *geom, *point
+        :int, :pointer, :pointer, :pointer
+      ],
+
       GEOSGeomGetPointN_r: [
         # *point, *handle, *geom, n
         :pointer, :pointer, :pointer, :int
