@@ -140,6 +140,12 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSDensify_r)
+      def densify(tolerance = 0.0)
+        cast_geometry_ptr(FFIGeos.GEOSDensify_r(Geos.current_handle_pointer, ptr, tolerance), srid_copy: srid)
+      end
+    end
+
     def convex_hull
       cast_geometry_ptr(FFIGeos.GEOSConvexHull_r(Geos.current_handle_pointer, ptr), srid_copy: srid)
     end

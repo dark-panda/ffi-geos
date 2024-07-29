@@ -439,6 +439,11 @@ module Geos
         :pointer, :pointer, :pointer, :double, :int, :buffer_cap_style, :buffer_join_style, :double
       ],
 
+      GEOSDensify_r: [
+        # *geom, *handle, *geom, tolerence
+        :pointer, :pointer, :pointer, :double
+      ],
+
       # Deprecated in GEOS 3.3.0.
       GEOSSingleSidedBuffer_r: [
         # *geom, *handle, *geom, width, quad_segs, buffer_join_style, mitre_limit, is_left
