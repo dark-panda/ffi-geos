@@ -731,6 +731,13 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSDensify_r)
+      # Added in GEOS 3.10+
+      def densify(tolerance)
+        cast_geometry_ptr(FFIGeos.GEOSDensify_r(Geos.current_handle_pointer, ptr, tolerance))
+      end
+    end
+
     if FFIGeos.respond_to?(:GEOSVoronoiDiagram_r)
       # Available in GEOS 3.5.0+
       #

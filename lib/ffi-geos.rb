@@ -240,6 +240,11 @@ module Geos
         :pointer, :pointer, :pointer
       ],
 
+      GEOSDensify_r: [
+        # *geom, *handle, *geom, tolerance
+        :pointer, :pointer, :pointer, :double
+      ],
+
       GEOSPolygonizer_getCutEdges_r: [
         # *geom, *handle, **geoms, ngeoms
         :pointer, :pointer, :pointer, :uint
