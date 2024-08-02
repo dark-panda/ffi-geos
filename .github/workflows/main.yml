@@ -8,7 +8,7 @@ name: FFI Geos
   pull_request:
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         ruby: [ '3.0', '3.1', '3.2', '3.3' ]
