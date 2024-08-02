@@ -153,6 +153,11 @@ module Geos
       :keep_collapsed, 1 << 1
     ])
 
+    Geos::PolygonHullSimplifyModes = enum(:polygon_hull_simplify_mode, [
+      :vertex_ratio, 1,
+      :area_ratio, 2
+    ])
+
     FFI_LAYOUT = {
       #### Utility functions ####
 
@@ -468,6 +473,16 @@ module Geos
       GEOSConcaveHullByLength_r: [
         # *geom, *handle, *geom, length, allow_holes
         :pointer, :pointer, :pointer, :double, :uint
+      ],
+
+      GEOSPolygonHullSimplify_r: [
+        # *geom, *handle, *geom, is_outer, vertex_num_fraction
+        :pointer, :pointer, :pointer, :uint, :double
+      ],
+
+      GEOSPolygonHullSimplifyMode_r: [
+        # *geom, *handle, *geom, is_outer, parameter_mode, parameter
+        :pointer, :pointer, :pointer, :uint, :uint, :double
       ],
 
       GEOSDifference_r: [

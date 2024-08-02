@@ -176,6 +176,19 @@ module Geos
       end
     end
 
+    if FFIGeos.respond_to?(:GEOSPolygonHullSimplify_r) && FFIGeos.respond_to?(:GEOSPolygonHullSimplifyMode_r)
+      def polygon_hull_simplify(parameter, outer: false, mode: :vertex_ratio)
+        check_enum_value(Geos::PolygonHullSimplifyModes, mode)
+
+        case mode
+          when :vertex_ratio
+            cast_geometry_ptr(FFIGeos.GEOSPolygonHullSimplify_r(Geos.current_handle_pointer, ptr, bool_to_int(outer), parameter), srid_copy: srid)
+          when :area_ratio
+            cast_geometry_ptr(FFIGeos.GEOSPolygonHullSimplifyMode_r(Geos.current_handle_pointer, ptr, bool_to_int(outer), 2, parameter), srid_copy: srid)
+        end
+      end
+    end
+
     def difference(geom, precision: nil)
       check_geometry(geom)
 
